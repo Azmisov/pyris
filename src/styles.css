@@ -1,0 +1,1324 @@
+/* ANSI Logs Panel Styles - Updated for terminal look v2.0 */
+/* Base panel styles */
+.ansi-logs-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ansi-panel-bg, #000000);
+  color: var(--ansi-panel-fg, #ffffff);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Header section */
+.ansi-logs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  flex-shrink: 0;
+  min-height: 32px;
+  font-size: 11px;
+  border-bottom:1px solid white; /* color overridden by theme */
+}
+
+/* Dark theme: lighter header */
+[data-theme="dark"] .ansi-logs-header {
+  background-color: var(--ansi-bg-accent-1);
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Light theme: darker header */
+[data-theme="light"] .ansi-logs-header {
+  background-color: var(--ansi-bg-accent-1);
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Toolbar section */
+.ansi-toolbar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.ansi-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.ansi-toolbar-button {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 3px;
+  background-color: transparent;
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.ansi-toolbar-button:hover {
+  opacity: 1;
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-toolbar-button.active {
+  opacity: 1;
+  background-color: var(--ansi-bg-accent-2);
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-toolbar-button:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-toolbar-button.active {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-toolbar-button:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-toolbar-button.active {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+.ansi-toolbar-button {
+  color: var(--ansi-panel-fg, #ffffff);
+}
+
+.ansi-toolbar-button svg {
+  display: block;
+  max-width: 16px;
+  max-height: 16px;
+  width: auto;
+  height: auto;
+}
+
+/* Color swatch strip */
+.ansi-color-swatch-strip {
+  display: inline-flex;
+  height: 28px;
+  margin-right: 8px;
+  padding: 6px;
+  vertical-align: middle;
+  border-radius: 2px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ansi-color-swatch-bar {
+  display: block;
+  width: 10px;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* Theme Select Component */
+.ansi-theme-select {
+  position: relative;
+  width: 100%;
+}
+
+.ansi-theme-select-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: var(--ansi-panel-fg, #ffffff);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  text-align: left;
+}
+
+/* Dark theme button */
+[data-theme="dark"] .ansi-theme-select-button {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="dark"] .ansi-theme-select-button:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-theme-select-button.open {
+  border-color: rgba(255, 255, 255, 0.4);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Light theme button */
+[data-theme="light"] .ansi-theme-select-button {
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="light"] .ansi-theme-select-button:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-theme-select-button.open {
+  border-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-theme-select-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ansi-theme-select-arrow {
+  margin-left: 4px;
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+.ansi-theme-select-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+  min-width: 100%;
+  width: max-content;
+  max-width: 400px;
+  background-color: var(--ansi-panel-bg, #000000);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 3px;
+  padding: 0;
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: none;
+}
+
+.ansi-theme-select-menu.open {
+  display: block;
+}
+
+/* Dark theme menu */
+[data-theme="dark"] .ansi-theme-select-menu {
+  background-color: var(--ansi-bg-accent-1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme menu */
+[data-theme="light"] .ansi-theme-select-menu {
+  background-color: var(--ansi-bg-accent-1);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ansi-theme-select-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ansi-theme-select-item.highlighted {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-theme-select-item.highlighted {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-theme-select-item.highlighted {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-theme-select-item.selected {
+  font-weight: 500;
+}
+
+.ansi-theme-select-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size:1.5em;
+}
+
+/* Settings dropdown */
+.ansi-settings-container {
+  position: relative;
+}
+
+.ansi-settings-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: var(--ansi-panel-bg, #000000);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 4px;
+  padding: 8px;
+  min-width: 200px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-settings-dropdown {
+  background-color: var(--ansi-bg-accent-1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-settings-dropdown {
+  background-color: var(--ansi-bg-accent-1);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ansi-settings-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.ansi-settings-item:last-child {
+  margin-bottom: 0;
+}
+
+.ansi-settings-item label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ansi-panel-fg, #ffffff);
+  opacity: 0.7;
+}
+
+.ansi-settings-item select {
+  background-color: transparent;
+  color: var(--ansi-panel-fg, #ffffff);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  width: auto;
+  min-width: 120px;
+}
+
+/* Dark theme select */
+[data-theme="dark"] .ansi-settings-item select {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="dark"] .ansi-settings-item select:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-settings-item select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Light theme select */
+[data-theme="light"] .ansi-settings-item select {
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="light"] .ansi-settings-item select:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-settings-item select:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Row height button group */
+.ansi-row-height-group {
+  display: inline-flex;
+  gap: 0;
+}
+
+.ansi-row-height-btn {
+  background-color: transparent;
+  color: var(--ansi-panel-fg, #ffffff);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  min-width: 40px;
+}
+
+.ansi-row-height-btn:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.ansi-row-height-btn:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.ansi-row-height-btn:not(:first-child) {
+  border-left: none;
+}
+
+.ansi-row-height-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ansi-row-height-btn.active {
+  font-weight: 500;
+}
+
+/* Make +/- buttons more prominent */
+.ansi-row-height-btn:nth-child(3),
+.ansi-row-height-btn:nth-child(4) {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 10px;
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-row-height-btn {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="dark"] .ansi-row-height-btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-row-height-btn.active {
+  background-color: var(--ansi-bg-accent-3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-row-height-btn {
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+[data-theme="light"] .ansi-row-height-btn:hover:not(:disabled) {
+  border-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-row-height-btn.active {
+  background-color: var(--ansi-bg-accent-3);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Search input group */
+.ansi-search-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 0;
+}
+
+/* When search is collapsed */
+.ansi-search-group:not(.expanded) {
+  flex: 0;
+}
+
+/* When search is expanded, make toggle button attach to search container */
+.ansi-search-group.expanded {
+  gap: 0;
+}
+
+.ansi-search-group.expanded .ansi-search-toggle-btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-right: 0;
+}
+
+.ansi-search-group.expanded .ansi-search-container {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.ansi-search-group.expanded .ansi-search-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Search section */
+.ansi-search-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  max-width: 400px;
+  margin-right: 8px;
+}
+
+.ansi-search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.ansi-search-input {
+  padding: 6px 58px 6px 10px;
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 4px;
+  background-color: var(--ansi-panel-bg, #1f1f23);
+  color: var(--ansi-panel-fg, #ffffff);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  width: 100%;
+}
+
+/* Dark theme: lighter input */
+[data-theme="dark"] .ansi-search-input {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .ansi-search-input:focus {
+  background-color: var(--ansi-bg-accent-3);
+  border-color: #ffffffc8;
+}
+
+/* Light theme: darker input */
+[data-theme="light"] .ansi-search-input {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .ansi-search-input:focus {
+  background-color: var(--ansi-bg-accent-3);
+  border-color: #000000;
+  box-shadow: 0 0 0 1px #000000;
+}
+
+.ansi-search-input::placeholder {
+  color: var(--ansi-panel-fg, #ffffff);
+  opacity: 0.6;
+}
+
+/* Search buttons container inside input */
+.ansi-search-buttons {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  margin: 2px;
+  gap: 2px;
+}
+
+/* Search toggle buttons (case-sensitive, regex) */
+.ansi-search-toggle {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 3px;
+  background-color: transparent;
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  flex-shrink: 0;
+  width: 26px;
+  height: 22px;
+}
+
+.ansi-search-toggle:hover {
+  opacity: 1;
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-search-toggle.active {
+  opacity: 1;
+  background-color: var(--ansi-bg-accent-2);
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-search-toggle:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="dark"] .ansi-search-toggle.active {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-search-toggle:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+[data-theme="light"] .ansi-search-toggle.active {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+.ansi-search-toggle svg {
+  display: block;
+  max-width: 16px;
+  max-height: 16px;
+  width: auto;
+  height: auto;
+}
+
+.ansi-clear-search {
+  padding: 4px 8px;
+  font-size: 11px;
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 3px;
+  background-color: var(--ansi-panel-bg, #1f1f23);
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+/* Dark theme: lighter button */
+[data-theme="dark"] .ansi-clear-search {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .ansi-clear-search:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Light theme: darker button */
+[data-theme="light"] .ansi-clear-search {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .ansi-clear-search:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Stats section */
+.ansi-logs-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.ansi-row-count {
+  font-weight: 500;
+}
+
+.ansi-indicator {
+  padding: 2px 6px;
+  background-color: #238636;
+  color: white;
+  border-radius: 3px;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+/* Controls section */
+.ansi-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ansi-copy-button {
+  padding: 4px 8px;
+  font-size: 11px;
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 3px;
+  background-color: var(--ansi-panel-bg, #1f1f23);
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+/* Dark theme: lighter button */
+[data-theme="dark"] .ansi-copy-button {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .ansi-copy-button:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Light theme: darker button */
+[data-theme="light"] .ansi-copy-button {
+  background-color: var(--ansi-bg-accent-2);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .ansi-copy-button:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Main content area */
+.ansi-logs-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.ansi-auto-sized-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Virtual list styles - Font settings applied here so rows inherit */
+.ansi-virtual-list,
+.simple-virtual-list {
+  width: 100%;
+  height: 100%;
+  outline: none;
+
+  font-family: var(--ansi-logs-row-font-family, "JetBrains Mono", "Cascadia Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace);
+
+  /* styles to try and improve pixel-perfect alignment of glyphs */
+  font-variant-ligatures: none;
+  font-kerning: none;
+  letter-spacing: 0;
+  text-rendering: geometricPrecision;
+  shape-rendering: crispEdges;
+  -webkit-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: grayscale;
+  image-rendering: crisp-edges;
+  font-optical-sizing: none;
+}
+
+.ansi-virtual-list::-webkit-scrollbar,
+.simple-virtual-list::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ansi-virtual-list::-webkit-scrollbar-track,
+.simple-virtual-list::-webkit-scrollbar-track {
+  background: var(--ansi-panel-bg, #1f1f23);
+}
+
+.ansi-virtual-list::-webkit-scrollbar-thumb,
+.simple-virtual-list::-webkit-scrollbar-thumb {
+  background-color: var(--ansi-scrollbar, #5c5c61);
+  border-radius: 4px;
+}
+
+.ansi-virtual-list::-webkit-scrollbar-thumb:hover,
+.simple-virtual-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ansi-panel-fg, #ffffff);
+}
+
+/* Individual log row styles */
+.ansi-logs-row {
+  display: block;
+  white-space: pre;
+  padding: 0 4px;
+  user-select: text;
+  cursor: default;
+  position: relative;
+  border: none;
+  /* inherited from container */
+  font-size: var(--ansi-logs-row-font-size);
+  line-height: var(--ansi-logs-row-height);
+  min-height: var(--ansi-logs-row-height);
+}
+
+/* Soft wrap mode - allows text to wrap */
+.ansi-logs-row.wrap-mode-soft {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.ansi-logs-row:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-logs-row.selected {
+  background-color: var(--ansi-selection-bg, rgba(0, 123, 255, 0.2));
+}
+
+.ansi-logs-row.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Label badges */
+.ansi-labels-container {
+  display: inline;
+  margin-right: 8px;
+}
+
+.ansi-label-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  font-size: 10px;
+  background-color: var(--ansi-panel-border, #3c3c41);
+  border-radius: 2px;
+  color: var(--ansi-panel-fg, #ffffff);
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 4px;
+}
+
+/* ANSI text styling */
+.ansi-bold {
+  font-weight: var(--ansi-bold-weight, 600);
+}
+
+.ansi-faint {
+  opacity: 0.5;
+}
+
+.ansi-italic {
+  font-style: var(--ansi-italic-style, italic);
+}
+
+.ansi-underline {
+  text-decoration: var(--ansi-underline-style, underline);
+}
+
+.ansi-double-underline {
+  text-decoration: underline double;
+}
+
+/* Blink animations */
+@keyframes ansi-blink-slow {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes ansi-blink-rapid {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.ansi-blink-slow {
+  display: inline-block;
+  animation-name: ansi-blink-slow;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.ansi-blink-rapid {
+  display: inline-block;
+  animation-name: ansi-blink-rapid;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Conceal/reveal */
+.ansi-conceal {
+  opacity: 0;
+}
+
+/* Strike through */
+.ansi-strike {
+  text-decoration: line-through;
+}
+
+/* Framed and encircled */
+.ansi-framed {
+  display: inline-block;
+  border: 1px solid currentColor;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.ansi-encircled {
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 20px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Overline */
+.ansi-overline {
+  text-decoration: overline;
+}
+
+/* Superscript and subscript */
+.ansi-superscript {
+  vertical-align: super;
+  font-size: 0.75em;
+}
+
+.ansi-subscript {
+  vertical-align: sub;
+  font-size: 0.75em;
+}
+
+/* Underline color classes are dynamically generated in cssVars.ts
+   for all 256 colors as .ansi-underline-color-{0-255} */
+
+/* Hyperlinks */
+.ansi-link,
+.ansi-detected-link,
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: text-decoration-style 0.15s ease, filter 0.15s ease;
+}
+
+.ansi-link:hover,
+.ansi-detected-link:hover,
+a:hover {
+  text-decoration-style: solid;
+  text-decoration-thickness: 1px;
+  filter: brightness(1.3);
+}
+
+/* Timestamp styles */
+.ansi-timestamp {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Truncation notice */
+.ansi-truncation-notice {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #f0883e;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  z-index: 10;
+}
+
+/* State styles */
+.ansi-loading,
+.ansi-error,
+.ansi-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ansi-loading-message,
+.ansi-error-message,
+.ansi-empty-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.ansi-error-message {
+  color: #f85149;
+}
+
+.ansi-error-message h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.ansi-error-message p {
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.ansi-error-message button {
+  padding: 6px 12px;
+  background-color: #f85149;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ansi-empty-message {
+  opacity: 0.6;
+}
+
+.ansi-empty-message h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.ansi-empty-message p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Development info */
+.ansi-logs-footer {
+  border-top: 1px solid var(--ansi-panel-border, #3c3c41);
+  background-color: var(--ansi-bg-accent-1);
+}
+
+.ansi-dev-info {
+  font-size: 11px;
+}
+
+.ansi-dev-toggle {
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.ansi-dev-toggle:hover {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-dev-details {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4px;
+  background-color: var(--ansi-bg-accent-2);
+  font-family: monospace;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ansi-logs-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .ansi-search-container {
+    max-width: none;
+  }
+
+  .ansi-logs-stats,
+  .ansi-controls {
+    justify-content: space-between;
+  }
+
+  .ansi-logs-row {
+    padding: 0 4px;
+  }
+
+  .ansi-labels-container {
+    margin-right: 0;
+    margin-bottom: 4px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .ansi-logs-header,
+  .ansi-logs-footer {
+    display: none;
+  }
+
+  .ansi-logs-panel {
+    background: white;
+    color: black;
+  }
+
+  .ansi-logs-row {
+    border: none;
+    padding: 2px 0;
+    break-inside: avoid;
+  }
+
+  .ansi-logs-row:hover,
+  .ansi-logs-row.selected {
+    background: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ansi-logs-panel {
+    border: 2px solid;
+  }
+
+  .ansi-search-input:focus {
+    outline: 3px solid;
+    outline-offset: 2px;
+  }
+}
+
+/* Animation for smooth interactions */
+.ansi-logs-row {
+  transition: background-color 0.15s ease;
+}
+
+.ansi-search-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ansi-copy-button,
+.ansi-clear-search {
+  transition: background-color 0.15s ease;
+}
+
+/* Modal overlay and dialog */
+.ansi-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+/* Light theme: lighter overlay */
+[data-theme="light"] .ansi-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ansi-modal {
+  background-color: var(--ansi-panel-bg, #000000);
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  min-width: 400px;
+  max-width: 600px;
+  animation: slideIn 0.2s ease;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from {
+    transform: scale(0.95) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.ansi-modal-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid white;
+}
+
+/* Dark theme: lighter header */
+[data-theme="dark"] .ansi-modal-header {
+  background-color: var(--ansi-bg-accent-2);
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Light theme: darker header */
+[data-theme="light"] .ansi-modal-header {
+  background-color: var(--ansi-bg-accent-2);
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+}
+
+.ansi-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ansi-panel-fg, #ffffff);
+}
+
+.ansi-modal-body {
+  padding: 20px 16px;
+  color: var(--ansi-panel-fg, #ffffff);
+}
+
+.ansi-modal-body p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+.ansi-modal-warning {
+  color: #f0883e;
+  font-weight: 500;
+}
+
+.ansi-modal-url {
+  padding: 8px 12px;
+  background-color: rgba(128, 128, 128, 0.15);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+  color: var(--ansi-panel-fg, #ffffff);
+  opacity: 0.9;
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-modal-url {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-modal-url {
+  background-color: var(--ansi-bg-accent-2);
+}
+
+.ansi-modal-footer {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid white;
+}
+
+/* Dark theme: lighter footer */
+[data-theme="dark"] .ansi-modal-footer {
+  background-color: var(--ansi-bg-accent-2);
+  border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Light theme: darker footer */
+[data-theme="light"] .ansi-modal-footer {
+  background-color: var(--ansi-bg-accent-2);
+  border-top-color: rgba(0, 0, 0, 0.15);
+}
+
+.ansi-modal-button {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid var(--ansi-panel-border, #3c3c41);
+  border-radius: 4px;
+  color: var(--ansi-panel-fg, #ffffff);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  min-width: 80px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Dark theme */
+[data-theme="dark"] .ansi-modal-button {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .ansi-modal-button:hover {
+  filter: brightness(1.1);
+}
+
+/* Light theme */
+[data-theme="light"] .ansi-modal-button {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .ansi-modal-button:hover {
+  filter: brightness(0.95);
+}
+
+.ansi-modal-button-copy {
+  font-weight: 500;
+}
+
+.ansi-modal-button-copy:hover {
+  background-color: rgba(128, 200, 128, 0.2);
+  border-color: rgba(128, 200, 128, 0.4);
+  filter: none;
+}
+
+/* Light theme copy button */
+[data-theme="light"] .ansi-modal-button-copy:hover {
+  background-color: rgba(40, 160, 40, 0.15);
+  border-color: rgba(40, 160, 40, 0.4);
+  filter: none;
+}
+
+.ansi-modal-button-confirm {
+  font-weight: 500;
+}
+
+.ansi-modal-button-confirm:hover {
+  background-color: rgba(88, 166, 255, 0.2);
+  border-color: rgba(88, 166, 255, 0.4);
+  filter: none;
+}
+
+/* Light theme confirm button */
+[data-theme="light"] .ansi-modal-button-confirm:hover {
+  background-color: rgba(9, 105, 218, 0.15);
+  border-color: rgba(9, 105, 218, 0.4);
+  filter: none;
+}
