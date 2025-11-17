@@ -2,7 +2,7 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 
 // Panel options for configuration
-export interface AnsiLogsPanelOptions {
+export interface LogsPanelOptions {
   // Theme selection
   themeMode: 'dark' | 'light' | 'system';
   darkTheme: string;
@@ -26,7 +26,7 @@ export interface AnsiLogsPanelOptions {
 }
 
 // Default panel options
-export const defaultOptions: AnsiLogsPanelOptions = {
+export const defaultOptions: LogsPanelOptions = {
   themeMode: 'system',
   darkTheme: 'grafana-dark',
   lightTheme: 'grafana-light',
@@ -95,7 +95,7 @@ export type ContentNode =
 // Memoization key for row processing
 export interface MemoKey {
   message: string;
-  options: Pick<AnsiLogsPanelOptions, 'wrapMode' | 'maxLineLength'>;
+  options: Pick<LogsPanelOptions, 'wrapMode' | 'maxLineLength'>;
 }
 
 // Virtual list item props
@@ -104,12 +104,12 @@ export interface VirtualListItemProps {
   style: React.CSSProperties;
   data: {
     rows: ProcessedLogRow[];
-    options: AnsiLogsPanelOptions;
+    options: LogsPanelOptions;
   };
 }
 
 // Panel props interface using proper Grafana types
-export type AnsiLogsPanelProps = PanelProps<AnsiLogsPanelOptions>;
+export interface LogsPanelProps extends PanelProps<LogsPanelOptions> {}
 
 // Error context for PanelDataErrorView
 export interface ParseErrorContext {

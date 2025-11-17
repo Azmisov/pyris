@@ -1,4 +1,4 @@
-import { ProcessedLogRow, AnsiLogsPanelOptions } from '../types';
+import { ProcessedLogRow, LogsPanelOptions } from '../types';
 
 // Simple hash function for stable memoization keys
 function simpleHash(str: string): string {
@@ -15,7 +15,7 @@ function simpleHash(str: string): string {
 }
 
 // Create stable hash from message and relevant options
-export function createMemoKey(message: string, options: AnsiLogsPanelOptions): string {
+export function createMemoKey(message: string, options: LogsPanelOptions): string {
   // Only include options that affect HTML output
   // Bold/Italic/Underline are CSS-only and don't affect caching
   // Hyperlinks are always enabled

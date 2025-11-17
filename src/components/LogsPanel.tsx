@@ -1,17 +1,30 @@
 import React, { useMemo } from 'react';
-import { AnsiLogsPanelOptions } from 'types';
+import { LogsPanelProps } from 'types';
 // import { css } from '@emotion/css';
-import { useTheme2 } from '@grafana/ui';
+// import { useTheme2 } from '@grafana/ui';
 import { PanelDataErrorView } from '@grafana/runtime';
-import { PanelProps } from '@grafana/data';
 import { LogsViewer } from './LogsViewer';
 import { parseDataFrame } from '../utils/frame';
 
-interface Props extends PanelProps<AnsiLogsPanelOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
-  const theme = useTheme2();
+
+export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id }) => {
+  // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
+
+  /* data format:
+    timeRange: {to, from}
+    series: [
+      meta: {preferredVisualisationType: "logs", typeVersion},
+      length: #,
+      name, refId: str, (the series name)
+      fields: [{
+        name: time, message, etc
+        type: time (unix timestamp int), string
+        values: []
+      }]
+    ]
+  */
 
   // Parse data frame into structured log rows
   const parsedData = useMemo(() => {

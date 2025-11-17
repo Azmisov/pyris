@@ -1,13 +1,13 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { LogRow, AnsiLogsPanelOptions } from '../types';
+import { LogRow, LogsPanelOptions } from '../types';
 import { Row } from './Row';
 import { applyFontSizeVars } from '../utils/fontSizing';
 
 interface VirtualListProps {
   rows: LogRow[];
-  options: AnsiLogsPanelOptions;
+  options: LogsPanelOptions;
   height: number;
   width: number;
   onRowClick?: (row: LogRow, index: number) => void;
@@ -77,7 +77,7 @@ VirtualList.displayName = 'VirtualList';
 // Auto-sizing wrapper component
 interface AutoSizedVirtualListProps {
   rows: LogRow[];
-  options: AnsiLogsPanelOptions;
+  options: LogsPanelOptions;
   onRowClick?: (row: LogRow, index: number) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;

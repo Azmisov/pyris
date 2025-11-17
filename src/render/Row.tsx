@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { LogRow, ProcessedLogRow, AnsiLogsPanelOptions } from '../types';
+import { LogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
 import { ansiToHtml, hasAnsiCodes, truncateLine, stripAnsiCodes } from '../converters/ansi';
 import { applyOsc8Links } from '../converters/osc8';
 import { linkifyPlainUrls } from '../converters/urlDetector';
@@ -7,7 +7,7 @@ import { createMemoKey, getGlobalCache } from '../utils/memo';
 
 interface RowProps {
   row: LogRow;
-  options: AnsiLogsPanelOptions;
+  options: LogsPanelOptions;
   isSelected?: boolean;
   onRowClick?: (row: LogRow) => void;
   style?: React.CSSProperties;
@@ -95,7 +95,7 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
 LabelsDisplay.displayName = 'LabelsDisplay';
 
 // Process log row with caching
-function processLogRow(row: LogRow, options: AnsiLogsPanelOptions): ProcessedLogRow {
+function processLogRow(row: LogRow, options: LogsPanelOptions): ProcessedLogRow {
   const cache = getGlobalCache();
   const cacheKey = createMemoKey(row.message, options);
 
