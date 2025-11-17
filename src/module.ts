@@ -1,6 +1,6 @@
 import { PanelPlugin } from '@grafana/data';
-import { AnsiLogsPanelOptions, defaultOptions } from './types';
-import { SimplePanel } from './components/SimplePanel';
+import { LogsPanelOptions, defaultOptions } from './types';
+import { SimplePanel } from './components/LogsPanel';
 import {
   getDarkColorSchemeOptions,
   getLightColorSchemeOptions,
@@ -9,7 +9,7 @@ import {
 // Import CSS styles
 import './styles.css';
 
-export const plugin = new PanelPlugin<AnsiLogsPanelOptions>(SimplePanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<LogsPanelOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
     .addSelect({
       path: 'darkTheme',
@@ -44,7 +44,7 @@ export const plugin = new PanelPlugin<AnsiLogsPanelOptions>(SimplePanel).setPane
       description: 'Display log labels as badges',
       defaultValue: defaultOptions.showLabels,
     })
-  .addNumberInput({
+    .addNumberInput({
       path: 'maxLineLength',
       name: 'Max Line Length',
       description: 'Maximum characters per line before truncation',
@@ -69,7 +69,7 @@ export const plugin = new PanelPlugin<AnsiLogsPanelOptions>(SimplePanel).setPane
 });
 
 // Validate panel options
-export function validateOptions(options: AnsiLogsPanelOptions): AnsiLogsPanelOptions {
+export function validateOptions(options: LogsPanelOptions): LogsPanelOptions {
   return {
     ...options,
     maxLineLength: Math.max(100, Math.min(10000, options.maxLineLength)),

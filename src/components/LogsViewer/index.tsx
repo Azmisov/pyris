@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
-import { AnsiLogsPanelOptions, LogRow } from '../../types';
+import { LogsPanelOptions, LogRow } from '../../types';
 import { getDarkColorSchemeOptions, getLightColorSchemeOptions } from '../../theme/colorSchemes';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useThemeManagement } from './hooks/useThemeManagement';
@@ -31,7 +31,7 @@ export interface LogData {
  */
 export interface LogsViewerProps {
   logs: LogData[];
-  options?: Partial<AnsiLogsPanelOptions>;
+  options?: Partial<LogsPanelOptions>;
   width?: number;
   height?: number;
   onRowClick?: (log: LogData, index: number) => void;
@@ -41,7 +41,7 @@ export interface LogsViewerProps {
 /**
  * Default options for the logs viewer
  */
-const defaultViewerOptions: AnsiLogsPanelOptions = {
+const defaultViewerOptions: LogsPanelOptions = {
   themeMode: 'system',
   darkTheme: 'nord',
   lightTheme: 'solarized-light',
@@ -342,38 +342,5 @@ export const LogsViewer = memo<LogsViewerProps>(({
 });
 
 LogsViewer.displayName = 'LogsViewer';
-
-// Development info component
-interface DevInfoProps {
-  stats: any;
-  memoryUsage: any;
-  options: AnsiLogsPanelOptions;
-}
-
-export const DevInfo = memo<DevInfoProps>(({ stats, memoryUsage, options }) => {
-  const [showDetails, setShowDetails] = useState(false);
-
-  return (
-    <div className="ansi-dev-info">
-      <button
-        onClick={() => setShowDetails(!showDetails)}
-        className="ansi-dev-toggle"
-      >
-        Dev Info {showDetails ? '−' : '+'}
-      </button>
-
-      {showDetails && (
-        <div className="ansi-dev-details">
-          <div>Cache: {memoryUsage.cacheSize} items ({memoryUsage.estimatedMemoryMB.toFixed(1)}MB)</div>
-          <div>ANSI Content: {stats.hasAnsiContent ? 'Yes' : 'No'}</div>
-          <div>Avg Message Length: {Math.round(stats.avgMessageLength)} chars</div>
-          <div>Max Rows: {options.maxRenderableRows}</div>
-        </div>
-      )}
-    </div>
-  );
-});
-
-DevInfo.displayName = 'DevInfo';
 
 export default LogsViewer;
