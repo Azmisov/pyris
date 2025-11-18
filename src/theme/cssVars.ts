@@ -1,6 +1,45 @@
 import { ColorPalette, AnsiColor } from '../types';
-import { colorToRgb, adjustColorForTheme, getPaletteWithScheme } from './palette256';
 import { getColorScheme } from './colorSchemes';
+import { XTERM_256_PALETTE } from './palette256';
+
+// Convert color to CSS rgb() string
+function colorToRgb(color: AnsiColor): string {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
+}
+
+// Create a palette with a custom color scheme applied to the first 16 colors
+function getPaletteWithScheme(schemeName: string = 'default'): ColorPalette {
+  const scheme = getColorScheme(schemeName);
+  const palette = [...XTERM_256_PALETTE];
+
+  // Replace first 16 colors with the scheme colors
+  for (let i = 0; i < 16; i++) {
+    palette[i] = scheme.colors[i];
+  }
+
+  return palette;
+}
+
+// Adjust colors for light/dark themes
+function adjustColorForTheme(color: AnsiColor, theme: 'light' | 'dark'): AnsiColor {
+  if (theme === 'light') {
+    // For light themes, darken bright colors for better contrast
+    const factor = 0.8;
+    return {
+      r: Math.floor(color.r * factor),
+      g: Math.floor(color.g * factor),
+      b: Math.floor(color.b * factor)
+    };
+  } else {
+    // For dark themes, brighten dark colors
+    const factor = 1.2;
+    return {
+      r: Math.min(255, Math.floor(color.r * factor)),
+      g: Math.min(255, Math.floor(color.g * factor)),
+      b: Math.min(255, Math.floor(color.b * factor))
+    };
+  }
+}
 
 // CSS variable names for ANSI colors
 export const ANSI_CSS_VARS = {

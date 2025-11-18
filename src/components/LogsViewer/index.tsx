@@ -37,6 +37,7 @@ export interface LogsViewerProps {
   height?: number;
   onRowClick?: (log: LogData, index: number) => void;
   onTimeRangeChange?: (startTimeMs: number, endTimeMs: number) => void;
+  dashboardTimeRange?: { from: number; to: number };
   className?: string;
 }
 
@@ -70,6 +71,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   height = 600,
   onRowClick,
   onTimeRangeChange,
+  dashboardTimeRange,
   className = '',
 }) => {
   // Merge user options with defaults
@@ -441,6 +443,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           sortOrder={sortOrder}
           onLogSelect={handleLogSelect}
           onTimeRangeChange={onTimeRangeChange}
+          dashboardTimeRange={dashboardTimeRange}
         />
       )}
 

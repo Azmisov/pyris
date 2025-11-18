@@ -7,9 +7,13 @@ import { LogsViewer } from './LogsViewer';
 import { parseDataFrame } from '../utils/frame';
 
 
-export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id }) => {
+export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id, onChangeTimeRange, timeRange }) => {
   // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
+
+  // Debug: Check if onChangeTimeRange is available
+  console.log('[LogsPanel] onChangeTimeRange available?', !!onChangeTimeRange);
+  console.log('[LogsPanel] timeRange:', timeRange);
 
   /* data format:
     timeRange: {to, from}
@@ -35,6 +39,29 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
     return result;
   }, [data]);
 
+  // Handle time range change from timeline
+  const handleTimeRangeChange = useMemo(() => {
+    if (!onChangeTimeRange) return undefined;
+
+    return (startTimeMs: number, endTimeMs: number) => {
+      console.log('[LogsPanel] Calling onChangeTimeRange with:', { from: startTimeMs, to: endTimeMs });
+      onChangeTimeRange({
+        from: startTimeMs,
+        to: endTimeMs,
+      });
+    };
+  }, [onChangeTimeRange]);
+
+  // Convert dashboard time range to milliseconds
+  const dashboardTimeRangeMs = useMemo(() => {
+    if (!timeRange) return undefined;
+
+    const fromMs = typeof timeRange.from === 'number' ? timeRange.from : timeRange.from.valueOf();
+    const toMs = typeof timeRange.to === 'number' ? timeRange.to : timeRange.to.valueOf();
+
+    return { from: fromMs, to: toMs };
+  }, [timeRange]);
+
   // Handle errors from parsing
   if (parseResult.parsed.error) {
     return (
@@ -55,6 +82,8 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
         options={options}
         width={width}
         height={height}
+        onTimeRangeChange={handleTimeRangeChange}
+        dashboardTimeRange={dashboardTimeRangeMs}
       />
   );
 };

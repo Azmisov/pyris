@@ -19,6 +19,7 @@ interface LogsTimelineProps {
   sortOrder?: 'asc' | 'desc';
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
   onLogSelect?: (timestamp: number) => void;
+  dashboardTimeRange?: { from: number; to: number };
 }
 
 const DEFAULT_HEIGHT = 100;
@@ -80,6 +81,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   sortOrder = 'asc',
   onTimeRangeChange,
   onLogSelect,
+  dashboardTimeRange,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
@@ -123,9 +125,23 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   // Update chart data when logs change
   useEffect(() => {
     if (chartRef.current && timeRange && histogram) {
-      chartRef.current.setData(timeRange, histogram);
+      // Convert dashboard time range to microseconds
+      const dashboardRangeUs = dashboardTimeRange
+        ? [dashboardTimeRange.from * 1000, dashboardTimeRange.to * 1000] as [number, number]
+        : undefined;
+      chartRef.current.setData(timeRange, histogram, dashboardRangeUs);
     }
-  }, [timeRange, histogram]);
+  }, [timeRange, histogram, dashboardTimeRange]);
+
+  // Update dashboard time range indicators
+  useEffect(() => {
+    if (chartRef.current && dashboardTimeRange) {
+      // Convert from milliseconds to microseconds
+      const fromUs = dashboardTimeRange.from * 1000;
+      const toUs = dashboardTimeRange.to * 1000;
+      chartRef.current.setDashboardRange(fromUs, toUs);
+    }
+  }, [dashboardTimeRange]);
 
   // Update hovered timestamp
   useEffect(() => {
