@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './LinkConfirmationModal.module.css';
 
 interface LinkConfirmationModalProps {
   isOpen: boolean;
@@ -22,20 +23,20 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="ansi-modal-overlay" onClick={onClose}>
-      <div className="ansi-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="ansi-modal-header">
+    <div className={styles['ansi-modal-overlay']} onClick={onClose}>
+      <div className={styles['ansi-modal']} onClick={(e) => e.stopPropagation()}>
+        <div className={styles['ansi-modal-header']}>
           <h3>
             {isFileUrl ? 'File Link' : isDangerousUrl ? 'Warning: Dangerous Link' : 'Open External Link'}
           </h3>
         </div>
-        <div className="ansi-modal-body">
+        <div className={styles['ansi-modal-body']}>
           {isDangerousUrl && (
-            <p className="ansi-modal-warning">⚠️ This URL uses a potentially dangerous scheme. Proceed with caution.</p>
+            <p className={styles['ansi-modal-warning']}>⚠️ This URL uses a potentially dangerous scheme. Proceed with caution.</p>
           )}
           {isFileUrl ? (
             <>
-              <p className="ansi-modal-warning">⚠️ Browsers block file:// links for security reasons.</p>
+              <p className={styles['ansi-modal-warning']}>⚠️ Browsers block file:// links for security reasons.</p>
               <p>Copy the path and paste it into your file manager or terminal:</p>
             </>
           ) : isDangerousUrl ? (
@@ -43,13 +44,13 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
           ) : (
             <p>Do you want to visit this link?</p>
           )}
-          <div className="ansi-modal-url">{displayUrl}</div>
+          <div className={styles['ansi-modal-url']}>{displayUrl}</div>
         </div>
-        <div className="ansi-modal-footer">
-          <button className="ansi-modal-button ansi-modal-button-cancel" onClick={onClose}>
+        <div className={styles['ansi-modal-footer']}>
+          <button className={`${styles['ansi-modal-button']} ${styles['ansi-modal-button-cancel']}`} onClick={onClose}>
             Cancel
           </button>
-          <button className="ansi-modal-button ansi-modal-button-copy" onClick={onCopy}>
+          <button className={`${styles['ansi-modal-button']} ${styles['ansi-modal-button-copy']}`} onClick={onCopy}>
             Copy
           </button>
           {!isFileUrl && (
@@ -57,7 +58,7 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="ansi-modal-button ansi-modal-button-confirm"
+              className={`${styles['ansi-modal-button']} ${styles['ansi-modal-button-confirm']}`}
               onClick={onClose}
             >
               Open

@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { ColorSwatch } from './ColorSwatch';
 import { getColorScheme } from '../theme/colorSchemes';
+import styles from './ThemeSelect.module.css';
 
 export interface ThemeOption {
   value: string;
@@ -24,10 +25,10 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
   const displayItem = selectedItem || options[0];
 
   return (
-    <div className="ansi-theme-select">
+    <div className={styles['ansi-theme-select']}>
       <Select.Root value={value} onValueChange={onChange}>
         <Select.Trigger
-          className="ansi-theme-select-button"
+          className={styles['ansi-theme-select-button']}
           id={id}
           aria-label="Select theme"
         >
@@ -35,18 +36,18 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
             {displayItem && (
               <>
                 <ColorSwatch scheme={getColorScheme(displayItem.value)} />
-                <span className="ansi-theme-select-label">{displayItem.label}</span>
+                <span className={styles['ansi-theme-select-label']}>{displayItem.label}</span>
               </>
             )}
           </div>
           <Select.Icon asChild>
-            <span className="ansi-theme-select-arrow">▼</span>
+            <span className={styles['ansi-theme-select-arrow']}>▼</span>
           </Select.Icon>
         </Select.Trigger>
 
         <Select.Portal>
           <Select.Content
-            className="ansi-theme-select-menu open"
+            className={`${styles['ansi-theme-select-menu']} ${styles.open}`}
             position="popper"
             sideOffset={2}
             align="start"
@@ -56,11 +57,11 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
                 <Select.Item
                   key={item.value}
                   value={item.value}
-                  className="ansi-theme-select-item"
+                  className={styles['ansi-theme-select-item']}
                 >
                   <ColorSwatch scheme={getColorScheme(item.value)} />
                   <Select.ItemText asChild>
-                    <span className="ansi-theme-select-item-label">{item.label}</span>
+                    <span className={styles['ansi-theme-select-item-label']}>{item.label}</span>
                   </Select.ItemText>
                 </Select.Item>
               ))}

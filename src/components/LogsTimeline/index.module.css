@@ -1,0 +1,33 @@
+/* Logs Timeline Component */
+
+.logs-timeline {
+  border-bottom: 1px solid var(--ansi-fg-muted1);
+}
+
+/* Timeline icon buttons */
+.timeline-icon-button {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ansi-fg-muted-2);
+  border-radius: 3px;
+  background-color: var(--ansi-bg-accent-2);
+  color: var(--ansi-fg);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  width: 28px;
+  height: 28px;
+}
+
+.timeline-icon-button:hover {
+  opacity: 1;
+  background-color: var(--ansi-bg-accent-3);
+  border-color: var(--ansi-fg-muted-1);
+}
+
+.timeline-icon-button:active {
+  transform: scale(0.95);
+}

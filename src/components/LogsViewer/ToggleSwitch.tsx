@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import styles from './ToggleSwitch.module.css';
 
 export interface ToggleSwitchOption {
   value: string;
@@ -20,10 +21,10 @@ export const ToggleSwitch = memo<ToggleSwitchProps>(({ options, value, onChange,
   const isFirstSelected = value === option1.value;
 
   return (
-    <div className={`ansi-toggle-switch ${className}`}>
+    <div className={`${styles['ansi-toggle-switch']} ${className}`}>
       <button
         type="button"
-        className={`ansi-toggle-option ${isFirstSelected ? 'active' : ''}`}
+        className={`${styles['ansi-toggle-option']} ${isFirstSelected ? styles.active : ''}`}
         onClick={() => onChange(option1.value)}
         aria-pressed={isFirstSelected}
       >
@@ -31,7 +32,7 @@ export const ToggleSwitch = memo<ToggleSwitchProps>(({ options, value, onChange,
       </button>
       <button
         type="button"
-        className={`ansi-toggle-option ${!isFirstSelected ? 'active' : ''}`}
+        className={`${styles['ansi-toggle-option']} ${!isFirstSelected ? styles.active : ''}`}
         onClick={() => onChange(option2.value)}
         aria-pressed={!isFirstSelected}
       >

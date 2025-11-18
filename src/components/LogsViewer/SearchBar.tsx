@@ -2,6 +2,8 @@ import React from 'react';
 import { Icon } from '@grafana/ui';
 import SearchIcon from '../../icons/search.svg';
 import RegexIcon from '../../icons/regex.svg';
+import styles from './SearchBar.module.css';
+import toolbarStyles from '../toolbar.module.css';
 
 interface SearchBarProps {
   searchTerm: string;
@@ -29,10 +31,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onToggleSearch,
 }) => {
   return (
-    <div className={`ansi-search-group ${searchExpanded ? 'expanded' : ''}`}>
+    <div className={`${styles['ansi-search-group']} ${searchExpanded ? styles.expanded : ''}`}>
       <button
         onClick={onToggleSearch}
-        className={`ansi-toolbar-button ansi-search-toggle-btn ${searchExpanded ? 'active' : ''}`}
+        className={`${toolbarStyles['ansi-toolbar-button']} ${styles['ansi-search-toggle-btn']} ${searchExpanded ? toolbarStyles.active : ''}`}
         title={searchExpanded ? 'Hide Search' : 'Show Search'}
         aria-label="Toggle Search"
       >
@@ -40,20 +42,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </button>
 
       {searchExpanded && (
-        <div className="ansi-search-container">
-          <div className="ansi-search-input-wrapper">
+        <div className={styles['ansi-search-container']}>
+          <div className={styles['ansi-search-input-wrapper']}>
             <input
               type="text"
               placeholder="Search phrase…"
               value={searchTerm}
               onChange={onSearchChange}
-              className="ansi-search-input"
+              className={styles['ansi-search-input']}
               autoFocus
             />
-            <div className="ansi-search-buttons">
+            <div className={styles['ansi-search-buttons']}>
               <button
                 onClick={onCaseSensitiveToggle}
-                className={`ansi-search-toggle ${caseSensitive ? 'active' : ''}`}
+                className={`${styles['ansi-search-toggle']} ${caseSensitive ? styles.active : ''}`}
                 title="Match Case"
                 aria-label="Match Case"
               >
@@ -64,7 +66,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               </button>
               <button
                 onClick={onRegexToggle}
-                className={`ansi-search-toggle ${useRegex ? 'active' : ''}`}
+                className={`${styles['ansi-search-toggle']} ${useRegex ? styles.active : ''}`}
                 title="Use Regular Expression"
                 aria-label="Use Regular Expression"
               >
@@ -73,7 +75,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               {hasFilter && (
                 <button
                   onClick={onClearSearch}
-                  className="ansi-search-toggle"
+                  className={styles['ansi-search-toggle']}
                   title="Clear Search"
                   aria-label="Clear Search"
                 >
