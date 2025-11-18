@@ -4,7 +4,7 @@ import { PanelProps } from '@grafana/data';
 // Panel options for configuration
 export interface LogsPanelOptions {
   // Theme selection
-  themeMode: 'dark' | 'light' | 'system';
+  themeMode: 'grafana' | 'system' | 'light' | 'dark';
   darkTheme: string;
   lightTheme: string;
 
@@ -27,15 +27,15 @@ export interface LogsPanelOptions {
 
 // Default panel options
 export const defaultOptions: LogsPanelOptions = {
-  themeMode: 'system',
+  themeMode: 'grafana',
   darkTheme: 'grafana-dark',
   lightTheme: 'grafana-light',
   wrapMode: 'nowrap',
   maxLineLength: 1000,
   rowHeight: 'auto',
-  fixedRowHeight: 20,
+  fixedRowHeight: 16,
   fontFamily: 'JetBrains Mono, Cascadia Mono, DejaVu Sans Mono, Consolas, Courier New, monospace',
-  showLabels: true,
+  showLabels: false,
   selectedLabels: [],
   maxRenderableRows: 10000,
 };
@@ -77,15 +77,6 @@ export type AnsiColor = {
 
 export type ColorPalette = AnsiColor[];
 
-// OSC-8 link structure
-export interface Osc8Link {
-  url: string;
-  text: string;
-  start: number;
-  end: number;
-  params?: Record<string, string>;
-}
-
 // AST node types for rendered content
 export type ContentNode =
   | { type: 'text'; content: string }
@@ -118,10 +109,16 @@ export interface ParseErrorContext {
   needsNumberField?: boolean;
 }
 
-// Parsed logs result structure
+// Parsed logs result structure (single series)
 export interface ParsedLogsResult {
   ansiLogs: AnsiLogRow[];
   jsonLogs: JsonLogRow[];
   error?: string;
   extra?: ParseErrorContext;
+}
+
+// DataFrame parse result (multiple series)
+export interface DataFrameParseResult {
+  parsed: ParsedLogsResult;
+  failed: Record<string, ParsedLogsResult>;
 }

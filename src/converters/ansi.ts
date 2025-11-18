@@ -27,16 +27,28 @@ export function convertAnsiToHtml(text: string): string {
 // Alias for backward compatibility
 export const ansiToHtml = convertAnsiToHtml;
 
-// Convert tokens to HTML with CSS classes and inline styles
+// Convert tokens to HTML with CSS classes, inline styles, and OSC-8 hyperlinks
 function tokensToHtml(tokens: AnsiToken[]): string {
   let html = '';
   let currentStyles: string[] = [];
   let currentInlineStyles: Record<string, string> = {};
 
+  // OSC-8 hyperlink state
+  let linkUrl: string | null = null;
+  let linkParams: Record<string, string> = {};
+  let linkContentHtml = '';
+
   for (const token of tokens) {
     switch (token.type) {
       case 'TEXT':
-        html += escapeHtml(token.raw);
+        const escapedText = escapeHtml(token.raw);
+        if (linkUrl) {
+          // Inside a link - collect content
+          linkContentHtml += escapedText;
+        } else {
+          // Normal text
+          html += escapedText;
+        }
         break;
 
       case 'CSI':
@@ -46,9 +58,12 @@ function tokensToHtml(tokens: AnsiToken[]): string {
           const newStyles = result.classes;
           const newInlineStyles = result.inlineStyles;
 
+          // Generate style change HTML
+          let styleChangeHtml = '';
+
           // Close current spans if styles changed
           if (currentStyles.length > 0 || Object.keys(currentInlineStyles).length > 0) {
-            html += '</span>';
+            styleChangeHtml += '</span>';
           }
 
           // Open new spans for new styles
@@ -57,7 +72,15 @@ function tokensToHtml(tokens: AnsiToken[]): string {
             const styleAttr = Object.keys(newInlineStyles).length > 0
               ? ` style="${Object.entries(newInlineStyles).map(([k, v]) => `${k}:${v}`).join(';')}"`
               : '';
-            html += `<span${classAttr}${styleAttr}>`;
+            styleChangeHtml += `<span${classAttr}${styleAttr}>`;
+          }
+
+          if (linkUrl) {
+            // Inside a link - collect styling
+            linkContentHtml += styleChangeHtml;
+          } else {
+            // Normal context
+            html += styleChangeHtml;
           }
 
           currentStyles = newStyles;
@@ -65,7 +88,34 @@ function tokensToHtml(tokens: AnsiToken[]): string {
         }
         break;
 
-      // Ignore other ANSI sequences for now (cursor movement, etc.)
+      case 'OSC':
+        if (token.command === '8') {
+          // OSC-8 hyperlink sequence
+          const params = token.params || [];
+          const paramsString = params[0] || '';
+          const url = params[1] || '';
+
+          if (url) {
+            // Open link
+            linkUrl = url;
+            linkParams = parseOsc8Params(paramsString);
+            linkContentHtml = '';
+          } else {
+            // Close link
+            if (linkUrl) {
+              // Wrap collected content in <a> tag
+              const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams);
+              html += linkHtml;
+
+              linkUrl = null;
+              linkParams = {};
+              linkContentHtml = '';
+            }
+          }
+        }
+        break;
+
+      // Ignore other sequences (cursor movement, etc.)
       default:
         break;
     }
@@ -76,7 +126,56 @@ function tokensToHtml(tokens: AnsiToken[]): string {
     html += '</span>';
   }
 
+  // Handle unclosed link (shouldn't happen with valid input)
+  if (linkUrl && linkContentHtml) {
+    const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams);
+    html += linkHtml;
+  }
+
   return html;
+}
+
+// Parse OSC-8 parameters (key=value pairs separated by :)
+function parseOsc8Params(paramString: string): Record<string, string> {
+  const params: Record<string, string> = {};
+
+  if (!paramString) return params;
+
+  const pairs = paramString.split(':');
+  for (const pair of pairs) {
+    const [key, value] = pair.split('=', 2);
+    if (key && value !== undefined) {
+      params[key.trim()] = value.trim();
+    }
+  }
+
+  return params;
+}
+
+// Create HTML hyperlink from OSC-8 data
+function createHyperlink(url: string, contentHtml: string, _params: Record<string, string>): string {
+  // Validate URL (user consent is required via modal in the UI)
+  try {
+    new URL(url);
+  } catch {
+    // Invalid URL - return content without link
+    return contentHtml;
+  }
+
+  // Escape URL for HTML attribute
+  const escapedUrl = escapeHtmlAttr(url);
+
+  return `<a href="${escapedUrl}" title="${escapedUrl}" target="_blank" rel="noopener noreferrer">${contentHtml}</a>`;
+}
+
+// Escape text for HTML attributes (more strict than content escaping)
+function escapeHtmlAttr(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
 }
 
 // Process SGR (Select Graphic Rendition) commands

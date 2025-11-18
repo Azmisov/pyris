@@ -5,7 +5,7 @@ import SettingsIcon from '../../icons/settings.svg';
 interface SettingsDropdownProps {
   isOpen: boolean;
   onToggle: () => void;
-  themeMode: 'dark' | 'light' | 'system';
+  themeMode: 'grafana' | 'system' | 'light' | 'dark';
   onThemeModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   effectiveThemeMode: 'dark' | 'light';
   availableThemeOptions: Array<{ value: string; label: string }>;
@@ -64,11 +64,17 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
       {isOpen && (
         <div className="ansi-settings-dropdown">
           <div className="ansi-settings-item">
-            <label htmlFor="theme-mode">Theme Mode</label>
-            <select id="theme-mode" value={themeMode} onChange={onThemeModeChange}>
+            <label htmlFor="theme-mode">Light/Dark Preference</label>
+            <select
+              key={`theme-mode-${themeMode}`}
+              id="theme-mode"
+              defaultValue={themeMode}
+              onChange={onThemeModeChange}
+            >
+              <option value="grafana">Grafana</option>
               <option value="system">System</option>
-              <option value="dark">Dark</option>
               <option value="light">Light</option>
+              <option value="dark">Dark</option>
             </select>
           </div>
           <div className="ansi-settings-item">

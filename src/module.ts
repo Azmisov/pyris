@@ -1,6 +1,6 @@
 import { PanelPlugin } from '@grafana/data';
 import { LogsPanelOptions, defaultOptions } from './types';
-import { SimplePanel } from './components/LogsPanel';
+import { LogsPanel } from './components/LogsPanel';
 import {
   getDarkColorSchemeOptions,
   getLightColorSchemeOptions,
@@ -9,12 +9,12 @@ import {
 // Import CSS styles
 import './styles.css';
 
-export const plugin = new PanelPlugin<LogsPanelOptions>(SimplePanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptions((builder) => {
   return builder
     .addSelect({
       path: 'darkTheme',
       name: 'Default Dark Theme',
-      description: 'Color scheme to use when system or panel is in dark mode',
+      description: 'Default color scheme to use when panel is in dark mode',
       defaultValue: defaultOptions.darkTheme,
       settings: {
         options: getDarkColorSchemeOptions(),
@@ -23,7 +23,7 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(SimplePanel).setPanelOpt
     .addSelect({
       path: 'lightTheme',
       name: 'Default Light Theme',
-      description: 'Color scheme to use when system or panel is in light mode',
+      description: 'Default color scheme to use when panel is in light mode',
       defaultValue: defaultOptions.lightTheme,
       settings: {
         options: getLightColorSchemeOptions(),

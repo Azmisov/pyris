@@ -1,20 +1,20 @@
 import React, { memo, useMemo } from 'react';
-import { LogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
+import { AnsiLogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
 import { ansiToHtml, hasAnsiCodes, truncateLine, stripAnsiCodes } from '../converters/ansi';
-import { applyOsc8Links } from '../converters/osc8';
 import { linkifyPlainUrls } from '../converters/urlDetector';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
 
 interface RowProps {
-  row: LogRow;
+  row: AnsiLogRow;
   options: LogsPanelOptions;
   isSelected?: boolean;
-  onRowClick?: (row: LogRow) => void;
+  onRowClick?: (row: AnsiLogRow) => void;
+  onRowHover?: (row: AnsiLogRow | null) => void;
   style?: React.CSSProperties;
 }
 
 // Main row component with memoization
-export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, style }) => {
+export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRowHover, style }) => {
   // Process the row with caching
   const processedRow = useMemo(() => {
     return processLogRow(row, options);
@@ -23,6 +23,14 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, style
   const handleClick = useMemo(() => {
     return onRowClick ? () => onRowClick(row) : undefined;
   }, [onRowClick, row]);
+
+  const handleMouseEnter = useMemo(() => {
+    return onRowHover ? () => onRowHover(row) : undefined;
+  }, [onRowHover, row]);
+
+  const handleMouseLeave = useMemo(() => {
+    return onRowHover ? () => onRowHover(null) : undefined;
+  }, [onRowHover]);
 
   const className = useMemo(() => {
     const classes = ['ansi-logs-row'];
@@ -37,6 +45,8 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, style
       className={className}
       style={style}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {options.showLabels && row.labels && (
         <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} />
@@ -95,7 +105,7 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
 LabelsDisplay.displayName = 'LabelsDisplay';
 
 // Process log row with caching
-function processLogRow(row: LogRow, options: LogsPanelOptions): ProcessedLogRow {
+function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLogRow {
   const cache = getGlobalCache();
   const cacheKey = createMemoKey(row.message, options);
 
@@ -118,12 +128,8 @@ function processLogRow(row: LogRow, options: LogsPanelOptions): ProcessedLogRow 
     // Fast path: plain text
     html = escapeHtml(message);
   } else {
-    // Convert ANSI to HTML
+    // Convert ANSI to HTML (includes OSC-8 hyperlink processing)
     html = ansiToHtml(message);
-
-    // Apply OSC-8 hyperlinks (dangerous schemes are blocked internally)
-    const withOsc8Links = applyOsc8Links(html, message, []);
-    html = withOsc8Links;
   }
 
   // Apply plain URL detection (auto-linking, dangerous schemes are blocked internally)

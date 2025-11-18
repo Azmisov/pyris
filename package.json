@@ -11,7 +11,10 @@
     "lint:fix": "npm run lint -- --fix && prettier --write --list-different .",
     "e2e": "playwright test",
     "server": "docker compose up --build",
-    "sign": "npx --yes @grafana/sign-plugin@latest"
+    "sign": "npx --yes @grafana/sign-plugin@latest",
+    "convert-samples": "node scripts/convert-samples.js",
+    "update-dashboard": "node scripts/update-dashboard.js",
+    "provision-samples": "npm run convert-samples && npm run update-dashboard"
   },
   "author": "Nyrix",
   "license": "Apache-2.0",
@@ -21,6 +24,7 @@
     "@grafana/tsconfig": "^2.0.1",
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-ts": "^2.9.0",
+    "@svgr/webpack": "^8.1.0",
     "@swc/core": "1.13.20",
     "@swc/helpers": "^0.5.0",
     "@swc/jest": "^0.2.26",
@@ -65,14 +69,18 @@
     "node": ">=22"
   },
   "dependencies": {
+    "@ansi-tools/parser": "^1.0.12",
     "@emotion/css": "11.10.6",
     "@grafana/data": "^12.2.1",
     "@grafana/i18n": "^12.2.1",
     "@grafana/runtime": "^12.2.1",
-    "@grafana/ui": "^12.2.1",
     "@grafana/schema": "^12.2.1",
+    "@grafana/ui": "^12.2.1",
+    "culori": "^4.0.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-virtualized-auto-sizer": "^1.0.26",
+    "react-virtuoso": "^4.14.1"
   },
   "packageManager": "npm@10.9.2"
 }
