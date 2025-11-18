@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { ColorScheme } from '../theme/colorSchemes';
+import styles from './ColorSwatch.module.css';
 
 interface ColorSwatchProps {
   scheme: ColorScheme;
@@ -30,7 +31,7 @@ export const ColorSwatch = memo<ColorSwatchProps>(({ scheme, className = '' }) =
 
   return (
     <span
-      className={`ansi-color-swatch-strip ${className}`}
+      className={`${styles['ansi-color-swatch-strip']} ${className}`}
       style={{
         backgroundColor: `rgb(${background.r}, ${background.g}, ${background.b})`,
       }}
@@ -38,7 +39,7 @@ export const ColorSwatch = memo<ColorSwatchProps>(({ scheme, className = '' }) =
       {colors.map((color, index) => (
         <span
           key={index}
-          className="ansi-color-swatch-bar"
+          className={styles['ansi-color-swatch-bar']}
           style={{
             backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`,
           }}

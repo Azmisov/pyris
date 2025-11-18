@@ -1,0 +1,133 @@
+/* Settings dropdown */
+.ansi-settings-container {
+  position: relative;
+}
+
+.ansi-settings-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: var(--ansi-bg-accent-1);
+  border: 1px solid var(--ansi-fg-muted-2);
+  border-radius: 4px;
+  padding: 8px;
+  min-width: 200px;
+  z-index: 1000;
+  box-shadow: 0 4px 16px var(--ansi-bg);
+  overflow: visible;
+}
+
+.ansi-settings-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.ansi-settings-item:last-child {
+  margin-bottom: 0;
+}
+
+.ansi-settings-item label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ansi-fg);
+  opacity: 0.7;
+}
+
+.ansi-settings-item select {
+  background-color: transparent;
+  color: var(--ansi-fg);
+  border: 1px solid var(--ansi-fg-muted-2);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  width: auto;
+  min-width: 120px;
+  height: auto !important; /* Override Grafana's global select height */
+  line-height: normal !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 8l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 12px;
+  padding-right: 24px;
+  background-color: var(--ansi-bg-accent-2);
+}
+
+.ansi-settings-item select option {
+  background-color: var(--ansi-bg);
+  color: var(--ansi-fg);
+}
+
+.ansi-settings-item select:hover,
+.ansi-settings-item select:focus {
+  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-settings-item select:focus {
+  outline: none;
+}
+
+/* Row height button group */
+.ansi-row-height-group {
+  display: inline-flex;
+  gap: 0;
+}
+
+.ansi-row-height-btn {
+  color: var(--ansi-fg);
+  border: 1px solid var(--ansi-fg-muted-2);
+  background-color: var(--ansi-bg-accent-2);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  min-width: 40px;
+}
+
+.ansi-row-height-btn:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.ansi-row-height-btn:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.ansi-row-height-btn:not(:first-child) {
+  border-left: none;
+}
+
+.ansi-row-height-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ansi-row-height-btn.active {
+  font-weight: 500;
+}
+
+.ansi-row-height-btn:hover:not(:disabled) {
+  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Make +/- buttons more prominent */
+.ansi-row-height-btn:nth-child(3),
+.ansi-row-height-btn:nth-child(4) {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 10px;
+}

@@ -8,6 +8,7 @@ import { Icon } from '@grafana/ui';
 import { TimelineChart } from './TimelineChart';
 import { AnsiLogRow } from '../../types';
 import { ColorScheme } from '../../theme/colorSchemes';
+import styles from './index.module.css';
 
 interface LogsTimelineProps {
   logs: AnsiLogRow[];
@@ -192,7 +193,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   }, [onTimeRangeChange]);
 
   return (
-    <div className="logs-timeline" style={{ position: 'relative', height }}>
+    <div className={styles['logs-timeline']} style={{ position: 'relative', height }}>
       <div
         ref={containerRef}
         style={{
@@ -213,7 +214,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       >
         <button
           onClick={handleRecenter}
-          className="timeline-icon-button"
+          className={styles['timeline-icon-button']}
           title="Center to log's time range"
         >
           <Icon name="home-alt" />
@@ -221,7 +222,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         {onTimeRangeChange && (
           <button
             onClick={handleSync}
-            className="timeline-icon-button"
+            className={styles['timeline-icon-button']}
             title="Update dashboard time range to match current view"
           >
             <Icon name="clock-nine" />

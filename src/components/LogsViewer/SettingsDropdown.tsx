@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { ThemeSelect } from '../ThemeSelect';
 import SettingsIcon from '../../icons/settings.svg';
+import styles from './SettingsDropdown.module.css';
+import toolbarStyles from '../toolbar.module.css';
 
 interface SettingsDropdownProps {
   isOpen: boolean;
@@ -72,18 +74,18 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
   }, [isOpen, onToggle]);
 
   return (
-    <div className="ansi-settings-container" ref={settingsRef}>
+    <div className={styles['ansi-settings-container']} ref={settingsRef}>
       <button
         onClick={onToggle}
-        className={`ansi-toolbar-button ${isOpen ? 'active' : ''}`}
+        className={`${toolbarStyles['ansi-toolbar-button']} ${isOpen ? toolbarStyles.active : ''}`}
         title="Settings"
         aria-label="Settings"
       >
         <SettingsIcon />
       </button>
       {isOpen && (
-        <div className="ansi-settings-dropdown">
-          <div className="ansi-settings-item">
+        <div className={styles['ansi-settings-dropdown']}>
+          <div className={styles['ansi-settings-item']}>
             <label htmlFor="theme-mode">Light/Dark Preference</label>
             <select
               key={`theme-mode-${themeMode}`}
@@ -97,7 +99,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               <option value="dark">Dark</option>
             </select>
           </div>
-          <div className="ansi-settings-item">
+          <div className={styles['ansi-settings-item']}>
             <label htmlFor="theme">{effectiveThemeMode === 'dark' ? 'Dark' : 'Light'} Theme</label>
             <ThemeSelect
               id="theme"
@@ -106,26 +108,26 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               onChange={onThemeChange}
             />
           </div>
-          <div className="ansi-settings-item">
+          <div className={styles['ansi-settings-item']}>
             <label htmlFor="row-height">Row Height</label>
-            <div className="ansi-row-height-group">
+            <div className={styles['ansi-row-height-group']}>
               <button
                 type="button"
-                className={`ansi-row-height-btn ${rowHeight === 'auto' ? 'active' : ''}`}
+                className={`${styles['ansi-row-height-btn']} ${rowHeight === 'auto' ? styles.active : ''}`}
                 onClick={onRowHeightAuto}
               >
                 Auto
               </button>
               <button
                 type="button"
-                className={`ansi-row-height-btn ${rowHeight === 'fixed' ? 'active' : ''}`}
+                className={`${styles['ansi-row-height-btn']} ${rowHeight === 'fixed' ? styles.active : ''}`}
                 onClick={onRowHeightFixed}
               >
                 {fixedRowHeight}px
               </button>
               <button
                 type="button"
-                className="ansi-row-height-btn"
+                className={styles['ansi-row-height-btn']}
                 onClick={onRowHeightDecrement}
                 disabled={rowHeight === 'auto'}
                 title="Decrease row height"
@@ -134,7 +136,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               </button>
               <button
                 type="button"
-                className="ansi-row-height-btn"
+                className={styles['ansi-row-height-btn']}
                 onClick={onRowHeightIncrement}
                 disabled={rowHeight === 'auto'}
                 title="Increase row height"

@@ -1,0 +1,132 @@
+/* Link Confirmation Modal Component */
+
+.ansi-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--ansi-bg);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ansi-modal {
+  background-color: var(--ansi-bg);
+  box-shadow: 0 4px 16px var(--ansi-bg);
+  border-radius: 6px;
+  min-width: 400px;
+  max-width: 600px;
+  animation: slideIn 0.2s ease;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from {
+    transform: scale(0.95) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.ansi-modal-header {
+  padding: 12px 16px;
+  background-color: var(--ansi-bg-accent-2);
+  border-bottom: 1px solid var(--ansi-fg-muted-1);
+}
+
+.ansi-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ansi-fg);
+}
+
+.ansi-modal-body {
+  padding: 20px 16px;
+  color: var(--ansi-fg);
+}
+
+.ansi-modal-body p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+.ansi-modal-warning {
+  color: #f0883e;
+  font-weight: 500;
+}
+
+.ansi-modal-url {
+  padding: 8px 12px;
+  background-color: var(--ansi-bg-accent-2);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+  color: var(--ansi-fg);
+  opacity: 0.9;
+}
+
+.ansi-modal-footer {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid var(--ansi-fg-muted-1);
+  background-color: var(--ansi-bg-accent-2);
+}
+
+.ansi-modal-button {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid var(--ansi-fg-muted-2);
+  border-radius: 4px;
+  color: var(--ansi-fg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  min-width: 80px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ansi-bg-accent-3);
+}
+
+.ansi-modal-button:hover {
+    border-color: var(--ansi-fg-muted-1);
+}
+.ansi-modal-button:active {
+  transform: scale(0.95);
+}
+
+[data-theme="dark"] .ansi-modal-button:hover {
+  filter: brightness(1.1);
+}
+[data-theme="light"] .ansi-modal-button:hover {
+  filter: brightness(0.95);
+}
+
+.ansi-modal-button-copy {
+  font-weight: 500;
+  background-color: var(--ansi-color-4);
+  border-color: var(--ansi-bg);
+  color: var(--ansi-bg);
+}

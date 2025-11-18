@@ -1,0 +1,18 @@
+/* Color swatch strip */
+.ansi-color-swatch-strip {
+  display: inline-flex;
+  height: 28px;
+  margin-right: 8px;
+  padding: 6px;
+  vertical-align: middle;
+  border-radius: 2px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ansi-color-swatch-bar {
+  display: block;
+  width: 10px;
+  height: 100%;
+  flex-shrink: 0;
+}
