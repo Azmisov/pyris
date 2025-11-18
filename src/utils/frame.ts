@@ -106,6 +106,7 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
       // Add to JSON logs
       const jsonRow: JsonLogRow = {
         timestamp,
+        seriesIndex: i,
         data: jsonData,
         labels,
       };
@@ -114,6 +115,7 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
       // Add to ANSI logs
       const ansiRow: AnsiLogRow = {
         timestamp,
+        seriesIndex: i,
         message,
         labels,
       };
@@ -143,6 +145,7 @@ export function parseDataFrame(data: any): DataFrameParseResult {
 
   // Parse each series separately
   let idx = 0;
+  let globalSeriesIndex = 0;
   for (const series of data.series) {
     const seriesName = series.refId || series.name || `anonymous-${idx}`;
     console.log("Parsing series:", seriesName);
@@ -153,9 +156,26 @@ export function parseDataFrame(data: any): DataFrameParseResult {
       // Track failed series
       result.failed[seriesName] = parsed;
     } else {
+      // Reassign seriesIndex to be global across all series
+      for (const log of parsed.ansiLogs) {
+        log.seriesIndex = globalSeriesIndex++;
+      }
+      for (const log of parsed.jsonLogs) {
+        log.seriesIndex = globalSeriesIndex++;
+      }
+
       // Merge successful parses
       result.parsed.ansiLogs.push(...parsed.ansiLogs);
       result.parsed.jsonLogs.push(...parsed.jsonLogs);
+
+      // Debug: Log all parsed data
+      console.log(`[DEBUG frame.ts] Series ${seriesName} - All ${parsed.ansiLogs.length} ANSI logs:`,
+        parsed.ansiLogs.map(l => ({
+          timestamp: l.timestamp,
+          seriesIndex: l.seriesIndex,
+          message: l.message.substring(0, 80)
+        }))
+      );
     }
 
     idx++;

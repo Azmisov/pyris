@@ -16,8 +16,8 @@ interface HistogramBin {
 const DRAG_THRESHOLD = 3;
 
 // Helper to convert AnsiColor to CSS color
-function colorToCSS(color: { r: number; g: number; b: number } | undefined, fallback: string): string {
-  return color ? `rgb(${color.r}, ${color.g}, ${color.b})` : fallback;
+function colorToCSS(color: { r: number; g: number; b: number }): string {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
 export class TimelineChart {
@@ -30,6 +30,7 @@ export class TimelineChart {
   private fullTimeRange: [number, number] | null = null;
   private grayPattern: CanvasPattern | null = null;
   private hoverIndicator: VerticalIndicator | null = null;
+  private selectedIndicator: VerticalIndicator | null = null;
   private rangeStartIndicator: VerticalIndicator | null = null;
   private rangeEndIndicator: VerticalIndicator | null = null;
   private colorScheme: ColorScheme;
@@ -40,12 +41,17 @@ export class TimelineChart {
   private dragStart: [number, number] | null = null;
   private dragging: boolean = false;
   private pointerCapture: number | null = null;
+  private mouseX: number | null = null;
+
+  // Callback for log selection
+  private onLogSelect?: (timestamp: number) => void;
 
   // Event handlers (bound methods)
   private boundPointerDown: (e: PointerEvent) => void;
   private boundPointerUp: (e: PointerEvent) => void;
   private boundPointerMove: (e: PointerEvent) => void;
   private boundWheel: (e: WheelEvent) => void;
+  private boundPointerLeave: (e: PointerEvent) => void;
 
   constructor(container: HTMLDivElement, colorScheme: ColorScheme) {
     this.container = container;
@@ -78,12 +84,14 @@ export class TimelineChart {
     this.boundPointerUp = this.pointerUp.bind(this);
     this.boundPointerMove = this.pointerMove.bind(this);
     this.boundWheel = this.wheel.bind(this);
+    this.boundPointerLeave = this.pointerLeave.bind(this);
 
     // Add event listeners
     container.addEventListener('pointerdown', this.boundPointerDown);
     container.addEventListener('pointerup', this.boundPointerUp);
     container.addEventListener('pointermove', this.boundPointerMove);
     container.addEventListener('wheel', this.boundWheel);
+    container.addEventListener('pointerleave', this.boundPointerLeave);
   }
 
   /**
@@ -99,15 +107,15 @@ export class TimelineChart {
     const pctx = patternCanvas.getContext('2d');
     if (!pctx) return null;
 
-    // Use bgAccent3 or fallback for subtle background
-    const bgColor = this.colorScheme.bgAccent3 || this.colorScheme.background;
-    const bgRgb = bgColor ? `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, 0.1)` : 'rgba(80, 80, 80, 0.1)';
+    // Use bgAccent1 for subtle background
+    const bgColor = this.colorScheme.bgAccent1;
+    const bgRgb = `rgba(${bgColor.r}, ${bgColor.g}, ${bgColor.b}, .2)`;
     pctx.fillStyle = bgRgb;
     pctx.fillRect(0, 0, patternSize, patternSize);
 
-    // Use bgAccent2 or fallback for dots
-    const dotColor = this.colorScheme.bgAccent2 || bgColor;
-    const dotRgb = dotColor ? `rgba(${dotColor.r}, ${dotColor.g}, ${dotColor.b}, 0.4)` : 'rgba(100, 100, 100, 0.4)';
+    // Use bgAccent2 for dots
+    const dotColor = this.colorScheme.bgAccent2;
+    const dotRgb = `rgba(${dotColor.r}, ${dotColor.g}, ${dotColor.b}, .6)`;
     pctx.fillStyle = dotRgb;
     const dotSize = 1;
     pctx.beginPath();
@@ -128,6 +136,7 @@ export class TimelineChart {
     c.removeEventListener('pointerup', this.boundPointerUp);
     c.removeEventListener('pointermove', this.boundPointerMove);
     c.removeEventListener('wheel', this.boundWheel);
+    c.removeEventListener('pointerleave', this.boundPointerLeave);
     this.observer.disconnect();
   }
 
@@ -145,6 +154,8 @@ export class TimelineChart {
   }
 
   private pointerUp(e: PointerEvent): void {
+    const wasClick = this.dragStart && !this.dragging;
+
     this.dragStart = null;
     if (this.dragging) {
       this.dragging = false;
@@ -153,10 +164,23 @@ export class TimelineChart {
     if (this.pointerCapture !== null) {
       this.container.releasePointerCapture(this.pointerCapture);
     }
+
+    // Handle click (not drag) - pass clicked timestamp to callback
+    if (wasClick && this.onLogSelect && this.mouseX !== null) {
+      const timestamp = this.axis.pixel2time(this.mouseX);
+      this.onLogSelect(timestamp);
+    }
   }
 
   private pointerMove(e: PointerEvent): void {
     const cur = this.mousePos(e);
+
+    // Track mouse X position and update hover indicator
+    this.mouseX = cur[0];
+    if (!this.dragging) {
+      const timestamp = this.axis.pixel2time(this.mouseX);
+      this.setHoveredTimestamp(timestamp);
+    }
 
     // Wait until we move a bit before initiating drag
     if (this.dragStart && !this.dragging) {
@@ -202,6 +226,18 @@ export class TimelineChart {
     });
   }
 
+  private pointerLeave(e: PointerEvent): void {
+    this.mouseX = null;
+    this.setHoveredTimestamp(null);
+  }
+
+  /**
+   * Set callback for log selection
+   */
+  setOnLogSelect(callback: (timestamp: number) => void): void {
+    this.onLogSelect = callback;
+  }
+
   updateDims(width: number, height: number): void {
     this.canvas.width = width;
     this.canvas.height = height;
@@ -224,11 +260,11 @@ export class TimelineChart {
    */
   setHoveredTimestamp(timestamp: number | null): void {
     if (timestamp !== null) {
-      const hoverColor = this.colorScheme.colors[14] || this.colorScheme.colors[12];
+      const hoverColor = this.colorScheme.colors[4];
       if (!this.hoverIndicator) {
         this.hoverIndicator = IndicatorFactory.createHover(
           timestamp,
-          colorToCSS(hoverColor, '#4a9eff')
+          colorToCSS(hoverColor)
         );
       } else {
         this.hoverIndicator.updateConfig({ timestamp });
@@ -240,13 +276,33 @@ export class TimelineChart {
   }
 
   /**
+   * Set the selected timestamp to display a vertical line (solid)
+   */
+  setSelectedTimestamp(timestamp: number | null): void {
+    if (timestamp !== null) {
+      const selectedColor = this.colorScheme.colors[4];
+      if (!this.selectedIndicator) {
+        this.selectedIndicator = IndicatorFactory.createSelection(
+          timestamp,
+          colorToCSS(selectedColor)
+        );
+      } else {
+        this.selectedIndicator.updateConfig({ timestamp });
+      }
+    } else {
+      this.selectedIndicator = null;
+    }
+    this.render();
+  }
+
+  /**
    * Set the visible range to display bracket indicators
    * When sortOrder is 'desc', indicators are swapped because first visible row has later timestamp
    */
   setVisibleRange(firstTimestamp: number | null, lastTimestamp: number | null, sortOrder: 'asc' | 'desc' = 'asc'): void {
     // Use yellow/orange color for visible range brackets
-    const rangeColor = this.colorScheme.colors[11] || this.colorScheme.colors[3]; // Bright yellow or yellow
-    const colorStr = colorToCSS(rangeColor, '#ffaa00');
+    const rangeColor = this.colorScheme.colors[3];
+    const colorStr = colorToCSS(rangeColor);
 
     // In descending order, swap the indicators:
     // - First visible row has later timestamp → needs left bracket (range end)
@@ -298,10 +354,10 @@ export class TimelineChart {
 
     // Update hover indicator color if it exists
     if (this.hoverIndicator) {
-      const hoverColor = this.colorScheme.colors[14] || this.colorScheme.colors[12];
+      const hoverColor = this.colorScheme.colors[4];
       this.hoverIndicator.updateConfig({
         style: {
-          color: colorToCSS(hoverColor, '#4a9eff'),
+          color: colorToCSS(hoverColor),
           lineWidth: 2,
           dashed: true,
           dashPattern: [4, 4],
@@ -309,9 +365,21 @@ export class TimelineChart {
       });
     }
 
+    // Update selected indicator color if it exists
+    if (this.selectedIndicator) {
+      const selectedColor = this.colorScheme.colors[4];
+      this.selectedIndicator.updateConfig({
+        style: {
+          color: colorToCSS(selectedColor),
+          lineWidth: 3,
+          dashed: false,
+        },
+      });
+    }
+
     // Update range indicator colors if they exist
     const rangeColor = this.colorScheme.colors[11] || this.colorScheme.colors[3];
-    const colorStr = colorToCSS(rangeColor, '#ffaa00');
+    const colorStr = colorToCSS(rangeColor);
     if (this.rangeStartIndicator) {
       this.rangeStartIndicator.updateConfig({
         style: {
@@ -360,7 +428,7 @@ export class TimelineChart {
     const height = this.canvas.height;
 
     // Clear canvas with theme background color
-    this.ctx.fillStyle = colorToCSS(this.colorScheme.background, '#1a1a1a');
+    this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
     this.ctx.fillRect(0, 0, width, height);
 
     const axisHeight = this.axis.getHeight();
@@ -394,8 +462,8 @@ export class TimelineChart {
     if (maxCount === 0) return;
 
     // Draw histogram bars using bright cyan or bright blue from palette
-    const histogramColor = this.colorScheme.colors[14] || this.colorScheme.colors[12];
-    this.ctx.fillStyle = colorToCSS(histogramColor, '#4a9eff');
+    const histogramColor = this.colorScheme.foreground ?? { r: 255, g: 255, b: 255 };
+    this.ctx.fillStyle = colorToCSS(histogramColor);
 
     for (const bin of this.histogram) {
       // Skip bins outside zoom range
@@ -452,7 +520,7 @@ export class TimelineChart {
     // Collect all indicators to render
     const allIndicators: VerticalIndicator[] = [];
 
-    // Add range indicators (render first so they appear behind hover)
+    // Add range indicators (render first so they appear behind everything)
     if (this.rangeStartIndicator && this.rangeStartIndicator.isVisible(zoomRange)) {
       allIndicators.push(this.rangeStartIndicator);
     }
@@ -460,7 +528,12 @@ export class TimelineChart {
       allIndicators.push(this.rangeEndIndicator);
     }
 
-    // Add hover indicator (render after range indicators so it appears on top)
+    // Add selected indicator (render after range indicators)
+    if (this.selectedIndicator && this.selectedIndicator.isVisible(zoomRange)) {
+      allIndicators.push(this.selectedIndicator);
+    }
+
+    // Add hover indicator (render last so it appears on top of selected)
     if (this.hoverIndicator && this.hoverIndicator.isVisible(zoomRange)) {
       allIndicators.push(this.hoverIndicator);
     }

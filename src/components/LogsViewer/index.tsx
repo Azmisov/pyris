@@ -36,6 +36,7 @@ export interface LogsViewerProps {
   width?: number;
   height?: number;
   onRowClick?: (log: LogData, index: number) => void;
+  onTimeRangeChange?: (startTimeMs: number, endTimeMs: number) => void;
   className?: string;
 }
 
@@ -68,6 +69,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   width,
   height = 600,
   onRowClick,
+  onTimeRangeChange,
   className = '',
 }) => {
   // Merge user options with defaults
@@ -76,10 +78,17 @@ export const LogsViewer = memo<LogsViewerProps>(({
     [userOptions]
   );
 
+  // Debug: Log onTimeRangeChange availability
+  useEffect(() => {
+    console.log('[LogsViewer] onTimeRangeChange prop:', !!onTimeRangeChange);
+  }, [onTimeRangeChange]);
+
   // State management
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | undefined>();
   const [hoveredTimestamp, setHoveredTimestamp] = useState<number | null>(null);
+  const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
   const [visibleRange, setVisibleRange] = useState<{ first: number | null; last: number | null }>({ first: null, last: null });
+  const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number } | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [useRegex, setUseRegex] = useState(false);
@@ -103,8 +112,9 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const logRows: AnsiLogRow[] = useMemo(() => {
     try {
       setError(null);
-      const rows = parsedData.ansiLogs.map(log => ({
+      const rows = parsedData.ansiLogs.map((log, index) => ({
         timestamp: log.timestamp,
+        seriesIndex: log.seriesIndex ?? index, // Use provided index or assign one
         message: log.message,
         strippedText: log.strippedText || stripAnsiCodes(log.message),
         labels: log.labels,
@@ -112,13 +122,20 @@ export const LogsViewer = memo<LogsViewerProps>(({
         level: log.level,
       }));
 
-      // Sort by timestamp
+      // Sort by timestamp, then by seriesIndex for stable ordering
       rows.sort((a, b) => {
-        if (sortOrder === 'asc') {
-          return a.timestamp - b.timestamp;
-        } else {
-          return b.timestamp - a.timestamp;
+        const timeDiff = sortOrder === 'asc'
+          ? a.timestamp - b.timestamp
+          : b.timestamp - a.timestamp;
+
+        // If timestamps are equal, use seriesIndex to maintain original order
+        if (timeDiff === 0) {
+          const indexA = a.seriesIndex ?? 0;
+          const indexB = b.seriesIndex ?? 0;
+          return sortOrder === 'asc' ? indexA - indexB : indexB - indexA;
         }
+
+        return timeDiff;
       });
 
       return rows;
@@ -176,6 +193,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Handle row selection
   const handleRowClick = useCallback((row: AnsiLogRow, index: number) => {
     setSelectedRowIndex(index);
+    setSelectedTimestamp(row.timestamp);
 
     if (onRowClick) {
       const logData: LogData = {
@@ -202,16 +220,62 @@ export const LogsViewer = memo<LogsViewerProps>(({
     });
   }, []);
 
+  // Handle log selection from timeline (binary search for nearest log)
+  const handleLogSelect = useCallback((timestamp: number) => {
+    if (filteredRows.length === 0) return;
+
+    // Binary search to find nearest log by timestamp
+    // Need to account for sort order (asc vs desc)
+    let left = 0;
+    let right = filteredRows.length - 1;
+    let nearestIndex = 0;
+    let minDiff = Infinity;
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      const midTimestamp = filteredRows[mid].timestamp;
+      const diff = Math.abs(midTimestamp - timestamp);
+
+      if (diff < minDiff) {
+        minDiff = diff;
+        nearestIndex = mid;
+      }
+
+      // Adjust comparison based on sort order
+      if (sortOrder === 'asc') {
+        if (midTimestamp < timestamp) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      } else {
+        // For descending order, reverse the comparison
+        if (midTimestamp > timestamp) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+    }
+
+    // Select and scroll to the nearest log
+    setSelectedRowIndex(nearestIndex);
+    setSelectedTimestamp(filteredRows[nearestIndex].timestamp);
+    setScrollToIndex({ index: nearestIndex, timestamp: Date.now() });
+  }, [filteredRows, sortOrder]);
+
   // Handle search input
   const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     setSelectedRowIndex(undefined);
+    setSelectedTimestamp(null);
   }, [setSearchTerm]);
 
   // Clear search
   const clearSearch = useCallback(() => {
     setSearchTerm('');
     setSelectedRowIndex(undefined);
+    setSelectedTimestamp(null);
   }, [setSearchTerm]);
 
   // Toggle search expansion
@@ -371,9 +435,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
           logs={logRows}
           height={timelineHeight}
           hoveredTimestamp={hoveredTimestamp}
+          selectedTimestamp={selectedTimestamp}
           visibleRange={visibleRange}
           colorScheme={currentColorScheme}
           sortOrder={sortOrder}
+          onLogSelect={handleLogSelect}
+          onTimeRangeChange={onTimeRangeChange}
         />
       )}
 
@@ -389,6 +456,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           selectedIndex={selectedRowIndex}
           minHeight={contentHeight}
           sortOrder={sortOrder}
+          scrollToIndex={scrollToIndex}
         />
       </div>
 

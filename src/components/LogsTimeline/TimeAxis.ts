@@ -339,10 +339,11 @@ export class TimeAxis {
     // Draw grid lines using bgAccent colors
     ctx.lineWidth = 1;
     // Major grid lines: use bgAccent1 or fallback
-    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent1, '#444');
+    // TODO: contrast between major/minor is not very strong
+    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent3, '#444');
     ctx.stroke(majorPath);
     // Minor grid lines: use bgAccent3 or fallback
-    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent3, '#333');
+    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent1, '#333');
     ctx.stroke(minorPath);
   }
 }
