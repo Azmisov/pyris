@@ -41,17 +41,6 @@ export const VirtualList = memo<VirtualListProps>(({
   const maxRows = Math.min(rows.length, options.maxRenderableRows);
   const displayRows = rows.slice(0, maxRows);
 
-  // Debug: Log all rows being displayed
-  useEffect(() => {
-    console.log(`[DEBUG VirtualList] Displaying all ${displayRows.length} rows:`,
-      displayRows.map(r => ({
-        timestamp: r.timestamp,
-        seriesIndex: r.seriesIndex,
-        message: r.message.substring(0, 80)
-      }))
-    );
-  }, [displayRows]);
-
   const renderItem = useCallback((index: number, row: AnsiLogRow) => {
     const handleClick = onRowClick ? () => onRowClick(row, index) : undefined;
     const handleHover = onRowHover ? (hoveredRow: AnsiLogRow | null) => onRowHover(hoveredRow, hoveredRow ? index : null) : undefined;
@@ -189,11 +178,9 @@ export function useVirtualListSearch(rows: AnsiLogRow[], options: SearchOptions 
   const filteredRows = useMemo(() => {
     if (!searchTerm.trim()) {
       setFilteredIndices([]);
-      console.log(`[DEBUG useVirtualListSearch] No search term - returning all ${rows.length} rows`);
       return rows;
     }
 
-    console.log(`[DEBUG useVirtualListSearch] Filtering ${rows.length} rows with term: "${searchTerm}"`);
     const indices: number[] = [];
 
     // Compile regex if needed
@@ -236,13 +223,6 @@ export function useVirtualListSearch(rows: AnsiLogRow[], options: SearchOptions 
     });
 
     setFilteredIndices(indices);
-    console.log(`[DEBUG useVirtualListSearch] Filtered to ${filtered.length} rows - All:`,
-      filtered.map(r => ({
-        timestamp: r.timestamp,
-        seriesIndex: r.seriesIndex,
-        message: r.message.substring(0, 80)
-      }))
-    );
     return filtered;
   }, [rows, searchTerm, caseSensitive, useRegex]);
 
