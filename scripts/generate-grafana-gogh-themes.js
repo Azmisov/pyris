@@ -134,9 +134,12 @@ function convertToGoghFormat(grafanaColors, themeName, isDark) {
     const oklabColor = oklab(color);
 
     // Increase lightness by 0.15 in OKLab space (more perceptually accurate)
+    let shift = 0.15;
+    if (!isDark)
+      shift = -shift;
     const brighterColor = {
       ...oklabColor,
-      l: Math.min(1, oklabColor.l + 0.15),
+      l: Math.min(1, oklabColor.l + shift),
     };
 
     return formatHex(brighterColor);

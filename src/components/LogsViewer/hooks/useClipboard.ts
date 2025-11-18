@@ -14,13 +14,14 @@ export function useClipboard(
   }, []);
 
   const copyAllLogs = useCallback(() => {
-    const text = filteredRows.map(row => row.message).join('\n');
+    const text = filteredRows.map(row => row.strippedText || row.message).join('\n');
     copyToClipboard(text);
   }, [filteredRows, copyToClipboard]);
 
   const copySelectedLog = useCallback(() => {
     if (selectedRowIndex !== undefined && filteredRows[selectedRowIndex]) {
-      copyToClipboard(filteredRows[selectedRowIndex].message);
+      const row = filteredRows[selectedRowIndex];
+      copyToClipboard(row.strippedText || row.message);
     }
   }, [selectedRowIndex, filteredRows, copyToClipboard]);
 

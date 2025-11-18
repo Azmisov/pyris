@@ -42,9 +42,29 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
-        onToggle();
+      const target = event.target as Node;
+
+      // Check if click is inside settings container
+      if (settingsRef.current && settingsRef.current.contains(target)) {
+        return;
       }
+
+      // Check if click is on Radix Select portaled content
+      // Radix UI portals the content to document.body, so we need to check for it
+      const clickedElement = target instanceof Element ? target : null;
+      if (clickedElement) {
+        // Check if the clicked element or any parent is part of Radix Select
+        const isRadixSelectContent = clickedElement.closest('[data-radix-select-content]');
+        const isRadixSelectViewport = clickedElement.closest('[data-radix-select-viewport]');
+        const isRadixSelectItem = clickedElement.closest('[data-radix-select-item]');
+
+        if (isRadixSelectContent || isRadixSelectViewport || isRadixSelectItem) {
+          return;
+        }
+      }
+
+      // Click is outside - close the dropdown
+      onToggle();
     };
 
     document.addEventListener('mousedown', handleClickOutside);
