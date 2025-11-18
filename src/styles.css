@@ -265,7 +265,6 @@
 }
 
 .ansi-theme-select-menu {
-  position: fixed;
   width: max-content;
   max-width: 400px;
   background-color: var(--ansi-panel-bg, #000000);
@@ -278,6 +277,7 @@
   z-index: 9999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: none;
+  margin: 0;
 }
 
 .ansi-theme-select-menu.open {
@@ -707,6 +707,44 @@
   font-weight: 500;
   text-transform: uppercase;
   font-size: 10px;
+}
+
+/* Toggle Switch */
+.ansi-toggle-switch {
+  display: inline-flex;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(204, 204, 220, 0.2));
+  background-color: var(--bg-secondary, rgba(0, 0, 0, 0.1));
+}
+
+.ansi-toggle-option {
+  padding: 3px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary, rgba(204, 204, 220, 0.65));
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.ansi-toggle-option:hover {
+  background-color: var(--hover-bg, rgba(255, 255, 255, 0.05));
+}
+
+.ansi-toggle-option.active {
+  background-color: var(--ansi-fg-2, #238636);
+  color: white;
+}
+
+.ansi-toggle-option:focus-visible {
+  outline: 2px solid var(--focus-color, #0969da);
+  outline-offset: -2px;
+  z-index: 1;
 }
 
 /* Controls section */

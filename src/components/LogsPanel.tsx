@@ -11,10 +11,6 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
   // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
 
-  // Debug: Check if onChangeTimeRange is available
-  console.log('[LogsPanel] onChangeTimeRange available?', !!onChangeTimeRange);
-  console.log('[LogsPanel] timeRange:', timeRange);
-
   /* data format:
     timeRange: {to, from}
     series: [
@@ -44,7 +40,6 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
     if (!onChangeTimeRange) return undefined;
 
     return (startTimeMs: number, endTimeMs: number) => {
-      console.log('[LogsPanel] Calling onChangeTimeRange with:', { from: startTimeMs, to: endTimeMs });
       onChangeTimeRange({
         from: startTimeMs,
         to: endTimeMs,

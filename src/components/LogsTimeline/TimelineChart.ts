@@ -252,10 +252,21 @@ export class TimelineChart {
    * If dashboardRange is provided, use it for initial zoom instead of full log range
    */
   setData(timeRange: [number, number], histogram: HistogramBin[], dashboardRange?: [number, number]): void {
+    const previousTimeRange = this.fullTimeRange;
+    const currentZoom = this.axis.getZoomRange();
+
     this.fullTimeRange = timeRange;
     this.histogram = histogram;
-    // Use dashboard range for initial zoom if provided, otherwise use log range
-    const initialRange = dashboardRange || timeRange;
+
+    // Preserve zoom if time range hasn't changed
+    const rangeUnchanged = previousTimeRange &&
+      previousTimeRange[0] === timeRange[0] &&
+      previousTimeRange[1] === timeRange[1];
+
+    const initialRange = rangeUnchanged && currentZoom
+      ? currentZoom
+      : (dashboardRange || timeRange);
+
     this.axis.updateRange(timeRange, initialRange);
     this.render();
   }

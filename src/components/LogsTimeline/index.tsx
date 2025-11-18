@@ -186,15 +186,9 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         // Convert from microseconds to milliseconds
         const startMs = Math.floor(zoomRange[0] / 1000);
         const endMs = Math.ceil(zoomRange[1] / 1000);
-        console.log('[LogsTimeline] handleSync - calling onTimeRangeChange with:', { startMs, endMs });
         onTimeRangeChange(startMs, endMs);
       }
     }
-  }, [onTimeRangeChange]);
-
-  // Debug: Log onTimeRangeChange availability
-  useEffect(() => {
-    console.log('[LogsTimeline] onTimeRangeChange prop:', !!onTimeRangeChange);
   }, [onTimeRangeChange]);
 
   return (
@@ -220,7 +214,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         <button
           onClick={handleRecenter}
           className="timeline-icon-button"
-          title="Recenter to full time range"
+          title="Center to log's time range"
         >
           <Icon name="home-alt" />
         </button>

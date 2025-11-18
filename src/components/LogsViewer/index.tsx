@@ -80,11 +80,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
     [userOptions]
   );
 
-  // Debug: Log onTimeRangeChange availability
-  useEffect(() => {
-    console.log('[LogsViewer] onTimeRangeChange prop:', !!onTimeRangeChange);
-  }, [onTimeRangeChange]);
-
   // State management
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | undefined>();
   const [hoveredTimestamp, setHoveredTimestamp] = useState<number | null>(null);
@@ -106,9 +101,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [fixedRowHeight, setFixedRowHeight] = useLocalStorage('fixedRowHeight', options.fixedRowHeight || 20);
   const [sortOrder, setSortOrder] = useLocalStorage<'asc' | 'desc'>('sortOrder', 'asc');
   const [showTimeline, setShowTimeline] = useLocalStorage('showTimeline', true);
+  const [viewMode, setViewMode] = useLocalStorage<'ansi' | 'json'>('viewMode', 'ansi');
 
-  // Ref to store index for scroll preservation when toggling sort
-  const sortToggleIndexRef = useRef<number | null>(null);
+  // Ref to track previous sort order to detect changes from other panels
+  const prevSortOrderRef = useRef<'asc' | 'desc'>(sortOrder);
+  // Ref to store the last visible index for scroll preservation
+  const lastVisibleIndexRef = useRef<number | null>(null);
 
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
@@ -225,6 +223,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
       first: firstRow ? firstRow.timestamp : null,
       last: lastRow ? lastRow.timestamp : null,
     });
+    // Update ref for scroll preservation
+    lastVisibleIndexRef.current = endIndex;
   }, []);
 
   // Handle log selection from timeline (binary search for nearest log)
@@ -300,17 +300,18 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Toggle sort order
   const toggleSortOrder = useCallback(() => {
-    // Preserve the last visible row's index
-    if (visibleRange.lastIndex !== null) {
-      sortToggleIndexRef.current = visibleRange.lastIndex;
-    }
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
-  }, [setSortOrder, visibleRange]);
+  }, [setSortOrder]);
 
   // Toggle timeline visibility
   const toggleTimeline = useCallback(() => {
     setShowTimeline(prev => !prev);
   }, [setShowTimeline]);
+
+  // Handle view mode change
+  const handleViewModeChange = useCallback((mode: 'ansi' | 'json') => {
+    setViewMode(mode);
+  }, [setViewMode]);
 
   // Toggle settings dropdown
   const toggleSettings = useCallback(() => {
@@ -370,22 +371,26 @@ export const LogsViewer = memo<LogsViewerProps>(({
     };
   }, []);
 
-  // Preserve scroll position when toggling sort order
+  // Preserve scroll position when sort order changes (from any source)
   useEffect(() => {
-    if (sortToggleIndexRef.current !== null && filteredRows.length > 0) {
-      const oldIndex = sortToggleIndexRef.current;
+    // Check if sort order actually changed
+    if (prevSortOrderRef.current !== sortOrder) {
+      // Use the last visible index captured before sort changes
+      if (lastVisibleIndexRef.current !== null && filteredRows.length > 0) {
+        const oldIndex = lastVisibleIndexRef.current;
 
-      // When sort order is toggled, the array is reversed
-      // So the new index is the inverse position
-      const newIndex = filteredRows.length - 1 - oldIndex;
+        // When sort order is toggled, the array is reversed
+        // So the new index is the inverse position
+        const newIndex = filteredRows.length - 1 - oldIndex;
 
-      // Scroll to the index instantly (no smooth scroll to avoid jank)
-      setScrollToIndex({ index: newIndex, timestamp: Date.now(), behavior: 'auto', align: 'start' });
+        // Scroll to the index instantly (no smooth scroll to avoid jank)
+        setScrollToIndex({ index: newIndex, timestamp: Date.now(), behavior: 'auto', align: 'start' });
+      }
 
-      // Clear the ref
-      sortToggleIndexRef.current = null;
+      // Update the ref for next comparison
+      prevSortOrderRef.current = sortOrder;
     }
-  }, [filteredRows, sortOrder]);
+  }, [sortOrder, filteredRows]);
 
   // Render error state
   if (error) {
@@ -452,6 +457,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onToggleSearch={toggleSearch}
         filteredRowsLength={filteredRows.length}
         totalRowsLength={logRows.length}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
         onCopyAll={copyAllLogs}
         onCopySelected={copySelectedLog}
         hasSelection={selectedRowIndex !== undefined}

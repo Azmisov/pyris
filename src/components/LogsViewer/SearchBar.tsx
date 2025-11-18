@@ -44,7 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <div className="ansi-search-input-wrapper">
             <input
               type="text"
-              placeholder="Search…"
+              placeholder="Search phrase…"
               value={searchTerm}
               onChange={onSearchChange}
               className="ansi-search-input"

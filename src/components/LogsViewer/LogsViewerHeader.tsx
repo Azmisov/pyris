@@ -1,6 +1,7 @@
 import React from 'react';
 import { SettingsDropdown } from './SettingsDropdown';
 import { SearchBar } from './SearchBar';
+import { ToggleSwitch } from './ToggleSwitch';
 import { Icon } from '@grafana/ui';
 
 interface LogsViewerHeaderProps {
@@ -48,6 +49,10 @@ interface LogsViewerHeaderProps {
   filteredRowsLength: number;
   totalRowsLength: number;
 
+  // View mode props
+  viewMode: 'ansi' | 'json';
+  onViewModeChange: (mode: 'ansi' | 'json') => void;
+
   // Copy props
   onCopyAll: () => void;
   onCopySelected: () => void;
@@ -87,6 +92,8 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   onToggleSearch,
   filteredRowsLength,
   totalRowsLength,
+  viewMode,
+  onViewModeChange,
   onCopyAll,
   onCopySelected,
   hasSelection,
@@ -158,7 +165,14 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
         <span className="ansi-row-count">
           {hasFilter ? `${filteredRowsLength} of ` : ''}{totalRowsLength} rows
         </span>
-        <span className="ansi-indicator">ANSI</span>
+        <ToggleSwitch
+          options={[
+            { value: 'ansi', label: 'ANSI' },
+            { value: 'json', label: 'JSON' }
+          ]}
+          value={viewMode}
+          onChange={(value) => onViewModeChange(value as 'ansi' | 'json')}
+        />
       </div>
 
       <div className="ansi-controls">
@@ -169,6 +183,9 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
         )}
         <button onClick={onCopyAll} className="ansi-copy-button" title="Copy all logs">
           <Icon name="clipboard-alt" size='lg' /> All
+        </button>
+        <button className="ansi-toolbar-button ansi-fg-1" title="View data loading errors">
+          <Icon name="exclamation-triangle" size='lg' />
         </button>
       </div>
     </div>
