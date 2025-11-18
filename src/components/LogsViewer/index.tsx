@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
@@ -89,8 +89,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | undefined>();
   const [hoveredTimestamp, setHoveredTimestamp] = useState<number | null>(null);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
-  const [visibleRange, setVisibleRange] = useState<{ first: number | null; last: number | null }>({ first: null, last: null });
-  const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number } | undefined>();
+  const [visibleRange, setVisibleRange] = useState<{ firstIndex: number | null; lastIndex: number | null; first: number | null; last: number | null }>({ firstIndex: null, lastIndex: null, first: null, last: null });
+  const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [useRegex, setUseRegex] = useState(false);
@@ -106,6 +106,9 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [fixedRowHeight, setFixedRowHeight] = useLocalStorage('fixedRowHeight', options.fixedRowHeight || 20);
   const [sortOrder, setSortOrder] = useLocalStorage<'asc' | 'desc'>('sortOrder', 'asc');
   const [showTimeline, setShowTimeline] = useLocalStorage('showTimeline', true);
+
+  // Ref to store index for scroll preservation when toggling sort
+  const sortToggleIndexRef = useRef<number | null>(null);
 
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
@@ -215,8 +218,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, []);
 
   // Handle visible range change
-  const handleVisibleRangeChange = useCallback((firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => {
+  const handleVisibleRangeChange = useCallback((firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => {
     setVisibleRange({
+      firstIndex: startIndex,
+      lastIndex: endIndex,
       first: firstRow ? firstRow.timestamp : null,
       last: lastRow ? lastRow.timestamp : null,
     });
@@ -295,8 +300,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Toggle sort order
   const toggleSortOrder = useCallback(() => {
+    // Preserve the last visible row's index
+    if (visibleRange.lastIndex !== null) {
+      sortToggleIndexRef.current = visibleRange.lastIndex;
+    }
     setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
-  }, [setSortOrder]);
+  }, [setSortOrder, visibleRange]);
 
   // Toggle timeline visibility
   const toggleTimeline = useCallback(() => {
@@ -360,6 +369,23 @@ export const LogsViewer = memo<LogsViewerProps>(({
       cleanupCaches();
     };
   }, []);
+
+  // Preserve scroll position when toggling sort order
+  useEffect(() => {
+    if (sortToggleIndexRef.current !== null && filteredRows.length > 0) {
+      const oldIndex = sortToggleIndexRef.current;
+
+      // When sort order is toggled, the array is reversed
+      // So the new index is the inverse position
+      const newIndex = filteredRows.length - 1 - oldIndex;
+
+      // Scroll to the index instantly (no smooth scroll to avoid jank)
+      setScrollToIndex({ index: newIndex, timestamp: Date.now(), behavior: 'auto', align: 'start' });
+
+      // Clear the ref
+      sortToggleIndexRef.current = null;
+    }
+  }, [filteredRows, sortOrder]);
 
   // Render error state
   if (error) {

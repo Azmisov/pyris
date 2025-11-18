@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useRef, useEffect, useState } from 'react';
 import { useSelect } from 'downshift';
 import { ColorSwatch } from './ColorSwatch';
 import { getColorScheme } from '../theme/colorSchemes';
@@ -21,6 +21,8 @@ interface ThemeSelectProps {
  */
 export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, id }) => {
   const selectedItem = options.find(opt => opt.value === value);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
 
   const {
     isOpen,
@@ -39,6 +41,18 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
     itemToString: item => item?.label || '',
   });
 
+  // Calculate menu position when it opens
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + 2,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, [isOpen]);
+
   // Fallback if no item is selected
   const displayItem = selectedItem || options[0];
 
@@ -47,6 +61,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
       <button
         type="button"
         {...getToggleButtonProps()}
+        ref={buttonRef}
         className={`ansi-theme-select-button ${isOpen ? 'open' : ''}`}
         id={id}
       >
@@ -62,6 +77,11 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
       <ul
         {...getMenuProps()}
         className={`ansi-theme-select-menu ${isOpen ? 'open' : ''}`}
+        style={isOpen ? {
+          top: `${menuPosition.top}px`,
+          left: `${menuPosition.left}px`,
+          minWidth: `${menuPosition.width}px`
+        } : undefined}
       >
         {isOpen &&
           options.map((item, index) => (

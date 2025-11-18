@@ -265,11 +265,7 @@
 }
 
 .ansi-theme-select-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 2px;
-  min-width: 100%;
+  position: fixed;
   width: max-content;
   max-width: 400px;
   background-color: var(--ansi-panel-bg, #000000);
@@ -277,9 +273,9 @@
   border-radius: 3px;
   padding: 0;
   list-style: none;
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
-  z-index: 1001;
+  z-index: 9999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: none;
 }
@@ -351,6 +347,7 @@
   min-width: 200px;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: visible;
 }
 
 /* Dark theme */
@@ -720,8 +717,8 @@
 }
 
 .ansi-copy-button {
-  padding: 4px 8px;
-  font-size: 11px;
+  padding: 0px 6px;
+  font-size: 13px;
   border: 1px solid var(--ansi-panel-border, #3c3c41);
   border-radius: 3px;
   background-color: var(--ansi-panel-bg, #1f1f23);
@@ -729,26 +726,19 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s ease;
-}
-
-/* Dark theme: lighter button */
-[data-theme="dark"] .ansi-copy-button {
+  height: 28px;
+  box-sizing: border-box;
   background-color: var(--ansi-bg-accent-2);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--ansi-panel-fg-muted2);
 }
 
-[data-theme="dark"] .ansi-copy-button:hover {
+.ansi-copy-button:hover {
   background-color: var(--ansi-bg-accent-3);
+  border-color: var(--ansi-panel-fg-muted1);
 }
 
-/* Light theme: darker button */
-[data-theme="light"] .ansi-copy-button {
-  background-color: var(--ansi-bg-accent-2);
-  border-color: rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .ansi-copy-button:hover {
-  background-color: var(--ansi-bg-accent-3);
+.ansi-copy-button svg {
+  vertical-align: text-bottom;
 }
 
 /* Main content area */
@@ -794,18 +784,23 @@
 
 .ansi-virtual-list::-webkit-scrollbar-track,
 .simple-virtual-list::-webkit-scrollbar-track {
-  background: var(--ansi-panel-bg, #1f1f23);
+  background: var(--ansi-panel-bg);
 }
 
 .ansi-virtual-list::-webkit-scrollbar-thumb,
 .simple-virtual-list::-webkit-scrollbar-thumb {
-  background-color: var(--ansi-scrollbar, #5c5c61);
+  background-color: var(--ansi-panel-fg-muted2);
   border-radius: 4px;
 }
 
 .ansi-virtual-list::-webkit-scrollbar-thumb:hover,
 .simple-virtual-list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--ansi-panel-fg, #ffffff);
+  background-color: var(--ansi-panel-fg-muted1);
+}
+
+.ansi-virtual-list::-webkit-scrollbar-corner,
+.simple-virtual-list::-webkit-scrollbar-corner {
+  background: var(--ansi-panel-bg);
 }
 
 /* Individual log row styles */

@@ -12,11 +12,11 @@ interface VirtualListProps {
   width: number;
   onRowClick?: (row: AnsiLogRow, index: number) => void;
   onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => void;
+  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
-  scrollToIndex?: { index: number; timestamp: number };
+  scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -73,7 +73,7 @@ export const VirtualList = memo<VirtualListProps>(({
 
     const firstRow = displayRows[range.startIndex] || null;
     const lastRow = displayRows[range.endIndex] || null;
-    onVisibleRangeChange(firstRow, lastRow);
+    onVisibleRangeChange(firstRow, lastRow, range.startIndex, range.endIndex);
   }, [displayRows, onVisibleRangeChange]);
 
   // Apply font sizing CSS variables when row height or font family changes
@@ -88,8 +88,8 @@ export const VirtualList = memo<VirtualListProps>(({
     if (scrollToIndex && virtuosoRef.current) {
       virtuosoRef.current.scrollToIndex({
         index: scrollToIndex.index,
-        align: 'center',
-        behavior: 'smooth',
+        align: scrollToIndex.align || 'center',
+        behavior: scrollToIndex.behavior || 'smooth',
       });
     }
   }, [scrollToIndex]);
@@ -129,12 +129,12 @@ interface AutoSizedVirtualListProps {
   options: LogsPanelOptions;
   onRowClick?: (row: AnsiLogRow, index: number) => void;
   onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => void;
+  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;
   sortOrder?: 'asc' | 'desc';
-  scrollToIndex?: { index: number; timestamp: number };
+  scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
