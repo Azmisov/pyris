@@ -52,7 +52,7 @@ const config = async (env: Env): Promise<Configuration> => {
 
     context: path.join(process.cwd(), SOURCE_DIR),
 
-    devtool: env.production ? 'source-map' : 'eval-source-map',
+    devtool: env.production ? 'source-map' : 'inline-source-map',
 
     entry: await getEntries(),
 
@@ -85,6 +85,8 @@ const config = async (env: Env): Promise<Configuration> => {
           use: {
             loader: 'swc-loader',
             options: {
+              sourceMaps: true,
+              inlineSourcesContent: true,
               jsc: {
                 baseUrl: path.resolve(process.cwd(), SOURCE_DIR),
                 target: 'es2015',
@@ -101,14 +103,41 @@ const config = async (env: Env): Promise<Configuration> => {
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: !env.production,
+              },
+            },
+          ],
         },
         {
           test: /\.s[ac]ss$/,
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: !env.production,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: !env.production,
+              },
+            },
+          ],
         },
         {
-          test: /\.(png|jpe?g|gif|svg)$/,
+          test: /\.svg$/,
+          issuer: /\.[jt]sx?$/,
+          use: ['@svgr/webpack'],
+        },
+        {
+          test: /\.(png|jpe?g|gif)$/,
           type: 'asset/resource',
           generator: {
             filename: Boolean(env.production) ? '[hash][ext]' : '[file]',

@@ -7,7 +7,6 @@ import { LogsViewer } from './LogsViewer';
 import { parseDataFrame } from '../utils/frame';
 
 
-
 export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id }) => {
   // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
@@ -27,19 +26,24 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
   */
 
   // Parse data frame into structured log rows
-  const parsedData = useMemo(() => {
-    return parseDataFrame(data);
+  const parseResult = useMemo(() => {
+    const result = parseDataFrame(data);
+    console.log("Parsed data:", result);
+    if (Object.keys(result.failed).length > 0) {
+      console.warn("Failed to parse some series:", result.failed);
+    }
+    return result;
   }, [data]);
 
   // Handle errors from parsing
-  if (parsedData.error) {
+  if (parseResult.parsed.error) {
     return (
       <PanelDataErrorView
         fieldConfig={fieldConfig}
         panelId={id}
         data={data}
-        message={parsedData.error}
-        {...parsedData.extra}
+        message={parseResult.parsed.error}
+        {...parseResult.parsed.extra}
       />
     );
   }
@@ -47,7 +51,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
   // Render the logs
   return (
     <LogsViewer
-        parsedData={parsedData}
+        parsedData={parseResult.parsed}
         options={options}
         width={width}
         height={height}

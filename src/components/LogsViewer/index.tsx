@@ -2,8 +2,8 @@ import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
-import { LogsPanelOptions, LogRow } from '../../types';
-import { getDarkColorSchemeOptions, getLightColorSchemeOptions } from '../../theme/colorSchemes';
+import { LogsPanelOptions, AnsiLogRow, ParsedLogsResult } from '../../types';
+import { getDarkColorSchemeOptions, getLightColorSchemeOptions, getColorScheme } from '../../theme/colorSchemes';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useThemeManagement } from './hooks/useThemeManagement';
 import { useClipboard } from './hooks/useClipboard';
@@ -13,6 +13,7 @@ import { LogsViewerHeader } from './LogsViewerHeader';
 import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
+import { LogsTimeline } from '../LogsTimeline';
 
 /**
  * Simple log data interface for the viewer
@@ -30,7 +31,7 @@ export interface LogData {
  * Core LogsViewer component props - no Grafana dependencies
  */
 export interface LogsViewerProps {
-  logs: LogData[];
+  parsedData: ParsedLogsResult;
   options?: Partial<LogsPanelOptions>;
   width?: number;
   height?: number;
@@ -42,7 +43,7 @@ export interface LogsViewerProps {
  * Default options for the logs viewer
  */
 const defaultViewerOptions: LogsPanelOptions = {
-  themeMode: 'system',
+  themeMode: 'grafana',
   darkTheme: 'nord',
   lightTheme: 'solarized-light',
   wrapMode: 'nowrap',
@@ -62,7 +63,7 @@ const defaultViewerOptions: LogsPanelOptions = {
  * It can be used standalone or wrapped by Grafana panel adapters.
  */
 export const LogsViewer = memo<LogsViewerProps>(({
-  logs,
+  parsedData,
   options: userOptions = {},
   width,
   height = 600,
@@ -77,6 +78,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // State management
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | undefined>();
+  const [hoveredTimestamp, setHoveredTimestamp] = useState<number | null>(null);
+  const [visibleRange, setVisibleRange] = useState<{ first: number | null; last: number | null }>({ first: null, last: null });
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [useRegex, setUseRegex] = useState(false);
@@ -85,34 +88,47 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // LocalStorage-backed state
   const [wrapMode, setWrapMode] = useLocalStorage('wrapMode', options.wrapMode || 'nowrap');
-  const [themeMode, setThemeMode] = useLocalStorage('themeMode', options.themeMode || 'system');
+  const [themeMode, setThemeMode] = useLocalStorage('themeMode', options.themeMode || 'grafana');
   const [darkTheme, setDarkTheme] = useLocalStorage('darkTheme', options.darkTheme || 'nord');
   const [lightTheme, setLightTheme] = useLocalStorage('lightTheme', options.lightTheme || 'solarized-light');
   const [rowHeight, setRowHeight] = useLocalStorage('rowHeight', options.rowHeight || 'auto');
   const [fixedRowHeight, setFixedRowHeight] = useLocalStorage('fixedRowHeight', options.fixedRowHeight || 20);
+  const [sortOrder, setSortOrder] = useLocalStorage<'asc' | 'desc'>('sortOrder', 'asc');
+  const [showTimeline, setShowTimeline] = useLocalStorage('showTimeline', true);
 
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
 
-  // Convert LogData to LogRow format
-  const logRows: LogRow[] = useMemo(() => {
+  // Process AnsiLogRow data (for now, ignore JSON logs)
+  const logRows: AnsiLogRow[] = useMemo(() => {
     try {
       setError(null);
-      return logs.map(log => ({
+      const rows = parsedData.ansiLogs.map(log => ({
         timestamp: log.timestamp,
         message: log.message,
-        strippedText: stripAnsiCodes(log.message),
+        strippedText: log.strippedText || stripAnsiCodes(log.message),
         labels: log.labels,
         id: log.id,
         level: log.level,
       }));
+
+      // Sort by timestamp
+      rows.sort((a, b) => {
+        if (sortOrder === 'asc') {
+          return a.timestamp - b.timestamp;
+        } else {
+          return b.timestamp - a.timestamp;
+        }
+      });
+
+      return rows;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error parsing data';
       setError(errorMessage);
       console.warn('Logs processing error:', err);
       return [];
     }
-  }, [logs]);
+  }, [parsedData.ansiLogs, sortOrder]);
 
   // Apply search/filtering
   const {
@@ -158,7 +174,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   );
 
   // Handle row selection
-  const handleRowClick = useCallback((row: LogRow, index: number) => {
+  const handleRowClick = useCallback((row: AnsiLogRow, index: number) => {
     setSelectedRowIndex(index);
 
     if (onRowClick) {
@@ -172,6 +188,19 @@ export const LogsViewer = memo<LogsViewerProps>(({
       onRowClick(logData, index);
     }
   }, [onRowClick]);
+
+  // Handle row hover
+  const handleRowHover = useCallback((row: AnsiLogRow | null) => {
+    setHoveredTimestamp(row ? row.timestamp : null);
+  }, []);
+
+  // Handle visible range change
+  const handleVisibleRangeChange = useCallback((firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => {
+    setVisibleRange({
+      first: firstRow ? firstRow.timestamp : null,
+      last: lastRow ? lastRow.timestamp : null,
+    });
+  }, []);
 
   // Handle search input
   const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,6 +227,16 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setWrapMode(prev => prev === 'nowrap' ? 'soft-wrap' : 'nowrap');
   }, [setWrapMode]);
 
+  // Toggle sort order
+  const toggleSortOrder = useCallback(() => {
+    setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+  }, [setSortOrder]);
+
+  // Toggle timeline visibility
+  const toggleTimeline = useCallback(() => {
+    setShowTimeline(prev => !prev);
+  }, [setShowTimeline]);
+
   // Toggle settings dropdown
   const toggleSettings = useCallback(() => {
     setSettingsOpen(!settingsOpen);
@@ -212,9 +251,13 @@ export const LogsViewer = memo<LogsViewerProps>(({
     return effectiveThemeMode === 'dark' ? darkTheme : lightTheme;
   }, [effectiveThemeMode, darkTheme, lightTheme]);
 
+  const currentColorScheme = useMemo(() => {
+    return getColorScheme(currentTheme);
+  }, [currentTheme]);
+
   // Settings change handlers
   const handleThemeModeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setThemeMode(e.target.value as 'dark' | 'light' | 'system');
+    setThemeMode(e.target.value as 'grafana' | 'system' | 'light' | 'dark');
   }, [setThemeMode]);
 
   const handleThemeChange = useCallback((value: string) => {
@@ -276,8 +319,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
     );
   }
 
-  // Calculate content height
-  const contentHeight = height - 60;
+  // Calculate content height (header + timeline)
+  const timelineHeight = showTimeline ? 100 : 0;
+  const headerHeight = 60;
+  const contentHeight = height - headerHeight - timelineHeight;
 
   // Main render
   return (
@@ -299,6 +344,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onRowHeightDecrement={handleRowHeightDecrement}
         wrapMode={wrapMode}
         onToggleWrapMode={toggleWrapMode}
+        sortOrder={sortOrder}
+        onToggleSortOrder={toggleSortOrder}
+        showTimeline={showTimeline}
+        onToggleTimeline={toggleTimeline}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         caseSensitive={caseSensitive}
@@ -316,6 +365,18 @@ export const LogsViewer = memo<LogsViewerProps>(({
         hasSelection={selectedRowIndex !== undefined}
       />
 
+      {/* Timeline */}
+      {showTimeline && (
+        <LogsTimeline
+          logs={logRows}
+          height={timelineHeight}
+          hoveredTimestamp={hoveredTimestamp}
+          visibleRange={visibleRange}
+          colorScheme={currentColorScheme}
+          sortOrder={sortOrder}
+        />
+      )}
+
       {/* Main log display */}
       <div className="ansi-logs-content">
         <AutoSizedVirtualList
@@ -323,8 +384,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
           rows={filteredRows}
           options={effectiveOptions}
           onRowClick={handleRowClick}
+          onRowHover={handleRowHover}
+          onVisibleRangeChange={handleVisibleRangeChange}
           selectedIndex={selectedRowIndex}
           minHeight={contentHeight}
+          sortOrder={sortOrder}
         />
       </div>
 

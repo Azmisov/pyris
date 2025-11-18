@@ -1,4 +1,4 @@
-import { convertAnsiToHtml, ansiToHtml } from './ansi';
+import { convertAnsiToHtml } from './ansi';
 
 describe('ANSI to HTML Converter', () => {
   describe('RGB Truecolor (38;2;r;g;b)', () => {

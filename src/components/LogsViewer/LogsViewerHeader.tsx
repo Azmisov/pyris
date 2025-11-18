@@ -2,12 +2,15 @@ import React from 'react';
 import { SettingsDropdown } from './SettingsDropdown';
 import { SearchBar } from './SearchBar';
 import WordwrapIcon from '../../icons/wordwrap.svg';
+import SortAscIcon from '../../icons/sort-asc.svg';
+import SortDescIcon from '../../icons/sort-desc.svg';
+import TimelineIcon from '../../icons/timeline.svg';
 
 interface LogsViewerHeaderProps {
   // Settings props
   settingsOpen: boolean;
   onToggleSettings: () => void;
-  themeMode: 'dark' | 'light' | 'system';
+  themeMode: 'grafana' | 'system' | 'light' | 'dark';
   onThemeModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   effectiveThemeMode: 'dark' | 'light';
   availableThemeOptions: Array<{ value: string; label: string }>;
@@ -23,6 +26,14 @@ interface LogsViewerHeaderProps {
   // Wrap mode props
   wrapMode: 'nowrap' | 'soft-wrap';
   onToggleWrapMode: () => void;
+
+  // Sort props
+  sortOrder: 'asc' | 'desc';
+  onToggleSortOrder: () => void;
+
+  // Timeline props
+  showTimeline: boolean;
+  onToggleTimeline: () => void;
 
   // Search props
   searchTerm: string;
@@ -63,6 +74,10 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   onRowHeightDecrement,
   wrapMode,
   onToggleWrapMode,
+  sortOrder,
+  onToggleSortOrder,
+  showTimeline,
+  onToggleTimeline,
   searchTerm,
   onSearchChange,
   caseSensitive,
@@ -108,6 +123,22 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
             aria-label="Toggle Word Wrap"
           >
             <WordwrapIcon />
+          </button>
+          <button
+            onClick={onToggleSortOrder}
+            className="ansi-toolbar-button"
+            title={sortOrder === 'asc' ? 'Sort: Oldest First (click for Newest First)' : 'Sort: Newest First (click for Oldest First)'}
+            aria-label="Toggle Sort Order"
+          >
+            {sortOrder === 'asc' ? <SortAscIcon /> : <SortDescIcon />}
+          </button>
+          <button
+            onClick={onToggleTimeline}
+            className={`ansi-toolbar-button ${showTimeline ? 'active' : ''}`}
+            title={showTimeline ? 'Hide Timeline' : 'Show Timeline'}
+            aria-label="Toggle Timeline"
+          >
+            <TimelineIcon />
           </button>
         </div>
 

@@ -11,6 +11,7 @@ const { execSync } = require('child_process');
 const yaml = require('js-yaml');
 const { parse, converter, formatHex } = require('culori');
 
+const INDENT = false; // whether to add indentation to output file
 const GOGH_REPO = 'https://github.com/Gogh-Co/Gogh.git';
 const TEMP_DIR = path.join(__dirname, 'tmp-gogh');
 const THEMES_DIR = path.join(TEMP_DIR, 'themes');
@@ -228,7 +229,7 @@ function main() {
     console.log(`Successfully parsed ${succeeded}/${files.length} themes`);
 
     // Write to JSON file
-    const output = JSON.stringify(themes, null, 2);
+    const output = JSON.stringify(themes, null, INDENT ? 2 : null);
     fs.writeFileSync(OUTPUT_FILE, output);
     console.log(`\nWrote ${succeeded} themes to ${path.relative(process.cwd(), OUTPUT_FILE)}`);
 

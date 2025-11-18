@@ -4,7 +4,6 @@ import {
   getLightColorSchemes,
   getActiveColorScheme,
   getEffectiveThemeMode,
-  getSystemThemeMode,
 } from './colorSchemes';
 
 describe('Color Schemes', () => {

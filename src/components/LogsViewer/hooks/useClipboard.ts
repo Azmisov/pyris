@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { LogRow } from '../../../types';
+import { AnsiLogRow } from '../../../types';
 
 export function useClipboard(
-  filteredRows: LogRow[],
+  filteredRows: AnsiLogRow[],
   selectedRowIndex: number | undefined
 ) {
   const copyToClipboard = useCallback(async (content: string) => {

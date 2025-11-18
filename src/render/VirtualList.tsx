@@ -1,18 +1,21 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { LogRow, LogsPanelOptions } from '../types';
+import { AnsiLogRow, LogsPanelOptions } from '../types';
 import { Row } from './Row';
 import { applyFontSizeVars } from '../utils/fontSizing';
 
 interface VirtualListProps {
-  rows: LogRow[];
+  rows: AnsiLogRow[];
   options: LogsPanelOptions;
   height: number;
   width: number;
-  onRowClick?: (row: LogRow, index: number) => void;
+  onRowClick?: (row: AnsiLogRow, index: number) => void;
+  onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
+  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -21,13 +24,23 @@ export const VirtualList = memo<VirtualListProps>(({
   height,
   width,
   onRowClick,
+  onRowHover,
+  onVisibleRangeChange,
   selectedIndex,
-  onScroll
+  onScroll,
+  sortOrder = 'asc'
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const renderItem = useCallback((index: number, row: LogRow) => {
+  // With line-height: normal, rows are naturally ~1.2-1.3x font-size
+  // For 14px font: ~18px height
+  const itemHeight = options.rowHeight === 'fixed' ? options.fixedRowHeight : 18;
+  const maxRows = Math.min(rows.length, options.maxRenderableRows);
+  const displayRows = rows.slice(0, maxRows);
+
+  const renderItem = useCallback((index: number, row: AnsiLogRow) => {
     const handleClick = onRowClick ? () => onRowClick(row, index) : undefined;
+    const handleHover = onRowHover ? (hoveredRow: AnsiLogRow | null) => onRowHover(hoveredRow, hoveredRow ? index : null) : undefined;
 
     return (
       <Row
@@ -35,15 +48,19 @@ export const VirtualList = memo<VirtualListProps>(({
         options={options}
         isSelected={selectedIndex === index}
         onRowClick={handleClick}
+        onRowHover={handleHover}
       />
     );
-  }, [options, selectedIndex, onRowClick]);
+  }, [options, selectedIndex, onRowClick, onRowHover]);
 
-  // With line-height: normal, rows are naturally ~1.2-1.3x font-size
-  // For 14px font: ~18px height
-  const itemHeight = options.rowHeight === 'fixed' ? options.fixedRowHeight : 18;
-  const maxRows = Math.min(rows.length, options.maxRenderableRows);
-  const displayRows = rows.slice(0, maxRows);
+  // Handle visible range changes
+  const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
+    if (!onVisibleRangeChange) return;
+
+    const firstRow = displayRows[range.startIndex] || null;
+    const lastRow = displayRows[range.endIndex] || null;
+    onVisibleRangeChange(firstRow, lastRow);
+  }, [displayRows, onVisibleRangeChange]);
 
   // Apply font sizing CSS variables when row height or font family changes
   useEffect(() => {
@@ -52,6 +69,11 @@ export const VirtualList = memo<VirtualListProps>(({
     }
   }, [itemHeight, options.fontFamily]);
 
+  // Configure initial scroll position and follow behavior based on sort order
+  const initialIndex = sortOrder === 'asc'
+    ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom for ascending (oldest first)
+    : 0;  // Top for descending (newest first)
+
   return (
     <div ref={containerRef} className="ansi-logs-container" style={{ height, width }}>
       <Virtuoso
@@ -59,8 +81,9 @@ export const VirtualList = memo<VirtualListProps>(({
         totalCount={displayRows.length}
         itemContent={renderItem}
         style={{ height, width }}
-        initialTopMostItemIndex={displayRows.length > 0 ? displayRows.length - 1 : 0}
-        followOutput="smooth"
+        initialTopMostItemIndex={initialIndex}
+        followOutput={sortOrder === 'asc' ? 'smooth' : false}
+        rangeChanged={handleRangeChanged}
         className="ansi-virtual-list"
       />
       {rows.length > options.maxRenderableRows && (
@@ -76,21 +99,27 @@ VirtualList.displayName = 'VirtualList';
 
 // Auto-sizing wrapper component
 interface AutoSizedVirtualListProps {
-  rows: LogRow[];
+  rows: AnsiLogRow[];
   options: LogsPanelOptions;
-  onRowClick?: (row: LogRow, index: number) => void;
+  onRowClick?: (row: AnsiLogRow, index: number) => void;
+  onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
+  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
   rows,
   options,
   onRowClick,
+  onRowHover,
+  onVisibleRangeChange,
   selectedIndex,
   onScroll,
-  minHeight = 200
+  minHeight = 200,
+  sortOrder = 'asc'
 }) => {
   return (
     <div className="ansi-auto-sized-container" style={{ height: '100%', minHeight }}>
@@ -102,8 +131,11 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
             height={height}
             width={width}
             onRowClick={onRowClick}
+            onRowHover={onRowHover}
+            onVisibleRangeChange={onVisibleRangeChange}
             selectedIndex={selectedIndex}
             onScroll={onScroll}
+            sortOrder={sortOrder}
           />
         )}
       </AutoSizer>
@@ -120,7 +152,7 @@ export interface SearchOptions {
   useRegex?: boolean;
 }
 
-export function useVirtualListSearch(rows: LogRow[], options: SearchOptions = {}) {
+export function useVirtualListSearch(rows: AnsiLogRow[], options: SearchOptions = {}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredIndices, setFilteredIndices] = useState<number[]>([]);
   const { caseSensitive = false, useRegex = false } = options;

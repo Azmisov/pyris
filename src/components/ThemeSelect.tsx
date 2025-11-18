@@ -20,7 +20,7 @@ interface ThemeSelectProps {
  * Uses Downshift for keyboard navigation and accessibility
  */
 export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, id }) => {
-  const selectedItem = options.find(opt => opt.value === value) || options[0];
+  const selectedItem = options.find(opt => opt.value === value);
 
   const {
     isOpen,
@@ -30,14 +30,17 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
     getItemProps,
   } = useSelect({
     items: options,
-    selectedItem,
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
-        onChange(selectedItem.value);
+    selectedItem: selectedItem || null,
+    onSelectedItemChange: ({ selectedItem: newItem }) => {
+      if (newItem) {
+        onChange(newItem.value);
       }
     },
     itemToString: item => item?.label || '',
   });
+
+  // Fallback if no item is selected
+  const displayItem = selectedItem || options[0];
 
   return (
     <div className="ansi-theme-select">
@@ -47,8 +50,12 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
         className={`ansi-theme-select-button ${isOpen ? 'open' : ''}`}
         id={id}
       >
-        <ColorSwatch scheme={getColorScheme(selectedItem.value)} />
-        <span className="ansi-theme-select-label">{selectedItem.label}</span>
+        {displayItem && (
+          <>
+            <ColorSwatch scheme={getColorScheme(displayItem.value)} />
+            <span className="ansi-theme-select-label">{displayItem.label}</span>
+          </>
+        )}
         <span className="ansi-theme-select-arrow">{isOpen ? '▲' : '▼'}</span>
       </button>
 
@@ -63,7 +70,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
               {...getItemProps({ item, index })}
               className={`ansi-theme-select-item ${
                 highlightedIndex === index ? 'highlighted' : ''
-              } ${selectedItem.value === item.value ? 'selected' : ''}`}
+              } ${selectedItem?.value === item.value ? 'selected' : ''}`}
             >
               <ColorSwatch scheme={getColorScheme(item.value)} />
               <span className="ansi-theme-select-item-label">{item.label}</span>

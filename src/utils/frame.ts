@@ -2,28 +2,19 @@
  * Parse grafana dataframe into log records for panel display
  */
 import { FieldType } from '@grafana/data';
-import { AnsiLogRow, JsonLogRow, ParsedLogsResult } from '../types';
+import { AnsiLogRow, JsonLogRow, ParsedLogsResult, DataFrameParseResult } from '../types';
 
 
-// Parse DataFrame into LogRow structures
-export function parseDataFrame(data: any): ParsedLogsResult {
+// Parse a single data series into LogRow structures
+export function parseDataSeries(series: any, seriesName?: string): ParsedLogsResult {
   const out: ParsedLogsResult = {
     ansiLogs: [],
     jsonLogs: [],
   };
-  if (!data || !data.fields || data.fields.length === 0) {
+
+  if (!series || !series.fields || series.fields.length === 0) {
+    out.error = `Series ${seriesName || 'unknown'} has no fields`;
     return out;
-  }
-
-  // TODO: fallback to using the first data series?
-  // TODO: should we display all series unioned?
-  const logFrame = data.series.find(
-    (frame: any) => frame.meta?.preferredVisualisationType === 'logs'
-  );
-
-  if (!logFrame) {
-    out.error = "No series have 'logs' preferred visualisation type";
-    return out
   }
 
   // Simple heuristic to extract time + message fields
@@ -40,7 +31,7 @@ export function parseDataFrame(data: any): ParsedLogsResult {
   // const lvlCandidates = ['level', 'severity', 'loglevel', 'priority'];
   const msgCandidates = ['message', 'msg', 'log', 'line', 'content', 'text']
   const lblCandidates = ['labels', 'tags', 'metadata', 'fields'];
-  for (const f of logFrame.fields) {
+  for (const f of series.fields) {
     let n = f.name.toLowerCase()
     // second field after time take to be log line (which somewehat mimics how grafana's builtin
     // log panel tries to find the log message); however we allow a higher priority string field
@@ -70,7 +61,7 @@ export function parseDataFrame(data: any): ParsedLogsResult {
   // reliable; maybe interpolate from dataframe sort order? seems too fragile to be worth the effort
   for (const expected of ["time", "msg"]) {
     if (!(expected in extracted)) {
-      out.error = `Log frame is missing a ${expected} field`
+      out.error = `Series ${seriesName || 'unknown'} is missing a ${expected} field`
       if (expected == "time") {
         out.extra = {needsTimeField: true}
       } else {
@@ -131,6 +122,53 @@ export function parseDataFrame(data: any): ParsedLogsResult {
   }
 
   return out;
+}
+
+// Parse DataFrame with multiple series, merging successful parses and tracking failures
+export function parseDataFrame(data: any): DataFrameParseResult {
+  console.debug("Parsing log data:", data);
+
+  const result: DataFrameParseResult = {
+    parsed: {
+      ansiLogs: [],
+      jsonLogs: [],
+    },
+    failed: {},
+  };
+
+  if (!data || !data.series) {
+    console.warn("Source dataframe is empty:", data);
+    return result;
+  }
+
+  // Parse each series separately
+  let idx = 0;
+  for (const series of data.series) {
+    const seriesName = series.refId || series.name || `anonymous-${idx}`;
+    console.log("Parsing series:", seriesName);
+
+    const parsed = parseDataSeries(series, seriesName);
+
+    if (parsed.error) {
+      // Track failed series
+      result.failed[seriesName] = parsed;
+    } else {
+      // Merge successful parses
+      result.parsed.ansiLogs.push(...parsed.ansiLogs);
+      result.parsed.jsonLogs.push(...parsed.jsonLogs);
+    }
+
+    idx++;
+  }
+
+  // If all series failed and we have failures, set an error on the parsed result
+  if (result.parsed.ansiLogs.length === 0 && result.parsed.jsonLogs.length === 0 && Object.keys(result.failed).length > 0) {
+    const firstFailure = Object.values(result.failed)[0];
+    result.parsed.error = `All series failed to parse. First error: ${firstFailure.error}`;
+    result.parsed.extra = firstFailure.extra;
+  }
+
+  return result;
 }
 
 // Parse a log message as JSON, returning null if not valid.

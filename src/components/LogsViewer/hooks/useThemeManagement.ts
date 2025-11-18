@@ -1,29 +1,37 @@
 import { useState, useEffect } from 'react';
+import { useTheme2 } from '@grafana/ui';
 import { applyPaletteTheme } from '../../../theme/cssVars';
 import { getActiveColorScheme, getEffectiveThemeMode } from '../../../theme/colorSchemes';
 
 export function useThemeManagement(
-  themeMode: 'dark' | 'light' | 'system',
+  themeMode: 'grafana' | 'system' | 'light' | 'dark',
   darkTheme: string,
   lightTheme: string
 ) {
+  const grafanaTheme = useTheme2();
+
   const [effectiveThemeMode, setEffectiveThemeMode] = useState<'dark' | 'light'>(() =>
-    getEffectiveThemeMode(themeMode)
+    themeMode === 'grafana' ? (grafanaTheme.isDark ? 'dark' : 'light') : getEffectiveThemeMode(themeMode)
   );
 
   // Apply theme with selected color scheme
   useEffect(() => {
     try {
-      const activeScheme = getActiveColorScheme(themeMode, darkTheme, lightTheme);
-      const effectiveMode = getEffectiveThemeMode(themeMode);
+      const effectiveMode = themeMode === 'grafana'
+        ? (grafanaTheme.isDark ? 'dark' : 'light')
+        : getEffectiveThemeMode(themeMode);
+      // For getActiveColorScheme, map 'grafana' to the effective mode
+      const modeForScheme = themeMode === 'grafana' ? effectiveMode : themeMode;
+      const activeScheme = getActiveColorScheme(modeForScheme, darkTheme, lightTheme);
       setEffectiveThemeMode(effectiveMode);
       applyPaletteTheme(effectiveMode, activeScheme);
     } catch (err) {
       console.warn('Failed to apply palette theme:', err);
     }
-  }, [themeMode, darkTheme, lightTheme]);
+  }, [themeMode, darkTheme, lightTheme, grafanaTheme.isDark]);
 
   // Listen for system theme changes if mode is 'system'
+  // (Grafana theme changes are handled by the grafanaTheme.isDark dependency above)
   useEffect(() => {
     if (themeMode !== 'system') {
       return undefined;

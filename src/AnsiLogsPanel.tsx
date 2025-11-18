@@ -1,65 +1,67 @@
-import { memo, useMemo, useCallback } from 'react';
-import { AnsiLogsPanelProps } from './types';
-import { LogsViewer, LogData } from './components/LogsViewer';
+import React, { memo, useMemo } from 'react';
+import { LogsPanelProps, ParsedLogsResult } from './types';
+import { LogsViewer } from './components/LogsViewer';
 import { parseDataFrame } from './utils/frame';
 
 /**
  * Grafana Panel Adapter for LogsViewer
  *
  * This is a thin wrapper that adapts Grafana's PanelProps and DataFrame
- * to the simple LogData interface used by the core LogsViewer component.
+ * to the ParsedLogsResult interface used by the core LogsViewer component.
  */
-export const AnsiLogsPanel = memo<AnsiLogsPanelProps>(({
+export const AnsiLogsPanel = memo<LogsPanelProps>(({
   data,
   options,
   width,
   height,
   timeRange,
 }) => {
-  // Convert Grafana DataFrame to simple LogData array
-  const logs = useMemo<LogData[]>(() => {
+  // Parse Grafana DataFrame to structured log data
+  const parsedData = useMemo<ParsedLogsResult>(() => {
     try {
       if (!data || !data.series || data.series.length === 0) {
-        return [];
+        return { ansiLogs: [], jsonLogs: [] };
       }
 
-      // Parse the first DataFrame (in a production implementation,
-      // we might want to merge multiple DataFrames)
-      const firstFrame = data.series[0];
-      const logRows = parseDataFrame(firstFrame);
+      // Parse the DataFrame
+      const result = parseDataFrame(data);
+
+      // Log any failed series
+      if (Object.keys(result.failed).length > 0) {
+        console.warn('Some series failed to parse:', result.failed);
+      }
 
       // Apply time range filtering if provided
       if (timeRange && timeRange.from && timeRange.to) {
         const fromMs = typeof timeRange.from === 'number' ? timeRange.from : timeRange.from.valueOf();
         const toMs = typeof timeRange.to === 'number' ? timeRange.to : timeRange.to.valueOf();
 
-        const filtered = logRows.filter(row =>
-          row.timestamp >= fromMs && row.timestamp <= toMs
-        );
-
-        return filtered;
+        return {
+          ansiLogs: result.parsed.ansiLogs.filter(row =>
+            row.timestamp >= fromMs && row.timestamp <= toMs
+          ),
+          jsonLogs: result.parsed.jsonLogs.filter(row =>
+            row.timestamp >= fromMs && row.timestamp <= toMs
+          ),
+          error: result.parsed.error,
+          extra: result.parsed.extra,
+        };
       }
 
-      return logRows;
+      return result.parsed;
     } catch (err) {
       console.error('AnsiLogsPanel: Error processing DataFrame:', err);
-      return [];
+      return { ansiLogs: [], jsonLogs: [], error: err instanceof Error ? err.message : 'Unknown error' };
     }
   }, [data, timeRange]);
-
-  // Handle row click events (currently no-op)
-  const handleRowClick = useCallback((_log: LogData, _index: number) => {
-    // No-op: could emit events here for integration with other Grafana panels
-  }, []);
 
   // Render the core LogsViewer with Grafana-provided data
   return (
     <LogsViewer
-      logs={logs}
+      parsedData={parsedData}
       options={options}
       width={width}
       height={height}
-      onRowClick={handleRowClick}
     />
   );
 });
