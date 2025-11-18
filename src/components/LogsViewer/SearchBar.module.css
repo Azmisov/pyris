@@ -95,7 +95,6 @@
   border: 1px solid var(--ansi-fg-muted-2);
   border-radius: 3px;
   background-color: transparent;
-  color: var(--ansi-fg, #ffffff);
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;

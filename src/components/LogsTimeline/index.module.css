@@ -1,7 +1,7 @@
 /* Logs Timeline Component */
 
 .logs-timeline {
-  border-bottom: 1px solid var(--ansi-fg-muted1);
+  border-bottom: 1px solid var(--ansi-fg-muted-1);
 }
 
 /* Timeline icon buttons */

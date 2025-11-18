@@ -14,7 +14,6 @@
   padding: 8px;
   min-width: 200px;
   z-index: 1000;
-  box-shadow: 0 4px 16px var(--ansi-bg);
   overflow: visible;
 }
 
@@ -116,6 +115,7 @@
 
 .ansi-row-height-btn.active {
   font-weight: 500;
+  background-color: var(--ansi-bg-accent-3);
 }
 
 .ansi-row-height-btn:hover:not(:disabled) {

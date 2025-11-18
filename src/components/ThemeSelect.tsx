@@ -1,8 +1,11 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { ColorSwatch } from './ColorSwatch';
 import { getColorScheme } from '../theme/colorSchemes';
 import styles from './ThemeSelect.module.css';
+
+// DEBUG: Set to true to keep dropdown open for inspection
+const DEBUG_KEEP_OPEN = false;
 
 export interface ThemeOption {
   value: string;
@@ -23,10 +26,16 @@ interface ThemeSelectProps {
 export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, id }) => {
   const selectedItem = options.find(opt => opt.value === value);
   const displayItem = selectedItem || options[0];
+  const [debugOpen, setDebugOpen] = useState(DEBUG_KEEP_OPEN);
 
   return (
     <div className={styles['ansi-theme-select']}>
-      <Select.Root value={value} onValueChange={onChange}>
+      <Select.Root
+        value={value}
+        onValueChange={onChange}
+        open={DEBUG_KEEP_OPEN ? debugOpen : undefined}
+        onOpenChange={DEBUG_KEEP_OPEN ? undefined : undefined}
+      >
         <Select.Trigger
           className={styles['ansi-theme-select-button']}
           id={id}
@@ -47,7 +56,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
 
         <Select.Portal>
           <Select.Content
-            className={`${styles['ansi-theme-select-menu']} ${styles.open}`}
+            className={`${styles['ansi-theme-select-menu']} ${styles.open} ansi-shadowed`}
             position="popper"
             sideOffset={2}
             align="start"

@@ -24,7 +24,7 @@
 .ansi-theme-select-button:hover,
 .ansi-theme-select-button.open,
 .ansi-theme-select-button[data-state="open"] {
-  border-color: var(--ansi-fg-muted1);
+  border-color: var(--ansi-fg-muted-1);
   background-color: var(--ansi-bg-accent-3);
 }
 
@@ -53,7 +53,6 @@
   max-height: 800px;
   overflow-y: auto;
   z-index: 9999;
-  box-shadow: 0 4px 16px var(--ansi-bg);
   display: none;
   margin: 0;
 }
