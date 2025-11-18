@@ -6,7 +6,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--ansi-bg);
+  /* Meant as shadow backdrop, which looks best as black for both light/dark themes */
+  background-color: rgba(0, 0, 0, .5);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -26,7 +27,6 @@
 
 .ansi-modal {
   background-color: var(--ansi-bg);
-  box-shadow: 0 4px 16px var(--ansi-bg);
   border-radius: 6px;
   min-width: 400px;
   max-width: 600px;
@@ -117,16 +117,22 @@
   transform: scale(0.95);
 }
 
-[data-theme="dark"] .ansi-modal-button:hover {
+[data-ansi-theme="dark"] .ansi-modal-button:hover {
   filter: brightness(1.1);
 }
-[data-theme="light"] .ansi-modal-button:hover {
+[data-ansi-theme="light"] .ansi-modal-button:hover {
   filter: brightness(0.95);
 }
 
-.ansi-modal-button-copy {
+.ansi-modal-button-copy, .ansi-modal-button-confirm {
   font-weight: 500;
-  background-color: var(--ansi-color-4);
   border-color: var(--ansi-bg);
   color: var(--ansi-bg);
+}
+
+.ansi-modal-button-copy {
+  background-color: var(--ansi-color-4);
+}
+.ansi-modal-button-confirm {
+  background-color: var(--ansi-color-2);
 }

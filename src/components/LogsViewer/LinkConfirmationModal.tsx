@@ -24,7 +24,7 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
 
   return (
     <div className={styles['ansi-modal-overlay']} onClick={onClose}>
-      <div className={styles['ansi-modal']} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles['ansi-modal']} ansi-shadowed`} onClick={(e) => e.stopPropagation()}>
         <div className={styles['ansi-modal-header']}>
           <h3>
             {isFileUrl ? 'File Link' : isDangerousUrl ? 'Warning: Dangerous Link' : 'Open External Link'}

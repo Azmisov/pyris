@@ -22,19 +22,13 @@
   flex-shrink: 0;
   min-height: 32px;
   font-size: 11px;
-  border-bottom:1px solid white; /* color overridden by theme */
+  border-bottom:1px solid var(--ansi-fg-muted-1);
+  background-color: var(--ansi-bg-accent-1);
 }
 
-/* Dark theme: lighter header */
-[data-theme="dark"] .ansi-logs-header {
-  background-color: var(--ansi-bg-accent-1);
-  border-bottom-color: var(--ansi-fg-muted-1);
-}
-
-/* Light theme: darker header */
-[data-theme="light"] .ansi-logs-header {
-  background-color: var(--ansi-bg-accent-1);
-  border-bottom-color: var(--ansi-fg-muted-1);
+/* Shadowing looks better black for both light and dark themes; don't want a glow */
+.ansi-shadowed {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
 }
 
 /* Stats section */
@@ -50,15 +44,6 @@
   font-weight: 500;
 }
 
-.ansi-indicator {
-  padding: 2px 6px;
-  background-color: #238636;
-  color: white;
-  border-radius: 3px;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 10px;
-}
 /* Controls section */
 .ansi-controls {
   display: flex;
@@ -79,13 +64,12 @@
 }
 
 /* Virtual list styles - Font settings applied here so rows inherit */
-.ansi-virtual-list,
-.simple-virtual-list {
+.ansi-virtual-list {
   width: 100%;
   height: 100%;
   outline: none;
 
-  font-family: var(--ansi-logs-row-font-family, "JetBrains Mono", "Cascadia Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace);
+  font-family: var(--ansi-logs-row-font-family);
 
   /* styles to try and improve pixel-perfect alignment of glyphs */
   font-variant-ligatures: none;
@@ -100,31 +84,36 @@
   font-optical-sizing: none;
 }
 
-.ansi-virtual-list::-webkit-scrollbar,
-.simple-virtual-list::-webkit-scrollbar {
+/* Override Virtuoso's viewport width to allow hover to extend across full scrollable width */
+.ansi-virtual-list [data-viewport-type="element"] {
+  width: max-content !important;
+  min-width: 100%;
+}
+
+/* Firefox scrollbar styling */
+.ansi-virtual-list {
+  /* scrollbar-width: thin; */
+  scrollbar-color: var(--ansi-fg-muted-1) var(--ansi-bg);
+}
+
+/* Chrome/Safari/Edge scrollbar styling */
+.ansi-virtual-list::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 .ansi-virtual-list::-webkit-scrollbar-track,
-.simple-virtual-list::-webkit-scrollbar-track {
+.ansi-virtual-list::-webkit-scrollbar-corner {
   background: var(--ansi-bg);
 }
 
-.ansi-virtual-list::-webkit-scrollbar-thumb,
-.simple-virtual-list::-webkit-scrollbar-thumb {
-  background-color: var(--ansi-fg-muted-2);
+.ansi-virtual-list::-webkit-scrollbar-thumb {
+  background-color: var(--ansi-fg-muted-1);
   border-radius: 4px;
 }
 
-.ansi-virtual-list::-webkit-scrollbar-thumb:hover,
-.simple-virtual-list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--ansi-fg-muted-1);
-}
-
-.ansi-virtual-list::-webkit-scrollbar-corner,
-.simple-virtual-list::-webkit-scrollbar-corner {
-  background: var(--ansi-bg);
+.ansi-virtual-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ansi-fg);
 }
 
 /* Individual log row styles */

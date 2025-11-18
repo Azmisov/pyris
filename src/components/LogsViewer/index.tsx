@@ -423,7 +423,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Main render
   return (
-    <div className={`ansi-logs-panel ${className}`} style={{ width, height }} data-theme={effectiveThemeMode} onClick={handlePanelClick}>
+    <div className={`ansi-logs-panel ${className}`} style={{ width, height }} onClick={handlePanelClick}>
       <LogsViewerHeader
         settingsOpen={settingsOpen}
         onToggleSettings={toggleSettings}
