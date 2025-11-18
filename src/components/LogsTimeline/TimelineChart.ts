@@ -33,6 +33,8 @@ export class TimelineChart {
   private selectedIndicator: VerticalIndicator | null = null;
   private rangeStartIndicator: VerticalIndicator | null = null;
   private rangeEndIndicator: VerticalIndicator | null = null;
+  private dashboardStartIndicator: VerticalIndicator | null = null;
+  private dashboardEndIndicator: VerticalIndicator | null = null;
   private colorScheme: ColorScheme;
   private indicators: VerticalIndicator[] = [];
 
@@ -247,11 +249,14 @@ export class TimelineChart {
 
   /**
    * Set the time range and histogram data
+   * If dashboardRange is provided, use it for initial zoom instead of full log range
    */
-  setData(timeRange: [number, number], histogram: HistogramBin[]): void {
+  setData(timeRange: [number, number], histogram: HistogramBin[], dashboardRange?: [number, number]): void {
     this.fullTimeRange = timeRange;
     this.histogram = histogram;
-    this.axis.updateRange(timeRange);
+    // Use dashboard range for initial zoom if provided, otherwise use log range
+    const initialRange = dashboardRange || timeRange;
+    this.axis.updateRange(timeRange, initialRange);
     this.render();
   }
 
@@ -317,7 +322,8 @@ export class TimelineChart {
       } else {
         this.rangeStartIndicator.updateConfig({
           timestamp: firstTimestamp,
-          direction: isDescending ? 'left' : 'right'
+          direction: isDescending ? 'left' : 'right',
+          style: { color: colorStr, lineWidth: 2, dashed: false }
         });
       }
     } else {
@@ -332,11 +338,45 @@ export class TimelineChart {
       } else {
         this.rangeEndIndicator.updateConfig({
           timestamp: lastTimestamp,
-          direction: isDescending ? 'right' : 'left'
+          direction: isDescending ? 'right' : 'left',
+          style: { color: colorStr, lineWidth: 2, dashed: false }
         });
       }
     } else {
       this.rangeEndIndicator = null;
+    }
+
+    this.render();
+  }
+
+  /**
+   * Set the dashboard time range to display red bracket indicators
+   */
+  setDashboardRange(fromTimestamp: number, toTimestamp: number): void {
+    // Use red color for dashboard range (color index 1 is usually red)
+    const dashboardColor = this.colorScheme.colors[1];
+    const colorStr = colorToCSS(dashboardColor);
+
+    // Start indicator (right bracket pointing inward)
+    if (!this.dashboardStartIndicator) {
+      this.dashboardStartIndicator = IndicatorFactory.createRangeStart(fromTimestamp, colorStr);
+    } else {
+      this.dashboardStartIndicator.updateConfig({
+        timestamp: fromTimestamp,
+        direction: 'right',
+        style: { color: colorStr, lineWidth: 2, dashed: false }
+      });
+    }
+
+    // End indicator (left bracket pointing inward)
+    if (!this.dashboardEndIndicator) {
+      this.dashboardEndIndicator = IndicatorFactory.createRangeEnd(toTimestamp, colorStr);
+    } else {
+      this.dashboardEndIndicator.updateConfig({
+        timestamp: toTimestamp,
+        direction: 'left',
+        style: { color: colorStr, lineWidth: 2, dashed: false }
+      });
     }
 
     this.render();
@@ -526,6 +566,14 @@ export class TimelineChart {
     }
     if (this.rangeEndIndicator && this.rangeEndIndicator.isVisible(zoomRange)) {
       allIndicators.push(this.rangeEndIndicator);
+    }
+
+    // Add dashboard range indicators (render after visible range)
+    if (this.dashboardStartIndicator && this.dashboardStartIndicator.isVisible(zoomRange)) {
+      allIndicators.push(this.dashboardStartIndicator);
+    }
+    if (this.dashboardEndIndicator && this.dashboardEndIndicator.isVisible(zoomRange)) {
+      allIndicators.push(this.dashboardEndIndicator);
     }
 
     // Add selected indicator (render after range indicators)

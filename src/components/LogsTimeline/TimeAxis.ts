@@ -64,11 +64,11 @@ export class TimeAxis {
   }
 
   /**
-   * Update time range, resetting zoom/offset
+   * Update time range, optionally setting initial zoom
    */
-  updateRange(timeRange: [number, number]): void {
+  updateRange(timeRange: [number, number], initialZoom?: [number, number]): void {
     this.fullRange = [...timeRange];
-    this.zoomRange = [...timeRange];
+    this.zoomRange = initialZoom ? [...initialZoom] : [...timeRange];
 
     // Calculate offsets for grid alignment
     const endUs = timeRange[1];
