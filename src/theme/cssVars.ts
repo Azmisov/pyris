@@ -40,12 +40,13 @@ export function generatePaletteCSS(): string {
 
 // Generate CSS variables for theme
 export function generateThemeCSS(scheme: ColorScheme): string {
-  // TODO: generate bg accent on the fly to keep bundle smaller
+  // TODO: generate bg accent on the fly to keep bundle smaller? need to add oklab conversions, so
+  // might not save any space
   let vars = [
     `--ansi-bg: ${colorToRgb(scheme.background)}`,
     `--ansi-fg: ${colorToRgb(scheme.foreground)}`,
-    `--ansi-fg-muted1: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.5)`,
-    `--ansi-fg-muted2: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.25)`,
+    `--ansi-fg-muted-1: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.5)`,
+    `--ansi-fg-muted-2: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.25)`,
     `--ansi-bg-accent-1: ${colorToRgb(scheme.bgAccent1)}`,
     `--ansi-bg-accent-2: ${colorToRgb(scheme.bgAccent2)}`,
     `--ansi-bg-accent-3: ${colorToRgb(scheme.bgAccent3)}`,
@@ -58,7 +59,7 @@ export function generateThemeCSS(scheme: ColorScheme): string {
   return `:root {\n${joined_vars}\n}`;
 }
 
-// Add a singleton CSS styles to the page, replacing if found already
+// Add a singleton CSS styles element to the page, replacing if found already
 export function addStyles(id : string, css : string): void {
   // Remove if already present
   const existingStyle = document.getElementById(id);
