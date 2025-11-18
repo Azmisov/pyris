@@ -56,13 +56,6 @@ export function calculateFontSize(
 }
 
 /**
- * Gets the font family from CSS or uses default monospace font stack
- */
-export function getMonospaceFontFamily(): string {
-  return '"JetBrains Mono", "Cascadia Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace';
-}
-
-/**
  * Applies font sizing CSS variables to an element
  *
  * @param element - The DOM element to apply variables to
@@ -72,12 +65,10 @@ export function getMonospaceFontFamily(): string {
 export function applyFontSizeVars(
   element: HTMLElement,
   rowHeight: number,
-  fontFamily?: string
+  fontFamily: string
 ): void {
-  const font = fontFamily || getMonospaceFontFamily();
-  const fontSize = calculateFontSize(font, rowHeight);
-
+  const fontSize = calculateFontSize(fontFamily, rowHeight);
   element.style.setProperty('--ansi-logs-row-height', `${rowHeight}px`);
   element.style.setProperty('--ansi-logs-row-font-size', `${fontSize}px`);
-  element.style.setProperty('--ansi-logs-row-font-family', font);
+  element.style.setProperty('--ansi-logs-row-font-family', fontFamily);
 }
