@@ -15,6 +15,8 @@ export const ANSI_CSS_VARS = {
   // Theme colors
   background: '--ansi-panel-bg',
   foreground: '--ansi-panel-fg',
+  fgMuted1: '--ansi-panel-fg-muted1',
+  fgMuted2: '--ansi-panel-fg-muted2',
   border: '--ansi-panel-border',
   scrollbar: '--ansi-scrollbar',
   selection: '--ansi-selection-bg',
@@ -100,6 +102,16 @@ export function generateThemeVariables(
     ? colorToRgb(scheme.foreground)
     : defaults.foreground;
 
+  // Generate muted foreground (50% alpha)
+  const fgMuted1 = scheme?.foreground
+    ? `rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.5)`
+    : theme === 'light' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+
+  // Generate more muted foreground (25% alpha)
+  const fgMuted2 = scheme?.foreground
+    ? `rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.25)`
+    : theme === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(255, 255, 255, 0.25)';
+
   // Use accent colors if available, otherwise fall back to background
   const bgAccent1 = scheme?.bgAccent1
     ? colorToRgb(scheme.bgAccent1)
@@ -116,6 +128,8 @@ export function generateThemeVariables(
   return `
   ${ANSI_CSS_VARS.background}: ${background};
   ${ANSI_CSS_VARS.foreground}: ${foreground};
+  ${ANSI_CSS_VARS.fgMuted1}: ${fgMuted1};
+  ${ANSI_CSS_VARS.fgMuted2}: ${fgMuted2};
   ${ANSI_CSS_VARS.border}: ${defaults.border};
   ${ANSI_CSS_VARS.scrollbar}: ${defaults.scrollbar};
   ${ANSI_CSS_VARS.selection}: ${defaults.selection};

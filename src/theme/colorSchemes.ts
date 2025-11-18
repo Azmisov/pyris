@@ -10,9 +10,9 @@ export interface ColorScheme {
   colors: AnsiColor[];
   background?: AnsiColor;  // Optional theme background color
   foreground?: AnsiColor;  // Optional theme foreground (text) color
-  bgAccent1?: AnsiColor;   // Background accent color (largest shift, for primary hover/active)
-  bgAccent2?: AnsiColor;   // Background accent color (medium shift, for secondary states)
-  bgAccent3?: AnsiColor;   // Background accent color (smallest shift, for subtle states)
+  bgAccent1: AnsiColor;    // Background accent color (largest shift, for primary hover/active)
+  bgAccent2: AnsiColor;    // Background accent color (medium shift, for secondary states)
+  bgAccent3: AnsiColor;    // Background accent color (smallest shift, for subtle states)
   dark: boolean;           // Whether this is a dark theme
 }
 
@@ -30,10 +30,19 @@ function hex(hexString: string): AnsiColor {
  * Convert Gogh theme to ColorScheme format
  */
 function convertGoghTheme(name: string, colors: string[], dark: boolean): ColorScheme {
+  // Default accent colors for dark and light themes
+  const defaultBgAccent1 = dark ? { r: 40, g: 40, b: 40 } : { r: 230, g: 230, b: 230 };
+  const defaultBgAccent2 = dark ? { r: 50, g: 50, b: 50 } : { r: 220, g: 220, b: 220 };
+  const defaultBgAccent3 = dark ? { r: 60, g: 60, b: 60 } : { r: 210, g: 210, b: 210 };
+
   const scheme: ColorScheme = {
     name,
     colors: colors.slice(0, 16).map(hex),
     dark,
+    // Always provide background accent colors with fallbacks
+    bgAccent1: colors[18] ? hex(colors[18]) : defaultBgAccent1,
+    bgAccent2: colors[19] ? hex(colors[19]) : defaultBgAccent2,
+    bgAccent3: colors[20] ? hex(colors[20]) : defaultBgAccent3,
   };
 
   // Add optional background and foreground colors
@@ -42,17 +51,6 @@ function convertGoghTheme(name: string, colors: string[], dark: boolean): ColorS
   }
   if (colors[17]) {
     scheme.foreground = hex(colors[17]);
-  }
-
-  // Add optional background accent colors
-  if (colors[18]) {
-    scheme.bgAccent1 = hex(colors[18]);
-  }
-  if (colors[19]) {
-    scheme.bgAccent2 = hex(colors[19]);
-  }
-  if (colors[20]) {
-    scheme.bgAccent3 = hex(colors[20]);
   }
 
   return scheme;

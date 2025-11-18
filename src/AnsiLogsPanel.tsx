@@ -15,6 +15,7 @@ export const AnsiLogsPanel = memo<LogsPanelProps>(({
   width,
   height,
   timeRange,
+  onChangeTimeRange,
 }) => {
   // Parse Grafana DataFrame to structured log data
   const parsedData = useMemo<ParsedLogsResult>(() => {
@@ -55,6 +56,20 @@ export const AnsiLogsPanel = memo<LogsPanelProps>(({
     }
   }, [data, timeRange]);
 
+  // Handle time range change from timeline
+  const handleTimeRangeChange = useMemo(() => {
+    console.log('[AnsiLogsPanel] onChangeTimeRange available?', !!onChangeTimeRange);
+    if (!onChangeTimeRange) return undefined;
+
+    return (startTimeMs: number, endTimeMs: number) => {
+      console.log('[AnsiLogsPanel] Calling onChangeTimeRange with:', { from: startTimeMs, to: endTimeMs });
+      onChangeTimeRange({
+        from: startTimeMs,
+        to: endTimeMs,
+      });
+    };
+  }, [onChangeTimeRange]);
+
   // Render the core LogsViewer with Grafana-provided data
   return (
     <LogsViewer
@@ -62,6 +77,7 @@ export const AnsiLogsPanel = memo<LogsPanelProps>(({
       options={options}
       width={width}
       height={height}
+      onTimeRangeChange={handleTimeRangeChange}
     />
   );
 });

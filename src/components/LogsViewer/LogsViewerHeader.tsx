@@ -1,10 +1,7 @@
 import React from 'react';
 import { SettingsDropdown } from './SettingsDropdown';
 import { SearchBar } from './SearchBar';
-import WordwrapIcon from '../../icons/wordwrap.svg';
-import SortAscIcon from '../../icons/sort-asc.svg';
-import SortDescIcon from '../../icons/sort-desc.svg';
-import TimelineIcon from '../../icons/timeline.svg';
+import { Icon } from '@grafana/ui';
 
 interface LogsViewerHeaderProps {
   // Settings props
@@ -117,20 +114,20 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
             onRowHeightDecrement={onRowHeightDecrement}
           />
           <button
-            onClick={onToggleWrapMode}
-            className={`ansi-toolbar-button ${wrapMode === 'soft-wrap' ? 'active' : ''}`}
-            title={wrapMode === 'nowrap' ? 'Enable Word Wrap' : 'Disable Word Wrap'}
-            aria-label="Toggle Word Wrap"
-          >
-            <WordwrapIcon />
-          </button>
-          <button
             onClick={onToggleSortOrder}
             className="ansi-toolbar-button"
             title={sortOrder === 'asc' ? 'Sort: Oldest First (click for Newest First)' : 'Sort: Newest First (click for Oldest First)'}
             aria-label="Toggle Sort Order"
           >
-            {sortOrder === 'asc' ? <SortAscIcon /> : <SortDescIcon />}
+            {sortOrder === 'asc' ? <Icon name="sort-amount-down" /> : <Icon name="sort-amount-up" />}
+          </button>
+          <button
+            onClick={onToggleWrapMode}
+            className={`ansi-toolbar-button ${wrapMode === 'soft-wrap' ? 'active' : ''}`}
+            title={wrapMode === 'nowrap' ? 'Enable Word Wrap' : 'Disable Word Wrap'}
+            aria-label="Toggle Word Wrap"
+          >
+            <Icon name="wrap-text" />
           </button>
           <button
             onClick={onToggleTimeline}
@@ -138,7 +135,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
             title={showTimeline ? 'Hide Timeline' : 'Show Timeline'}
             aria-label="Toggle Timeline"
           >
-            <TimelineIcon />
+            <Icon name="graph-bar" />
           </button>
         </div>
 

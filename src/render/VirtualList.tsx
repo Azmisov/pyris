@@ -16,6 +16,7 @@ interface VirtualListProps {
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
+  scrollToIndex?: { index: number; timestamp: number };
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -28,15 +29,28 @@ export const VirtualList = memo<VirtualListProps>(({
   onVisibleRangeChange,
   selectedIndex,
   onScroll,
-  sortOrder = 'asc'
+  sortOrder = 'asc',
+  scrollToIndex
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const virtuosoRef = useRef<any>(null);
 
   // With line-height: normal, rows are naturally ~1.2-1.3x font-size
   // For 14px font: ~18px height
   const itemHeight = options.rowHeight === 'fixed' ? options.fixedRowHeight : 18;
   const maxRows = Math.min(rows.length, options.maxRenderableRows);
   const displayRows = rows.slice(0, maxRows);
+
+  // Debug: Log all rows being displayed
+  useEffect(() => {
+    console.log(`[DEBUG VirtualList] Displaying all ${displayRows.length} rows:`,
+      displayRows.map(r => ({
+        timestamp: r.timestamp,
+        seriesIndex: r.seriesIndex,
+        message: r.message.substring(0, 80)
+      }))
+    );
+  }, [displayRows]);
 
   const renderItem = useCallback((index: number, row: AnsiLogRow) => {
     const handleClick = onRowClick ? () => onRowClick(row, index) : undefined;
@@ -69,6 +83,17 @@ export const VirtualList = memo<VirtualListProps>(({
     }
   }, [itemHeight, options.fontFamily]);
 
+  // Handle scrollToIndex
+  useEffect(() => {
+    if (scrollToIndex && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: scrollToIndex.index,
+        align: 'center',
+        behavior: 'smooth',
+      });
+    }
+  }, [scrollToIndex]);
+
   // Configure initial scroll position and follow behavior based on sort order
   const initialIndex = sortOrder === 'asc'
     ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom for ascending (oldest first)
@@ -77,6 +102,7 @@ export const VirtualList = memo<VirtualListProps>(({
   return (
     <div ref={containerRef} className="ansi-logs-container" style={{ height, width }}>
       <Virtuoso
+        ref={virtuosoRef}
         data={displayRows}
         totalCount={displayRows.length}
         itemContent={renderItem}
@@ -108,6 +134,7 @@ interface AutoSizedVirtualListProps {
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;
   sortOrder?: 'asc' | 'desc';
+  scrollToIndex?: { index: number; timestamp: number };
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
@@ -119,7 +146,8 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
   selectedIndex,
   onScroll,
   minHeight = 200,
-  sortOrder = 'asc'
+  sortOrder = 'asc',
+  scrollToIndex
 }) => {
   return (
     <div className="ansi-auto-sized-container" style={{ height: '100%', minHeight }}>
@@ -136,6 +164,7 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
             selectedIndex={selectedIndex}
             onScroll={onScroll}
             sortOrder={sortOrder}
+            scrollToIndex={scrollToIndex}
           />
         )}
       </AutoSizer>
@@ -160,9 +189,11 @@ export function useVirtualListSearch(rows: AnsiLogRow[], options: SearchOptions 
   const filteredRows = useMemo(() => {
     if (!searchTerm.trim()) {
       setFilteredIndices([]);
+      console.log(`[DEBUG useVirtualListSearch] No search term - returning all ${rows.length} rows`);
       return rows;
     }
 
+    console.log(`[DEBUG useVirtualListSearch] Filtering ${rows.length} rows with term: "${searchTerm}"`);
     const indices: number[] = [];
 
     // Compile regex if needed
@@ -205,6 +236,13 @@ export function useVirtualListSearch(rows: AnsiLogRow[], options: SearchOptions 
     });
 
     setFilteredIndices(indices);
+    console.log(`[DEBUG useVirtualListSearch] Filtered to ${filtered.length} rows - All:`,
+      filtered.map(r => ({
+        timestamp: r.timestamp,
+        seriesIndex: r.seriesIndex,
+        message: r.message.substring(0, 80)
+      }))
+    );
     return filtered;
   }, [rows, searchTerm, caseSensitive, useRegex]);
 

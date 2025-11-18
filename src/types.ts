@@ -43,6 +43,7 @@ export const defaultOptions: LogsPanelOptions = {
 // Base log row with shared fields
 export interface BaseLogRow {
   timestamp: number;
+  seriesIndex?: number; // Original order index for stable sorting when timestamps are equal
   labels?: Record<string, string>;
   id?: string;
   level?: string;

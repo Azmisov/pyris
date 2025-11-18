@@ -4,6 +4,7 @@
  */
 
 import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import { Icon } from '@grafana/ui';
 import { TimelineChart } from './TimelineChart';
 import { AnsiLogRow } from '../../types';
 import { ColorScheme } from '../../theme/colorSchemes';
@@ -12,10 +13,12 @@ interface LogsTimelineProps {
   logs: AnsiLogRow[];
   height?: number;
   hoveredTimestamp?: number | null;
+  selectedTimestamp?: number | null;
   visibleRange?: { first: number | null; last: number | null };
   colorScheme: ColorScheme;
   sortOrder?: 'asc' | 'desc';
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
+  onLogSelect?: (timestamp: number) => void;
 }
 
 const DEFAULT_HEIGHT = 100;
@@ -71,10 +74,12 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   logs,
   height = DEFAULT_HEIGHT,
   hoveredTimestamp = null,
+  selectedTimestamp = null,
   visibleRange = { first: null, last: null },
   colorScheme,
   sortOrder = 'asc',
   onTimeRangeChange,
+  onLogSelect,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
@@ -104,6 +109,17 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, [colorScheme]);
 
+  // Set log selection callback
+  useEffect(() => {
+    if (chartRef.current && onLogSelect) {
+      chartRef.current.setOnLogSelect((timestampUs: number) => {
+        // Convert from microseconds to milliseconds
+        const timestampMs = Math.floor(timestampUs / 1000);
+        onLogSelect(timestampMs);
+      });
+    }
+  }, [onLogSelect]);
+
   // Update chart data when logs change
   useEffect(() => {
     if (chartRef.current && timeRange && histogram) {
@@ -119,6 +135,15 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       chartRef.current.setHoveredTimestamp(timestampUs);
     }
   }, [hoveredTimestamp]);
+
+  // Update selected timestamp
+  useEffect(() => {
+    if (chartRef.current) {
+      // Convert from milliseconds to microseconds
+      const timestampUs = selectedTimestamp ? selectedTimestamp * 1000 : null;
+      chartRef.current.setSelectedTimestamp(timestampUs);
+    }
+  }, [selectedTimestamp]);
 
   // Update visible range indicators
   useEffect(() => {
@@ -145,9 +170,15 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         // Convert from microseconds to milliseconds
         const startMs = Math.floor(zoomRange[0] / 1000);
         const endMs = Math.ceil(zoomRange[1] / 1000);
+        console.log('[LogsTimeline] handleSync - calling onTimeRangeChange with:', { startMs, endMs });
         onTimeRangeChange(startMs, endMs);
       }
     }
+  }, [onTimeRangeChange]);
+
+  // Debug: Log onTimeRangeChange availability
+  useEffect(() => {
+    console.log('[LogsTimeline] onTimeRangeChange prop:', !!onTimeRangeChange);
   }, [onTimeRangeChange]);
 
   return (
@@ -172,36 +203,18 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       >
         <button
           onClick={handleRecenter}
-          className="timeline-button"
+          className="timeline-icon-button"
           title="Recenter to full time range"
-          style={{
-            padding: '2px 8px',
-            fontSize: '11px',
-            backgroundColor: '#333',
-            color: '#fff',
-            border: '1px solid #555',
-            borderRadius: '3px',
-            cursor: 'pointer',
-          }}
         >
-          Recenter
+          <Icon name="home-alt" size="sm" />
         </button>
         {onTimeRangeChange && (
           <button
             onClick={handleSync}
-            className="timeline-button"
+            className="timeline-icon-button"
             title="Update dashboard time range to match current view"
-            style={{
-              padding: '2px 8px',
-              fontSize: '11px',
-              backgroundColor: '#333',
-              color: '#fff',
-              border: '1px solid #555',
-              borderRadius: '3px',
-              cursor: 'pointer',
-            }}
           >
-            Sync
+            <Icon name="clock-nine" size="sm" />
           </button>
         )}
       </div>

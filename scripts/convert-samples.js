@@ -54,6 +54,8 @@ function extractTimestampFromLogLine(line) {
       parseInt(centiseconds) * 10 // Convert centiseconds to milliseconds
     );
 
+    console.log(timestampStr, date.getTime());
+
     return date.getTime();
   }
   return null;
@@ -79,7 +81,7 @@ function convertSampleFile(config) {
 
   // Read input file
   const content = fs.readFileSync(inputPath, 'utf-8');
-  const lines = content.split('\n').filter(line => line.trim().length > 0);
+  const lines = content.split('\n');
 
   console.log(`  Read ${lines.length} lines`);
 
@@ -116,22 +118,34 @@ function convertSampleFile(config) {
   const labelsJson = JSON.stringify(config.labels);
 
   // Process each line
-  let currentTimestamp = Date.now();
+  let currentTimestamp = 0; // Will be set to first extracted timestamp
 
   for (const line of lines) {
-    let timestamp;
-
     if (config.extractTimestamp) {
       // Try to extract timestamp from line
-      timestamp = config.extractTimestamp(line);
-      if (timestamp) {
-        currentTimestamp = timestamp;
-      } else {
-        // If no timestamp found, use previous + small increment
-        currentTimestamp += 100;
+      const extractedTimestamp = config.extractTimestamp(line);
+      if (extractedTimestamp) {
+        // Initialize on first timestamp
+        if (currentTimestamp === 0) {
+          currentTimestamp = extractedTimestamp;
+        }
+        // Ensure timestamps are always ascending
+        // If extracted timestamp is earlier than current, increment current instead
+        else if (extractedTimestamp >= currentTimestamp) {
+          currentTimestamp = extractedTimestamp;
+        } else {
+          // Timestamp went backwards, increment by 1ms to maintain order
+          currentTimestamp += 1;
+          console.warn("Out-of-order sample logs")
+        }
       }
+      // If no timestamp found, reuse previous timestamp (for multiline messages)
+      // currentTimestamp stays the same
     } else if (config.generateTimestamp) {
       // Generate timestamp with random interval
+      if (currentTimestamp === 0) {
+        currentTimestamp = Date.now();
+      }
       currentTimestamp += getRandomInterval();
     }
 
