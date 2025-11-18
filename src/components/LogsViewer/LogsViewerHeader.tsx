@@ -162,14 +162,14 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
       </div>
 
       <div className="ansi-controls">
-        <button onClick={onCopyAll} className="ansi-copy-button" title="Copy all logs">
-          Copy All
-        </button>
         {hasSelection && (
           <button onClick={onCopySelected} className="ansi-copy-button" title="Copy selected log">
-            Copy Selected
+            <Icon name="clipboard-alt" size='lg' />
           </button>
         )}
+        <button onClick={onCopyAll} className="ansi-copy-button" title="Copy all logs">
+          <Icon name="clipboard-alt" size='lg' /> All
+        </button>
       </div>
     </div>
   );

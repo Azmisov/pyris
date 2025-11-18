@@ -222,7 +222,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
           className="timeline-icon-button"
           title="Recenter to full time range"
         >
-          <Icon name="home-alt" size="sm" />
+          <Icon name="home-alt" />
         </button>
         {onTimeRangeChange && (
           <button
@@ -230,7 +230,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
             className="timeline-icon-button"
             title="Update dashboard time range to match current view"
           >
-            <Icon name="clock-nine" size="sm" />
+            <Icon name="clock-nine" />
           </button>
         )}
       </div>
