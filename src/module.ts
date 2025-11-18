@@ -1,32 +1,33 @@
 import { PanelPlugin } from '@grafana/data';
 import { LogsPanelOptions, defaultOptions } from './types';
 import { LogsPanel } from './components/LogsPanel';
-import {
-  getDarkColorSchemeOptions,
-  getLightColorSchemeOptions,
-} from './theme/colorSchemes';
+import { ThemeSelectEditor } from './components/ThemeSelectEditor';
 
 // Import CSS styles
 import './styles.css';
 
 export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptions((builder) => {
   return builder
-    .addSelect({
+    .addCustomEditor({
+      id: 'darkTheme',
       path: 'darkTheme',
       name: 'Default Dark Theme',
       description: 'Default color scheme to use when panel is in dark mode',
       defaultValue: defaultOptions.darkTheme,
+      editor: ThemeSelectEditor,
       settings: {
-        options: getDarkColorSchemeOptions(),
+        themeMode: 'dark',
       },
     })
-    .addSelect({
+    .addCustomEditor({
+      id: 'lightTheme',
       path: 'lightTheme',
       name: 'Default Light Theme',
       description: 'Default color scheme to use when panel is in light mode',
       defaultValue: defaultOptions.lightTheme,
+      editor: ThemeSelectEditor,
       settings: {
-        options: getLightColorSchemeOptions(),
+        themeMode: 'light',
       },
     })
     .addTextInput({

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTheme2 } from '@grafana/ui';
-import { applyPaletteTheme } from '../../../theme/cssVars';
+import { applyTheme, applyPalette } from '../../../theme/cssVars';
 import { getActiveColorScheme, getEffectiveThemeMode } from '../../../theme/colorSchemes';
 
 export function useThemeManagement(
@@ -14,6 +14,9 @@ export function useThemeManagement(
     themeMode === 'grafana' ? (grafanaTheme.isDark ? 'dark' : 'light') : getEffectiveThemeMode(themeMode)
   );
 
+  // Initialize fixed palette styles once on mount
+  useEffect(applyPalette, []); // Empty deps - only run once on mount
+
   // Apply theme with selected color scheme
   useEffect(() => {
     try {
@@ -24,7 +27,7 @@ export function useThemeManagement(
       const modeForScheme = themeMode === 'grafana' ? effectiveMode : themeMode;
       const activeScheme = getActiveColorScheme(modeForScheme, darkTheme, lightTheme);
       setEffectiveThemeMode(effectiveMode);
-      applyPaletteTheme(effectiveMode, activeScheme);
+      applyTheme(activeScheme);
     } catch (err) {
       console.warn('Failed to apply palette theme:', err);
     }
@@ -44,7 +47,7 @@ export function useThemeManagement(
         const activeScheme = getActiveColorScheme(themeMode, darkTheme, lightTheme);
         const effectiveMode = getEffectiveThemeMode(themeMode);
         setEffectiveThemeMode(effectiveMode);
-        applyPaletteTheme(effectiveMode, activeScheme);
+        applyTheme(activeScheme);
       } catch (err) {
         console.warn('Failed to apply palette theme on system change:', err);
       }
@@ -53,9 +56,6 @@ export function useThemeManagement(
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
-    } else if (mediaQuery.addListener) {
-      mediaQuery.addListener(handleChange);
-      return () => mediaQuery.removeListener(handleChange);
     }
 
     return undefined;

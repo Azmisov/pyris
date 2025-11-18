@@ -2,14 +2,13 @@ import { AnsiColor } from '../types';
 import goghThemes from './gogh-themes.json';
 
 /**
- * Color scheme for base 16 ANSI colors plus optional background/foreground
- * Indices: 0-7 (normal), 8-15 (bright), 16 (background), 17 (foreground), 18-20 (bg accents)
+ * Color scheme for base 16 ANSI colors plus background/foreground
  */
 export interface ColorScheme {
   name: string;
   colors: AnsiColor[];
-  background?: AnsiColor;  // Optional theme background color
-  foreground?: AnsiColor;  // Optional theme foreground (text) color
+  background: AnsiColor;  // Theme background color
+  foreground: AnsiColor;  // Theme foreground (text) color
   bgAccent1: AnsiColor;    // Background accent color (largest shift, for primary hover/active)
   bgAccent2: AnsiColor;    // Background accent color (medium shift, for secondary states)
   bgAccent3: AnsiColor;    // Background accent color (smallest shift, for subtle states)
@@ -27,32 +26,20 @@ function hex(hexString: string): AnsiColor {
 }
 
 /**
- * Convert Gogh theme to ColorScheme format
+ * Convert Gogh theme to ColorScheme format;
+ * Indices: 0-7 (normal), 8-15 (bright), 16 (background), 17 (foreground), 18-20 (bg accents)
  */
 function convertGoghTheme(name: string, colors: string[], dark: boolean): ColorScheme {
-  // Default accent colors for dark and light themes
-  const defaultBgAccent1 = dark ? { r: 40, g: 40, b: 40 } : { r: 230, g: 230, b: 230 };
-  const defaultBgAccent2 = dark ? { r: 50, g: 50, b: 50 } : { r: 220, g: 220, b: 220 };
-  const defaultBgAccent3 = dark ? { r: 60, g: 60, b: 60 } : { r: 210, g: 210, b: 210 };
-
   const scheme: ColorScheme = {
     name,
-    colors: colors.slice(0, 16).map(hex),
     dark,
-    // Always provide background accent colors with fallbacks
-    bgAccent1: colors[18] ? hex(colors[18]) : defaultBgAccent1,
-    bgAccent2: colors[19] ? hex(colors[19]) : defaultBgAccent2,
-    bgAccent3: colors[20] ? hex(colors[20]) : defaultBgAccent3,
+    colors: colors.slice(0, 16).map(hex),
+    background: hex(colors[16]),
+    foreground: hex(colors[17]),
+    bgAccent1: hex(colors[18]),
+    bgAccent2: hex(colors[19]),
+    bgAccent3: hex(colors[20]),
   };
-
-  // Add optional background and foreground colors
-  if (colors[16]) {
-    scheme.background = hex(colors[16]);
-  }
-  if (colors[17]) {
-    scheme.foreground = hex(colors[17]);
-  }
-
   return scheme;
 }
 
@@ -67,10 +54,14 @@ export const COLOR_SCHEMES: Record<string, ColorScheme> = Object.fromEntries(
 );
 
 /**
- * Get color scheme by name
+ * Get color scheme by name, falling back to first color scheme if not found
  */
 export function getColorScheme(name: string): ColorScheme {
-  return COLOR_SCHEMES[name] || COLOR_SCHEMES['default'] || Object.values(COLOR_SCHEMES)[0];
+  if (name in COLOR_SCHEMES) {
+    return COLOR_SCHEMES[name];
+  }
+  // Fallback to first in the list
+  return Object.values(COLOR_SCHEMES)[0];
 }
 
 /**

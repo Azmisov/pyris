@@ -1,10 +1,4 @@
 import { AnsiColor, ColorPalette } from '../types';
-import { getColorScheme } from './colorSchemes';
-
-// Standard xterm-256 color palette
-// First 16 colors (0-15): standard ANSI colors (can be customized via color scheme)
-// Colors 16-231: 216 color cube (6x6x6)
-// Colors 232-255: grayscale ramp
 
 // Base palette starts with default 16 colors
 const BASE_16_COLORS: ColorPalette = [
@@ -27,6 +21,12 @@ const BASE_16_COLORS: ColorPalette = [
   { r: 255, g: 255, b: 255 }, // 15: bright white
 ];
 
+/**
+ * Standard xterm-256 color palette
+ * First 16 colors (0-15): standard ANSI colors (can be customized via color scheme)
+ * Colors 16-231: 216 color cube (6x6x6)
+ * Colors 232-255: grayscale ramp
+ */
 export const XTERM_256_PALETTE: ColorPalette = [...BASE_16_COLORS];
 
 // Generate 216 color cube (16-231)
@@ -65,44 +65,3 @@ function generateGrayscaleRamp(): AnsiColor[] {
 const colorCube = generateColorCube();
 const grayscaleRamp = generateGrayscaleRamp();
 XTERM_256_PALETTE.push(...colorCube, ...grayscaleRamp);
-
-// Convert color to CSS rgb() string
-export function colorToRgb(color: AnsiColor): string {
-  return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
-
-/**
- * Create a palette with a custom color scheme applied to the first 16 colors
- */
-export function getPaletteWithScheme(schemeName: string = 'default'): ColorPalette {
-  const scheme = getColorScheme(schemeName);
-  const palette = [...XTERM_256_PALETTE];
-
-  // Replace first 16 colors with the scheme colors
-  for (let i = 0; i < 16; i++) {
-    palette[i] = scheme.colors[i];
-  }
-
-  return palette;
-}
-
-// Adjust colors for light/dark themes
-export function adjustColorForTheme(color: AnsiColor, theme: 'light' | 'dark'): AnsiColor {
-  if (theme === 'light') {
-    // For light themes, darken bright colors for better contrast
-    const factor = 0.8;
-    return {
-      r: Math.floor(color.r * factor),
-      g: Math.floor(color.g * factor),
-      b: Math.floor(color.b * factor)
-    };
-  } else {
-    // For dark themes, brighten dark colors
-    const factor = 1.2;
-    return {
-      r: Math.min(255, Math.floor(color.r * factor)),
-      g: Math.min(255, Math.floor(color.g * factor)),
-      b: Math.min(255, Math.floor(color.b * factor))
-    };
-  }
-}
