@@ -15,6 +15,7 @@
     - if expression is invalid JSON, or the filtering raises an error, add error class to search
       group, which adds a --ansi-color-1 (red) border
   - navigation:
+    - the toggle in the header switches between showing ANSI vs JSON logs
     - when switching between ANSI and JSON logs, we sync the viewport display and selection; these
       only need to be synced lazily when switching
       - viewport display: get first visible row; find match; scroll into view instantaneously with
@@ -26,6 +27,10 @@
       algorithm. The one with longest common substring is the match.
 
 
+- changes needed:
+No log data should show in the logs viewer panel, the header and timeline should still be visible.
+The timeline should still show range vertical indicators, but no visible, selected, or hover indicators.
+
 
 - timeline view:
   - show log count as bars; vertical gap between zero and one is stretched to make it more evident
@@ -36,6 +41,7 @@
 - bugs:
   - weird character by []Text link; still there, just not visible anymore
   - changing font size should snap to top visible line
+  - wordwrap broken, probably because of the added override styles
 - features:
   - warning message if series errors
   - show log labels
@@ -43,14 +49,18 @@
   - warning if line count is truncated
   - shift/ctrl select to extend line selection
   - show dates in timeline axis?
+  - showing json + ansi in the timeline?
 - styling tweaks:
   - tweak modal colors
   - timeline should use the main font, I think its defaulting to plain monospace
   - timeline axis labels: too squashed when get to microsecond level
 - cleanup:
+  - styles are scoped; simplify naming
+  - use different prefix for global styles
   - are there unused CSS classes
   - test maxLineLength, maxRenderableRows; seems like max line length is truncating when there is
     several OSC8 urls
+  - finalize name and logo
 
 - needs more thought:
   - autoconvert first datetime format to the user's timezone? will be finicky
