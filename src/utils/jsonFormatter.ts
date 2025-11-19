@@ -9,16 +9,17 @@ export interface FormatJsonOptions {
   compact: boolean; // Single-line vs multi-line
   depth: number; // Current nesting depth
   indentSize?: number; // Spaces per indent level (default: 2)
+  expandedPaths?: Set<string>; // Set of expanded paths (format: "rowIndex:path")
+  rowIndex?: number; // Current row index for path generation
 }
 
 /**
- * Format JSON data to ANSI-colored HTML
- * For Phase 1, we keep it simple - no expand/collapse yet
+ * Format JSON data to ANSI-colored HTML with collapse/expand support
  */
 export function formatJsonToAnsi(data: any, options: FormatJsonOptions): string {
-  const { compact, depth, indentSize = 2 } = options;
+  const { compact, depth, indentSize = 2, expandedPaths = new Set(), rowIndex = 0 } = options;
 
-  return formatValue(data, [], depth, compact, indentSize);
+  return formatValue(data, [], depth, compact, indentSize, expandedPaths, rowIndex);
 }
 
 function formatValue(
@@ -26,7 +27,9 @@ function formatValue(
   path: string[],
   depth: number,
   compact: boolean,
-  indentSize: number
+  indentSize: number,
+  expandedPaths: Set<string>,
+  rowIndex: number
 ): string {
   const type = typeof value;
 
@@ -46,12 +49,12 @@ function formatValue(
 
   // Objects
   if (isObject(value)) {
-    return formatObject(value, path, depth, compact, indentSize);
+    return formatObject(value, path, depth, compact, indentSize, expandedPaths, rowIndex);
   }
 
   // Arrays
   if (isArray(value)) {
-    return formatArray(value, path, depth, compact, indentSize);
+    return formatArray(value, path, depth, compact, indentSize, expandedPaths, rowIndex);
   }
 
   // Fallback for undefined, functions, etc.
@@ -63,7 +66,9 @@ function formatObject(
   path: string[],
   depth: number,
   compact: boolean,
-  indentSize: number
+  indentSize: number,
+  expandedPaths: Set<string>,
+  rowIndex: number
 ): string {
   const entries = Object.entries(obj);
 
@@ -71,11 +76,19 @@ function formatObject(
     return '{}';
   }
 
+  // Check if should collapse (depth >= 2 and not expanded)
+  const pathString = `${rowIndex}:${path.join('.')}`;
+  const shouldCollapse = depth >= 2 && !expandedPaths.has(pathString);
+
+  if (shouldCollapse) {
+    return `<span class="json-ellipsis" data-path="${escapeHtml(pathString)}">{…}</span>`;
+  }
+
   if (compact) {
     // Single line: {key: value, key2: value2}
     const parts = entries.map(([key, val]) => {
       const keyHtml = ansiWrap(key, 'dim');
-      const valHtml = formatValue(val, [...path, key], depth + 1, true, indentSize);
+      const valHtml = formatValue(val, [...path, key], depth + 1, true, indentSize, expandedPaths, rowIndex);
       return `${keyHtml}: ${valHtml}`;
     });
     return `{${parts.join(', ')}}`;
@@ -83,13 +96,20 @@ function formatObject(
     // Multi-line
     const indent = ' '.repeat(depth * indentSize);
     const nextIndent = ' '.repeat((depth + 1) * indentSize);
+
+    // If this object is expanded from a collapsed state, make the opening bracket clickable to collapse
+    const isExpanded = depth >= 2 && expandedPaths.has(pathString);
+    const openBracket = isExpanded
+      ? `<span class="json-collapse" data-path="${escapeHtml(pathString)}" title="Click to collapse">{</span>`
+      : '{';
+
     const parts = entries.map(([key, val], i) => {
       const keyHtml = `<span class="ansi-dim ansi-italic">${escapeHtml(key)}</span>`;
-      const valHtml = formatValue(val, [...path, key], depth + 1, false, indentSize);
+      const valHtml = formatValue(val, [...path, key], depth + 1, false, indentSize, expandedPaths, rowIndex);
       const comma = i < entries.length - 1 ? ',' : '';
       return `${nextIndent}${keyHtml}: ${valHtml}${comma}`;
     });
-    return `{\n${parts.join('\n')}\n${indent}}`;
+    return `${openBracket}\n${parts.join('\n')}\n${indent}}`;
   }
 }
 
@@ -98,28 +118,45 @@ function formatArray(
   path: string[],
   depth: number,
   compact: boolean,
-  indentSize: number
+  indentSize: number,
+  expandedPaths: Set<string>,
+  rowIndex: number
 ): string {
   if (arr.length === 0) {
     return '[]';
   }
 
+  // Check if should collapse (depth >= 2 and not expanded)
+  const pathString = `${rowIndex}:${path.join('.')}`;
+  const shouldCollapse = depth >= 2 && !expandedPaths.has(pathString);
+
+  if (shouldCollapse) {
+    return `<span class="json-ellipsis" data-path="${escapeHtml(pathString)}">[…]</span>`;
+  }
+
   if (compact) {
     // Single line: [item1, item2, item3]
     const parts = arr.map((item, i) =>
-      formatValue(item, [...path, String(i)], depth + 1, true, indentSize)
+      formatValue(item, [...path, String(i)], depth + 1, true, indentSize, expandedPaths, rowIndex)
     );
     return `[${parts.join(', ')}]`;
   } else {
     // Multi-line
     const indent = ' '.repeat(depth * indentSize);
     const nextIndent = ' '.repeat((depth + 1) * indentSize);
+
+    // If this array is expanded from a collapsed state, make the opening bracket clickable to collapse
+    const isExpanded = depth >= 2 && expandedPaths.has(pathString);
+    const openBracket = isExpanded
+      ? `<span class="json-collapse" data-path="${escapeHtml(pathString)}" title="Click to collapse">[</span>`
+      : '[';
+
     const parts = arr.map((item, i) => {
-      const itemHtml = formatValue(item, [...path, String(i)], depth + 1, false, indentSize);
+      const itemHtml = formatValue(item, [...path, String(i)], depth + 1, false, indentSize, expandedPaths, rowIndex);
       const comma = i < arr.length - 1 ? ',' : '';
       return `${nextIndent}${itemHtml}${comma}`;
     });
-    return `[\n${parts.join('\n')}\n${indent}]`;
+    return `${openBracket}\n${parts.join('\n')}\n${indent}]`;
   }
 }
 

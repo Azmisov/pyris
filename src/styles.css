@@ -488,3 +488,37 @@ a:hover {
   font-size: 14px;
 }
 
+/* JSON ellipsis for collapsed structures */
+.json-ellipsis {
+  cursor: pointer;
+  color: var(--ansi-fg-4); /* blue */
+  text-decoration: none;
+  user-select: none;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.json-ellipsis:hover {
+  color: var(--ansi-fg-12); /* bright blue */
+  background-color: var(--ansi-bg-accent-1);
+  text-decoration: none;
+}
+
+/* JSON collapse button for expanded structures */
+.json-collapse {
+  cursor: pointer;
+  color: var(--ansi-fg-4); /* blue */
+  text-decoration: none;
+  user-select: none;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.json-collapse:hover {
+  color: var(--ansi-fg-12); /* bright blue */
+  background-color: var(--ansi-bg-accent-1);
+  text-decoration: none;
+}
+

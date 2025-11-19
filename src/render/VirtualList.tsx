@@ -18,6 +18,8 @@ interface VirtualListProps {
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
+  expandedPaths?: Set<string>;
+  onToggleExpand?: (path: string) => void;
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -31,7 +33,9 @@ export const VirtualList = memo<VirtualListProps>(({
   selectedIndex,
   onScroll,
   sortOrder = 'asc',
-  scrollToIndex
+  scrollToIndex,
+  expandedPaths,
+  onToggleExpand
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
@@ -51,10 +55,13 @@ export const VirtualList = memo<VirtualListProps>(({
       return (
         <JsonRow
           row={row}
+          index={index}
           options={options}
           isSelected={selectedIndex === index}
+          expandedPaths={expandedPaths}
           onRowClick={handleClick}
           onRowHover={handleHover}
+          onToggleExpand={onToggleExpand}
         />
       );
     }
@@ -74,7 +81,7 @@ export const VirtualList = memo<VirtualListProps>(({
 
     // Fallback for invalid row type
     return <div>Invalid row type</div>;
-  }, [options, selectedIndex, onRowClick, onRowHover]);
+  }, [options, selectedIndex, onRowClick, onRowHover, expandedPaths, onToggleExpand]);
 
   // Handle visible range changes
   const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
@@ -144,6 +151,8 @@ interface AutoSizedVirtualListProps {
   minHeight?: number;
   sortOrder?: 'asc' | 'desc';
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
+  expandedPaths?: Set<string>;
+  onToggleExpand?: (path: string) => void;
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
@@ -156,7 +165,9 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
   onScroll,
   minHeight = 200,
   sortOrder = 'asc',
-  scrollToIndex
+  scrollToIndex,
+  expandedPaths,
+  onToggleExpand
 }) => {
   return (
     <div className="ansi-auto-sized-container" style={{ height: '100%', minHeight }}>
@@ -174,6 +185,8 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
             onScroll={onScroll}
             sortOrder={sortOrder}
             scrollToIndex={scrollToIndex}
+            expandedPaths={expandedPaths}
+            onToggleExpand={onToggleExpand}
           />
         )}
       </AutoSizer>
