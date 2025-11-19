@@ -493,7 +493,7 @@ export class TimelineChart {
 
     // Render time axis at bottom
     this.axis.y = histogramHeight;
-    this.axis.render(this.ctx, height);
+    this.axis.render(this.ctx);
   }
 
   private renderHistogram(yOffset: number, availableHeight: number): void {

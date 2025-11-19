@@ -9,9 +9,9 @@ export interface ColorScheme {
   colors: AnsiColor[];
   background: AnsiColor;  // Theme background color
   foreground: AnsiColor;  // Theme foreground (text) color
-  bgAccent1: AnsiColor;    // Background accent color (largest shift, for primary hover/active)
-  bgAccent2: AnsiColor;    // Background accent color (medium shift, for secondary states)
-  bgAccent3: AnsiColor;    // Background accent color (smallest shift, for subtle states)
+  bgAccent1: AnsiColor;    // Background accent color (big shift from background, for primary hover/active)
+  bgAccent2: AnsiColor;    // Background accent color (medium shift from bgAccent1, for secondary states)
+  bgAccent3: AnsiColor;    // Background accent color (small shift from bgAccent2, for subtle states)
   dark: boolean;           // Whether this is a dark theme
 }
 
