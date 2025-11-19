@@ -60,6 +60,8 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
             position="popper"
             sideOffset={2}
             align="start"
+            collisionPadding={8}
+            avoidCollisions={true}
           >
             <Select.Viewport>
               {options.map((item) => (

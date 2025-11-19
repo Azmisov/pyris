@@ -12,15 +12,20 @@ const TESTDATA_DIR = path.join(__dirname, '..', 'provisioning', 'testdata');
 
 // Sample configurations
 const SAMPLES = [
+  // {
+  //   title: 'Sample A - Application Logs',
+  //   file: 'sample-A-dashboard.json',
+  //   position: { x: 0, y: 0, w: 12, h: 27 },
+  // },
   {
-    title: 'Sample A - Application Logs',
-    file: 'sample-A-dashboard.json',
-    position: { x: 0, y: 0, w: 12, h: 12 },
+    title: 'Sample B - Hybrid JSON/Text Logs',
+    file: 'sample-B-dashboard.json',
+    position: { x: 0, y: 0, w: 12, h: 27 },
   },
   {
     title: 'Sample C - ANSI Test Suite',
     file: 'sample-C-dashboard.json',
-    position: { x: 12, y: 0, w: 12, h: 12 },
+    position: { x: 12, y: 0, w: 12, h: 27 },
   },
 ];
 

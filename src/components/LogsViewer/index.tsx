@@ -371,7 +371,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     };
   }, []);
 
-  // Preserve scroll position when sort order changes (from any source)
+  // Preserve scroll position and selection when sort order changes (from any source)
   useEffect(() => {
     // Check if sort order actually changed
     if (prevSortOrderRef.current !== sortOrder) {
@@ -387,10 +387,19 @@ export const LogsViewer = memo<LogsViewerProps>(({
         setScrollToIndex({ index: newIndex, timestamp: Date.now(), behavior: 'auto', align: 'start' });
       }
 
+      // Update selected row index if a row is selected
+      // Find the selected row by its timestamp and update its index
+      if (selectedTimestamp !== null && filteredRows.length > 0) {
+        const newSelectedIndex = filteredRows.findIndex(row => row.timestamp === selectedTimestamp);
+        if (newSelectedIndex !== -1) {
+          setSelectedRowIndex(newSelectedIndex);
+        }
+      }
+
       // Update the ref for next comparison
       prevSortOrderRef.current = sortOrder;
     }
-  }, [sortOrder, filteredRows]);
+  }, [sortOrder, filteredRows, selectedTimestamp]);
 
   // Render error state
   if (error) {
