@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from '
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
-import { LogsPanelOptions, AnsiLogRow, ParsedLogsResult } from '../../types';
+import { LogsPanelOptions, LogRow, ParsedLogsResult } from '../../types';
 import { getDarkColorSchemeOptions, getLightColorSchemeOptions, getColorScheme } from '../../theme/colorSchemes';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useThemeManagement } from './hooks/useThemeManagement';
@@ -12,7 +12,6 @@ import { useLinkModal } from './hooks/useLinkModal';
 import { LogsViewerHeader } from './LogsViewerHeader';
 import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { ErrorState } from './ErrorState';
-import { EmptyState } from './EmptyState';
 import { LogsTimeline } from '../LogsTimeline';
 
 /**
@@ -111,19 +110,30 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
 
-  // Process AnsiLogRow data (for now, ignore JSON logs)
-  const logRows: AnsiLogRow[] = useMemo(() => {
+  // Select log rows based on view mode
+  const logRows: LogRow[] = useMemo(() => {
     try {
       setError(null);
-      const rows = parsedData.ansiLogs.map((log, index) => ({
-        timestamp: log.timestamp,
-        seriesIndex: log.seriesIndex ?? index, // Use provided index or assign one
-        message: log.message,
-        strippedText: log.strippedText || stripAnsiCodes(log.message),
-        labels: log.labels,
-        id: log.id,
-        level: log.level,
-      }));
+
+      // Process rows based on type
+      const rows: LogRow[] = viewMode === 'json'
+        ? parsedData.jsonLogs.map((log, index) => ({
+            timestamp: log.timestamp,
+            seriesIndex: log.seriesIndex ?? index,
+            data: log.data,
+            labels: log.labels,
+            id: log.id,
+            level: log.level,
+          }))
+        : parsedData.ansiLogs.map((log, index) => ({
+            timestamp: log.timestamp,
+            seriesIndex: log.seriesIndex ?? index,
+            message: log.message,
+            strippedText: log.strippedText || stripAnsiCodes(log.message),
+            labels: log.labels,
+            id: log.id,
+            level: log.level,
+          }));
 
       // Sort by timestamp, then by seriesIndex for stable ordering
       rows.sort((a, b) => {
@@ -148,15 +158,23 @@ export const LogsViewer = memo<LogsViewerProps>(({
       console.warn('Logs processing error:', err);
       return [];
     }
-  }, [parsedData.ansiLogs, sortOrder]);
+  }, [parsedData.ansiLogs, parsedData.jsonLogs, sortOrder, viewMode]);
 
-  // Apply search/filtering
+  // Memoize ANSI-only rows for search hook to prevent infinite re-renders
+  const ansiOnlyRows = useMemo(() => {
+    return logRows.filter((row): row is LogRow & { message: string } => 'message' in row);
+  }, [logRows]);
+
+  // Apply search/filtering (only for ANSI logs in Phase 1)
   const {
     searchTerm,
     setSearchTerm,
-    filteredRows,
+    filteredRows: searchFilteredRows,
     hasFilter
-  } = useVirtualListSearch(logRows, { caseSensitive, useRegex });
+  } = useVirtualListSearch(ansiOnlyRows as any, { caseSensitive, useRegex });
+
+  // For JSON logs, skip filtering for now (Phase 3 will add expression filtering)
+  const filteredRows = viewMode === 'json' ? logRows : searchFilteredRows;
 
   // Update options with local state
   const effectiveOptions = useMemo(() => ({
@@ -182,7 +200,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   } = useLinkModal();
 
   // Clipboard operations
-  const { copyAllLogs, copySelectedLog } = useClipboard(filteredRows, selectedRowIndex);
+  const { copyAllLogs, copySelectedLog } = useClipboard(filteredRows as any, selectedRowIndex);
 
   // Keyboard navigation
   useKeyboardNavigation(
@@ -194,14 +212,14 @@ export const LogsViewer = memo<LogsViewerProps>(({
   );
 
   // Handle row selection
-  const handleRowClick = useCallback((row: AnsiLogRow, index: number) => {
+  const handleRowClick = useCallback((row: LogRow, index: number) => {
     setSelectedRowIndex(index);
     setSelectedTimestamp(row.timestamp);
 
     if (onRowClick) {
       const logData: LogData = {
         timestamp: row.timestamp,
-        message: row.message,
+        message: 'message' in row ? row.message : JSON.stringify(row.data),
         labels: row.labels,
         id: row.id,
         level: row.level,
@@ -211,12 +229,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, [onRowClick]);
 
   // Handle row hover
-  const handleRowHover = useCallback((row: AnsiLogRow | null) => {
+  const handleRowHover = useCallback((row: LogRow | null) => {
     setHoveredTimestamp(row ? row.timestamp : null);
   }, []);
 
   // Handle visible range change
-  const handleVisibleRangeChange = useCallback((firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => {
+  const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => {
     setVisibleRange({
       firstIndex: startIndex,
       lastIndex: endIndex,
@@ -414,16 +432,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
     );
   }
 
-  // Render empty state
-  if (logRows.length === 0) {
-    return (
-      <EmptyState
-        className={className}
-        width={width}
-        height={height}
-      />
-    );
-  }
 
   // Calculate content height (header + timeline)
   const timelineHeight = showTimeline ? 100 : 0;
@@ -476,11 +484,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
       {/* Timeline */}
       {showTimeline && (
         <LogsTimeline
-          logs={logRows}
+          logs={logRows as any}
           height={timelineHeight}
-          hoveredTimestamp={hoveredTimestamp}
-          selectedTimestamp={selectedTimestamp}
-          visibleRange={visibleRange}
+          hoveredTimestamp={filteredRows.length === 0 ? null : hoveredTimestamp}
+          selectedTimestamp={filteredRows.length === 0 ? null : selectedTimestamp}
+          visibleRange={filteredRows.length === 0 ? { firstIndex: null, lastIndex: null, first: null, last: null } : visibleRange}
           colorScheme={currentColorScheme}
           sortOrder={sortOrder}
           onLogSelect={handleLogSelect}
@@ -491,18 +499,24 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
       {/* Main log display */}
       <div className="ansi-logs-content">
-        <AutoSizedVirtualList
-          key={filteredRows.length}
-          rows={filteredRows}
-          options={effectiveOptions}
-          onRowClick={handleRowClick}
-          onRowHover={handleRowHover}
-          onVisibleRangeChange={handleVisibleRangeChange}
-          selectedIndex={selectedRowIndex}
-          minHeight={contentHeight}
-          sortOrder={sortOrder}
-          scrollToIndex={scrollToIndex}
-        />
+        {filteredRows.length === 0 ? (
+          <div className="empty-state">
+            <p>No {viewMode === 'json' ? 'JSON' : 'ANSI'} logs</p>
+          </div>
+        ) : (
+          <AutoSizedVirtualList
+            key={filteredRows.length}
+            rows={filteredRows}
+            options={effectiveOptions}
+            onRowClick={handleRowClick}
+            onRowHover={handleRowHover}
+            onVisibleRangeChange={handleVisibleRangeChange}
+            selectedIndex={selectedRowIndex}
+            minHeight={contentHeight}
+            sortOrder={sortOrder}
+            scrollToIndex={scrollToIndex}
+          />
+        )}
       </div>
 
       <LinkConfirmationModal

@@ -1,18 +1,19 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { AnsiLogRow, LogsPanelOptions } from '../types';
+import { AnsiLogRow, LogRow, LogsPanelOptions } from '../types';
 import { Row } from './Row';
+import { JsonRow } from './JsonRow';
 import { applyFontSizeVars } from '../utils/fontSizing';
 
 interface VirtualListProps {
-  rows: AnsiLogRow[];
+  rows: LogRow[];
   options: LogsPanelOptions;
   height: number;
   width: number;
-  onRowClick?: (row: AnsiLogRow, index: number) => void;
-  onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => void;
+  onRowClick?: (row: LogRow, index: number) => void;
+  onRowHover?: (row: LogRow | null, index: number | null) => void;
+  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
@@ -41,19 +42,38 @@ export const VirtualList = memo<VirtualListProps>(({
   const maxRows = Math.min(rows.length, options.maxRenderableRows);
   const displayRows = rows.slice(0, maxRows);
 
-  const renderItem = useCallback((index: number, row: AnsiLogRow) => {
+  const renderItem = useCallback((index: number, row: LogRow) => {
     const handleClick = onRowClick ? () => onRowClick(row, index) : undefined;
-    const handleHover = onRowHover ? (hoveredRow: AnsiLogRow | null) => onRowHover(hoveredRow, hoveredRow ? index : null) : undefined;
+    const handleHover = onRowHover ? (hoveredRow: LogRow | null) => onRowHover(hoveredRow, hoveredRow ? index : null) : undefined;
 
-    return (
-      <Row
-        row={row}
-        options={options}
-        isSelected={selectedIndex === index}
-        onRowClick={handleClick}
-        onRowHover={handleHover}
-      />
-    );
+    // Render JSON row
+    if ('data' in row) {
+      return (
+        <JsonRow
+          row={row}
+          options={options}
+          isSelected={selectedIndex === index}
+          onRowClick={handleClick}
+          onRowHover={handleHover}
+        />
+      );
+    }
+
+    // Render ANSI row
+    if ('message' in row) {
+      return (
+        <Row
+          row={row as AnsiLogRow}
+          options={options}
+          isSelected={selectedIndex === index}
+          onRowClick={handleClick}
+          onRowHover={handleHover}
+        />
+      );
+    }
+
+    // Fallback for invalid row type
+    return <div>Invalid row type</div>;
   }, [options, selectedIndex, onRowClick, onRowHover]);
 
   // Handle visible range changes
@@ -114,11 +134,11 @@ VirtualList.displayName = 'VirtualList';
 
 // Auto-sizing wrapper component
 interface AutoSizedVirtualListProps {
-  rows: AnsiLogRow[];
+  rows: LogRow[];
   options: LogsPanelOptions;
-  onRowClick?: (row: AnsiLogRow, index: number) => void;
-  onRowHover?: (row: AnsiLogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: AnsiLogRow | null, lastRow: AnsiLogRow | null, startIndex: number, endIndex: number) => void;
+  onRowClick?: (row: LogRow, index: number) => void;
+  onRowHover?: (row: LogRow | null, index: number | null) => void;
+  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;

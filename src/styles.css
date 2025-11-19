@@ -432,3 +432,59 @@ a:hover {
   transition: background-color 0.15s ease;
 }
 
+/* JSON Row Styles */
+.json-row {
+  display: block;
+  padding: 0 4px;
+  user-select: text;
+  cursor: default;
+  position: relative;
+  border: none;
+  /* inherited from container */
+  font-size: var(--ansi-logs-row-font-size);
+  line-height: var(--ansi-logs-row-height);
+  min-height: var(--ansi-logs-row-height);
+}
+
+.json-row:hover {
+  background-color: var(--ansi-bg-accent-1);
+}
+
+.json-row.selected {
+  background-color: var(--ansi-bg-accent-3);
+}
+
+/* Soft wrap mode for JSON rows */
+.json-row.wrap-mode-soft {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* JSON content */
+.json-content {
+  display: inline-block;
+  font-family: var(--ansi-logs-row-font-family);
+  white-space: pre;
+}
+
+/* Compact mode - single line */
+.json-content.compact {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Empty state for logs */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--ansi-fg-muted-1);
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
