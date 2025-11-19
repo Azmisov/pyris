@@ -6,8 +6,8 @@
 import { ColorScheme } from '../../theme/colorSchemes';
 
 // Helper to convert AnsiColor to CSS color
-function colorToCSS(color: { r: number; g: number; b: number } | undefined, fallback: string): string {
-  return color ? `rgb(${color.r}, ${color.g}, ${color.b})` : fallback;
+function colorToCSS(color: { r: number; g: number; b: number }): string {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
 interface GridSettings {
@@ -279,7 +279,7 @@ export class TimeAxis {
 
     // Draw background for axis area using bgAccent1
     const axisHeight = this.getHeight();
-    ctx.fillStyle = colorToCSS(this.colorScheme.bgAccent1, '#222');
+    ctx.fillStyle = colorToCSS(this.colorScheme.bgAccent1);
     ctx.fillRect(0, this.y, this.width, axisHeight);
 
     const G = this.grid;
@@ -293,7 +293,7 @@ export class TimeAxis {
     const majorPath = new Path2D();
 
     // Use foreground color or fallback for text
-    ctx.fillStyle = colorToCSS(this.colorScheme.foreground, '#999');
+    ctx.fillStyle = colorToCSS(this.colorScheme.foreground);
     ctx.font = '11px monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
@@ -340,10 +340,10 @@ export class TimeAxis {
     ctx.lineWidth = 1;
     // Major grid lines: use bgAccent1 or fallback
     // TODO: contrast between major/minor is not very strong
-    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent3, '#444');
+    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent3);
     ctx.stroke(majorPath);
     // Minor grid lines: use bgAccent3 or fallback
-    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent1, '#333');
+    ctx.strokeStyle = colorToCSS(this.colorScheme.bgAccent1);
     ctx.stroke(minorPath);
   }
 }

@@ -23,6 +23,12 @@ const SAMPLE_FILES = [
     extractTimestamp: extractTimestampFromLogLine,
   },
   {
+    input: 'B.txt',
+    output: 'sample-B.json',
+    labels: { source: 'sample-B', app: 'st_anomaly_detect', type: 'hybrid' },
+    extractTimestampHybrid: true,
+  },
+  {
     input: 'C.txt',
     output: 'sample-C.json',
     labels: { source: 'sample-C', type: 'ansi-test' },
@@ -57,6 +63,30 @@ function extractTimestampFromLogLine(line) {
     console.log(timestampStr, date.getTime());
 
     return date.getTime();
+  }
+  return null;
+}
+
+/**
+ * Check if a line is JSON (starts with { and ends with })
+ */
+function isJsonLine(line) {
+  const trimmed = line.trim();
+  return trimmed.startsWith('{') && trimmed.endsWith('}');
+}
+
+/**
+ * Extract timestamp from JSON log_time field
+ * Format: "log_time":"2025-11-18T23:46:48.927082+00:00"
+ */
+function extractTimestampFromJson(line) {
+  try {
+    const json = JSON.parse(line);
+    if (json.log_time) {
+      return new Date(json.log_time).getTime();
+    }
+  } catch (error) {
+    // Not valid JSON, return null
   }
   return null;
 }
@@ -119,9 +149,51 @@ function convertSampleFile(config) {
 
   // Process each line
   let currentTimestamp = 0; // Will be set to first extracted timestamp
+  // For hybrid format, track timestamps separately
+  let jsonTimestamp = 0;
+  let textTimestamp = 0;
 
   for (const line of lines) {
-    if (config.extractTimestamp) {
+    if (config.extractTimestampHybrid) {
+      // Hybrid format: check if line is JSON or text
+      if (isJsonLine(line)) {
+        // JSON line - extract from log_time field
+        const extractedTimestamp = extractTimestampFromJson(line);
+        if (extractedTimestamp) {
+          if (jsonTimestamp === 0) {
+            jsonTimestamp = extractedTimestamp;
+          } else if (extractedTimestamp >= jsonTimestamp) {
+            jsonTimestamp = extractedTimestamp;
+          } else {
+            // Timestamp went backwards, increment by 1ms to maintain order
+            jsonTimestamp += 1;
+            console.warn("Out-of-order JSON logs");
+          }
+          currentTimestamp = jsonTimestamp;
+        } else {
+          // Fallback to previous JSON timestamp
+          currentTimestamp = jsonTimestamp || Date.now();
+        }
+      } else {
+        // Text line - extract from log line
+        const extractedTimestamp = extractTimestampFromLogLine(line);
+        if (extractedTimestamp) {
+          if (textTimestamp === 0) {
+            textTimestamp = extractedTimestamp;
+          } else if (extractedTimestamp >= textTimestamp) {
+            textTimestamp = extractedTimestamp;
+          } else {
+            // Timestamp went backwards, increment by 1ms to maintain order
+            textTimestamp += 1;
+            console.warn("Out-of-order text logs");
+          }
+          currentTimestamp = textTimestamp;
+        } else {
+          // Reuse previous text timestamp (for multiline messages)
+          currentTimestamp = textTimestamp || Date.now();
+        }
+      }
+    } else if (config.extractTimestamp) {
       // Try to extract timestamp from line
       const extractedTimestamp = config.extractTimestamp(line);
       if (extractedTimestamp) {
@@ -201,4 +273,9 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { convertSampleFile, extractTimestampFromLogLine };
+module.exports = {
+  convertSampleFile,
+  extractTimestampFromLogLine,
+  extractTimestampFromJson,
+  isJsonLine,
+};

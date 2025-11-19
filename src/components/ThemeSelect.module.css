@@ -50,7 +50,7 @@
   border-radius: 4px;
   padding: 0;
   list-style: none;
-  max-height: 800px;
+  max-height: var(--radix-select-content-available-height);
   overflow-y: auto;
   z-index: 9999;
   display: none;
