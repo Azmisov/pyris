@@ -13,6 +13,7 @@ import { LogsViewerHeader } from './LogsViewerHeader';
 import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
+import { parseExpression } from '../../utils/jsonExpression';
 
 /**
  * Simple log data interface for the viewer
@@ -91,6 +92,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [jsonExpandedPaths, setJsonExpandedPaths] = useState<Set<string>>(new Set());
+  const [expressionError, setExpressionError] = useState<string | null>(null);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   // LocalStorage-backed state
   const [wrapMode, setWrapMode] = useLocalStorage('wrapMode', options.wrapMode || 'nowrap');
@@ -166,16 +169,89 @@ export const LogsViewer = memo<LogsViewerProps>(({
     return logRows.filter((row): row is LogRow & { message: string } => 'message' in row);
   }, [logRows]);
 
-  // Apply search/filtering (only for ANSI logs in Phase 1)
+  // Apply search/filtering (only for ANSI logs)
   const {
     searchTerm,
     setSearchTerm,
     filteredRows: searchFilteredRows,
-    hasFilter
+    hasFilter: ansiHasFilter
   } = useVirtualListSearch(ansiOnlyRows as any, { caseSensitive, useRegex });
 
-  // For JSON logs, skip filtering for now (Phase 3 will add expression filtering)
-  const filteredRows = viewMode === 'json' ? logRows : searchFilteredRows;
+  // Debounce search term for expression evaluation (300ms delay)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Parse expression immediately for error display (no debounce)
+  const immediateExpression = useMemo(() => {
+    if (viewMode !== 'json' || !searchTerm.trim()) {
+      return null;
+    }
+    const result = parseExpression(searchTerm);
+    if (result.error) {
+      console.log('[Expression] Syntax error detected:', result.error);
+    }
+    return result;
+  }, [viewMode, searchTerm]);
+
+  // Parse expression with debounce for filtering
+  const parsedExpression = useMemo(() => {
+    if (viewMode !== 'json' || !debouncedSearchTerm.trim()) {
+      return null;
+    }
+    return parseExpression(debouncedSearchTerm);
+  }, [viewMode, debouncedSearchTerm]);
+
+  // Apply expression filtering for JSON logs
+  const { filteredRows, hasFilter, runtimeError } = useMemo(() => {
+    if (viewMode === 'json') {
+      // Apply expression filtering for JSON mode
+      if (!debouncedSearchTerm.trim()) {
+        return { filteredRows: logRows, hasFilter: false, runtimeError: null };
+      }
+
+      if (!parsedExpression || parsedExpression.error || !parsedExpression.filter) {
+        return { filteredRows: logRows, hasFilter: false, runtimeError: null };
+      }
+
+      // Run actual filtering and catch runtime errors
+      try {
+        const filtered = logRows.filter(parsedExpression.filter);
+        return { filteredRows: filtered, hasFilter: true, runtimeError: null };
+      } catch (error) {
+        // Runtime error during filtering - stop and report error
+        const errorMsg = error instanceof Error ? error.message : 'Runtime error during filtering';
+        return { filteredRows: logRows, hasFilter: false, runtimeError: errorMsg };
+      }
+    } else {
+      // Use ANSI search results
+      return { filteredRows: searchFilteredRows, hasFilter: ansiHasFilter, runtimeError: null };
+    }
+  }, [viewMode, logRows, debouncedSearchTerm, parsedExpression, searchFilteredRows, ansiHasFilter]);
+
+  // Update expression error to include runtime errors
+  useEffect(() => {
+    if (viewMode !== 'json') {
+      console.log('[Expression] Not in JSON mode, clearing error');
+      setExpressionError(null);
+    } else if (!searchTerm.trim()) {
+      console.log('[Expression] Empty search term, clearing error');
+      setExpressionError(null);
+    } else if (runtimeError) {
+      // Runtime error takes precedence
+      console.log('[Expression] Setting runtime error:', runtimeError);
+      setExpressionError(runtimeError);
+    } else if (immediateExpression) {
+      // Syntax/parse error
+      const error = immediateExpression.error || null;
+      console.log('[Expression] Setting syntax error:', error);
+      setExpressionError(error);
+    }
+  }, [viewMode, searchTerm, immediateExpression, runtimeError]);
 
   // Update options with local state
   const effectiveOptions = useMemo(() => ({
@@ -491,6 +567,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onClearSearch={clearSearch}
         searchExpanded={searchExpanded}
         onToggleSearch={toggleSearch}
+        expressionError={expressionError}
         filteredRowsLength={filteredRows.length}
         totalRowsLength={logRows.length}
         viewMode={viewMode}

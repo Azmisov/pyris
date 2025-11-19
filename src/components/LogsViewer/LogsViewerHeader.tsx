@@ -45,6 +45,7 @@ interface LogsViewerHeaderProps {
   onClearSearch: () => void;
   searchExpanded: boolean;
   onToggleSearch: () => void;
+  expressionError?: string | null;
 
   // Stats props
   filteredRowsLength: number;
@@ -91,6 +92,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   onClearSearch,
   searchExpanded,
   onToggleSearch,
+  expressionError,
   filteredRowsLength,
   totalRowsLength,
   viewMode,
@@ -159,6 +161,8 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
           onClearSearch={onClearSearch}
           searchExpanded={searchExpanded}
           onToggleSearch={onToggleSearch}
+          expressionError={expressionError}
+          isExpressionMode={viewMode === 'json'}
         />
       </div>
 
