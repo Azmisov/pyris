@@ -90,6 +90,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [useRegex, setUseRegex] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [jsonExpandedPaths, setJsonExpandedPaths] = useState<Set<string>>(new Set());
 
   // LocalStorage-backed state
   const [wrapMode, setWrapMode] = useLocalStorage('wrapMode', options.wrapMode || 'nowrap');
@@ -213,6 +214,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle row selection
   const handleRowClick = useCallback((row: LogRow, index: number) => {
+    // Clear expand paths when switching to a different row
+    if (selectedRowIndex !== index) {
+      setJsonExpandedPaths(new Set());
+    }
+
     setSelectedRowIndex(index);
     setSelectedTimestamp(row.timestamp);
 
@@ -226,7 +232,20 @@ export const LogsViewer = memo<LogsViewerProps>(({
       };
       onRowClick(logData, index);
     }
-  }, [onRowClick]);
+  }, [onRowClick, selectedRowIndex]);
+
+  // Handle expand/collapse toggle for JSON nested structures
+  const handleToggleExpand = useCallback((path: string) => {
+    setJsonExpandedPaths(prev => {
+      const next = new Set(prev);
+      if (next.has(path)) {
+        next.delete(path);
+      } else {
+        next.add(path);
+      }
+      return next;
+    });
+  }, []);
 
   // Handle row hover
   const handleRowHover = useCallback((row: LogRow | null) => {
@@ -515,6 +534,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
             minHeight={contentHeight}
             sortOrder={sortOrder}
             scrollToIndex={scrollToIndex}
+            expandedPaths={jsonExpandedPaths}
+            onToggleExpand={handleToggleExpand}
           />
         )}
       </div>

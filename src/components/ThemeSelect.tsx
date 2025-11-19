@@ -26,7 +26,7 @@ interface ThemeSelectProps {
 export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, id }) => {
   const selectedItem = options.find(opt => opt.value === value);
   const displayItem = selectedItem || options[0];
-  const [debugOpen, setDebugOpen] = useState(DEBUG_KEEP_OPEN);
+  const [debugOpen, _setDebugOpen] = useState(DEBUG_KEEP_OPEN);
 
   return (
     <div className={styles['ansi-theme-select']}>

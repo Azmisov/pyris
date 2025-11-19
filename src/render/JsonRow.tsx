@@ -1,30 +1,57 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { JsonLogRow, LogsPanelOptions } from '../types';
 import { formatJsonToAnsi } from '../utils/jsonFormatter';
 
 interface JsonRowProps {
   row: JsonLogRow;
+  index: number;
   options: LogsPanelOptions;
   isSelected?: boolean;
+  expandedPaths?: Set<string>;
   onRowClick?: (row: JsonLogRow) => void;
   onRowHover?: (row: JsonLogRow | null) => void;
+  onToggleExpand?: (path: string) => void;
   style?: React.CSSProperties;
 }
 
 // Main JSON row component with memoization
-export const JsonRow = memo<JsonRowProps>(({ row, options, isSelected, onRowClick, onRowHover, style }) => {
+export const JsonRow = memo<JsonRowProps>(({
+  row,
+  index,
+  options,
+  isSelected,
+  expandedPaths = new Set(),
+  onRowClick,
+  onRowHover,
+  onToggleExpand,
+  style
+}) => {
   // Format JSON with syntax highlighting
   const processedJson = useMemo(() => {
     return formatJsonToAnsi(row.data, {
       compact: !isSelected, // Compact when not selected, multi-line when selected
       depth: 0,
       indentSize: 2,
+      expandedPaths: isSelected ? expandedPaths : new Set(), // Only use expanded paths when selected
+      rowIndex: index,
     });
-  }, [row.data, isSelected]);
+  }, [row.data, isSelected, expandedPaths, index]);
 
   const handleClick = useMemo(() => {
     return onRowClick ? () => onRowClick(row) : undefined;
   }, [onRowClick, row]);
+
+  // Handle clicks on ellipsis and collapse elements
+  const handleContentClick = useCallback((event: React.MouseEvent<HTMLSpanElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('json-ellipsis') || target.classList.contains('json-collapse')) {
+      event.stopPropagation(); // Don't trigger row click
+      const path = target.getAttribute('data-path');
+      if (path && onToggleExpand) {
+        onToggleExpand(path);
+      }
+    }
+  }, [onToggleExpand]);
 
   const handleMouseEnter = useMemo(() => {
     return onRowHover ? () => onRowHover(row) : undefined;
@@ -56,6 +83,7 @@ export const JsonRow = memo<JsonRowProps>(({ row, options, isSelected, onRowClic
       <span
         className={isSelected ? 'json-content' : 'json-content compact'}
         dangerouslySetInnerHTML={{ __html: processedJson }}
+        onClick={handleContentClick}
       />
     </div>
   );
