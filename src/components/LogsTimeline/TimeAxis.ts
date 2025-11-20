@@ -34,6 +34,10 @@ export function format_time_full(t: number) : string {
 }
 
 interface GridSettings {
+  /** Minimum pixel width between grid intervals
+   * TODO: make this dynamic based on what is being
+   * displayed and font, e.g. 05:00 is shorter than 2025-10-12
+   */
   minIntervalWidth: number;
   /** How much each zoom iteration should scale the current duration */
   zoomFactor: number;
@@ -63,50 +67,50 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
     {
       unit: 'μs',
       minDuration: 1,
-      intervals: [500, 250, 100, 50, 20, 15, 5, 2, 1]
+      intervals: [1, 2, 5, 15, 25, 50, 100, 250, 500]
     },
     {
       unit: 'ms',
       minDuration: 1000,
-      intervals: [500, 250, 100, 50, 25, 10, 5, 2, 1]
+      intervals: [1, 2, 5, 10, 25, 50, 100, 250, 500]
     },
     {
       unit: 's',
       minDuration: 1000*1000,
       // typical wall clock divisions
-      intervals: [30, 15, 10, 5, 2, 1]
+      intervals: [1, 2, 5, 10, 15, 30]
     },
     {
       unit: 'm',
       minDuration: 60*1000*1000,
       // typical wall clock divisions
-      intervals: [30, 15, 10, 5, 2, 1]
+      intervals: [1, 2, 5, 10, 15, 30]
     },
     {
       unit: 'h',
       minDuration: 60*60*1000*1000,
       // 8 to match typical workday; 12 for sensible noon/midnight division
-      intervals: [12, 8, 4, 2, 1]
+      intervals: [1, 2, 4, 8, 12]
     },
     {
       unit: 'd',
       // daylight savings; currently max shift for any timezone is 1hr
       minDuration: 23*60*60*1000*1000,
       // TODO: multiples of seven aligned to monday?
-      intervals: [15, 10, 5, 2, 1]
+      intervals: [1, 2, 5, 10, 15]
     },
     {
       unit: 'M',
       // february
       minDuration: 28*24*60*60*1000*1000,
       // quartarly and mid-year divisions
-      intervals: [6, 4, 2, 1]
+      intervals: [1, 2, 4, 6]
     },
     {
       unit: 'y',
       // non-leap year
       minDuration: 365*24*60*60*1000*1000,
-      intervals: [1000, 500, 250, 100, 50, 25, 10, 5, 2, 1]
+      intervals: [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000]
     },
   ],
 };
@@ -130,6 +134,13 @@ interface GridLine {
 class GridLineGenerator {
   /** Grid configuration settings (min spacing, zoom factors, available units) */
   private gridSettings: GridSettings;
+
+  /**
+   * Preprocessed flat array of [duration, {unit, interval, majorUnit}] pairs,
+   * sorted in ascending duration order. Used for binary search to find appropriate
+   * grid spacing based on zoom level.
+   */
+  private durationLookup: Array<[number, { unit: string; interval: number; majorUnit: string }]>;
 
   /**
    * Map of unit names to their floor timestamps (most recent boundary at/before range end).
@@ -157,6 +168,72 @@ class GridLineGenerator {
     this.gridSettings = gridSettings;
     this.offsets = offsets;
     this.tzOffset = tzOffset;
+
+    // Preprocess gridSettings into flat duration lookup array
+    this.durationLookup = this.preprocessGridSettings(gridSettings);
+  }
+
+  /**
+   * Preprocess gridSettings into a flat array of [duration, {unit, interval, majorUnit}] pairs.
+   * Each entry represents minDuration * interval for a given spacing configuration.
+   * Validates that the resulting array is in strictly ascending duration order.
+   *
+   * @param gridSettings - Grid configuration with spacings
+   * @returns Sorted array of [duration, metadata] pairs for binary search
+   * @throws Error if durations are not in ascending order
+   */
+  private preprocessGridSettings(
+    gridSettings: GridSettings
+  ): Array<[number, { unit: string; interval: number; majorUnit: string }]> {
+    const result: Array<[number, { unit: string; interval: number; majorUnit: string }]> = [];
+
+    // Flatten all spacings into [duration, metadata] pairs
+    let prev = 0;
+    for (let i = 0; i < gridSettings.spacings.length; i++) {
+      const spacing = gridSettings.spacings[i];
+      // Major unit is the next unit up in the hierarchy (or same if last)
+      const majorUnit = gridSettings.spacings[i + 1]?.unit || spacing.unit;
+
+      for (const interval of spacing.intervals) {
+        const duration = spacing.minDuration * interval;
+        // Validate ascending order
+        if (duration <= prev) {
+          throw new Error(`Grid setting unit=${spacing.unit} interval=${interval} is not in ascending order`);
+        }
+        result.push([duration, { unit: spacing.unit, interval, majorUnit }]);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Binary search to find the first duration >= target value.
+   * Returns the metadata (unit, interval, majorUnit) for that duration.
+   *
+   * @param targetDuration - Minimum duration to search for (in microseconds)
+   * @returns Metadata for the first duration >= targetDuration, or null if not found (which means
+   * the target duration is incredibly large)
+   */
+  private findMinDuration(targetDuration: number): { unit: string; interval: number; majorUnit: string } | null {
+    // Binary search for first element >= targetDuration
+    let left = 0;
+    let right = this.durationLookup.length - 1;
+    let result: { unit: string; interval: number; majorUnit: string } | null = null;
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      const [duration, metadata] = this.durationLookup[mid];
+
+      if (duration >= targetDuration) {
+        result = metadata;
+        right = mid - 1; // Continue searching left for smaller valid duration
+      } else {
+        left = mid + 1;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -166,82 +243,25 @@ class GridLineGenerator {
    *
    * Sets internal state: unit (minor unit), interval (# of units per line), majorUnit
    *
-   * @param zoomRangeUs - Visible time range [start, end] in microseconds
-   * @param width - Canvas width in pixels
+   * @param zoomRangeUs Visible time range [start, end] in microseconds
+   * @param width Canvas width in pixels
    */
   updateZoom(zoomRangeUs: [number, number], width: number): void {
     // Microseconds span for the full grid
     const us = zoomRangeUs[1] - zoomRangeUs[0];
-    // Min microseconds per grid interval
-    const minGridUs = (us / width) * this.gridSettings.minIntervalWidth;
+    const usPerPx = us / width;
+    // Minimum interval between grid lines in microsecond coordinates
+    const minGridUs = usPerPx * this.gridSettings.minIntervalWidth;
 
-    const sgs = this.gridSettings.spacings;
-    for (let gi = 0; gi < sgs.length; gi++) {
-      const gs = sgs[gi];
-      const approxBase = this.getApproximateBase(gs.unit);
-      const gridRes = Math.ceil(minGridUs / approxBase);
-      let interval = gs.intervals[0];
-
-      // Grid spacing too small to accommodate min
-      if (interval < gridRes) {
-        continue;
-      }
-
-      // Unit is sufficient; find min interval >= gridRes
-      let bestInterval = interval;
-      for (let i = 1; i < gs.intervals.length; i++) {
-        interval = gs.intervals[i];
-        if (interval >= gridRes) {
-          bestInterval = interval;
-        } else {
-          break;
-        }
-      }
-
-      // Found appropriate grid configuration
-      this.unit = gs.unit;
-      this.interval = bestInterval;
-      this.majorUnit = gs.major;
-      return;
+    // Use binary search to find the smallest duration >= minGridUs
+    const config = this.findMinDuration(minGridUs);
+    if (!config) {
+      throw Error("Max zoom duration clamping needs to be increased")
     }
 
-    // Fallback to coarsest available
-    const lastSpacing = sgs[sgs.length - 1];
-    this.unit = lastSpacing.unit;
-    this.interval = lastSpacing.intervals[lastSpacing.intervals.length - 1];
-    this.majorUnit = lastSpacing.major;
-  }
-
-  /**
-   * Get approximate microsecond conversion for a unit.
-   * Uses minimum values (worst-case) for calendar units to ensure labels don't overlap.
-   * E.g., uses 28 days for months (February) rather than average 30.437 days.
-   *
-   * @param unit - Time unit to convert
-   * @param currentBase - Accumulated base from previous units (for fixed units)
-   * @returns Microseconds per unit (minimum value for calendar units)
-   */
-  private getApproximateBase(unit: string, currentBase: number): number {
-    switch (unit) {
-      case 'μs':
-        return 1;
-      case 'ms':
-        return 1000;
-      case 's':
-        return 1000 * 1000;
-      case 'm':
-        return 60 * 1000 * 1000;
-      case 'h':
-        return 60 * 60 * 1000 * 1000;
-      case 'd':
-        return 24 * 60 * 60 * 1000 * 1000;
-      case 'M':
-        return 28 * 24 * 60 * 60 * 1000 * 1000; // February (worst case)
-      case 'y':
-        return 365 * 24 * 60 * 60 * 1000 * 1000; // Non-leap year
-      default:
-        return currentBase;
-    }
+    this.unit = config.unit;
+    this.interval = config.interval;
+    this.majorUnit = config.majorUnit;
   }
 
   /**
