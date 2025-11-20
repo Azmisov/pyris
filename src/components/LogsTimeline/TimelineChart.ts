@@ -39,6 +39,7 @@ export class TimelineChart {
   private indicators: VerticalIndicator[] = [];
 
   // Mouse state
+  /** Autoincrementing drag identifier to indicate for knowing when a new drag has begun */
   private dragId: number = 0;
   private dragStart: [number, number] | null = null;
   private dragging: boolean = false;
@@ -195,11 +196,7 @@ export class TimelineChart {
     }
 
     if (this.dragging && this.dragStart) {
-      this.axis.mousedrag({
-        id: this.dragId,
-        start: this.dragStart,
-        end: cur,
-      });
+      this.axis.shift(this.dragId, this.dragStart[0], cur);
     }
   }
 
@@ -209,23 +206,37 @@ export class TimelineChart {
     // Disallow while clicking/dragging
     if (this.dragStart) return;
 
-    let fac = evt.deltaY;
+    // Conversion factor from wheel delta to approximate pixels
+    let fac = 1;
     switch (evt.deltaMode) {
       case WheelEvent.DOM_DELTA_LINE:
-        fac *= 16;
+        fac = 40;
         break;
       case WheelEvent.DOM_DELTA_PAGE:
-        fac *= 960;
+        fac = 800;
         break;
     }
 
-    if (!fac) return;
+    // Figure out zoom vs shift distances
+    let zoom = evt.deltaZ;
+    let shift = evt.deltaX;
+    // Use vertical scroll as fallback if others are not provided
+    if (evt.shiftKey && !shift) {
+      shift = evt.deltaY;
+    } else if (!zoom) {
+      zoom = evt.deltaY;
+    }
+    shift *= fac;
+    zoom *= fac;
 
-    this.axis.mousewheel({
-      factor: fac,
-      shift: evt.shiftKey,
-      position: this.mousePos(evt as any),
-    });
+    // Perform view adjustment
+    const x = this.mousePos(evt as any)[0];
+    if (zoom) {
+      this.axis.zoom(zoom, x);
+    }
+    if (shift) {
+      this.axis.shift(null, x, x + shift);
+    }
   }
 
   private pointerLeave(e: PointerEvent): void {
