@@ -196,7 +196,7 @@ export class TimelineChart {
     }
 
     if (this.dragging && this.dragStart) {
-      this.axis.shift(this.dragId, this.dragStart[0], cur);
+      this.axis.shift(this.dragId, this.dragStart[0], cur[0]);
     }
   }
 

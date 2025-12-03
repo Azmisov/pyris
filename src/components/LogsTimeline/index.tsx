@@ -34,20 +34,20 @@ function calculateHistogram(logs: AnsiLogRow[], binCount: number) {
     return { timeRange: [0, 0] as [number, number], histogram: [] };
   }
 
-  // Find time range (timestamps are in milliseconds, convert to microseconds)
+  // Find time range (timestamps are in milliseconds)
   let minTime = Infinity;
   let maxTime = -Infinity;
 
   for (const log of logs) {
-    const timeUs = log.timestamp * 1000; // Convert ms to μs
-    if (timeUs < minTime) minTime = timeUs;
-    if (timeUs > maxTime) maxTime = timeUs;
+    const timeMs = log.timestamp;
+    if (timeMs < minTime) minTime = timeMs;
+    if (timeMs > maxTime) maxTime = timeMs;
   }
 
   // If all logs have the same timestamp, add some padding
   if (minTime === maxTime) {
-    minTime -= 1000000; // 1 second before
-    maxTime += 1000000; // 1 second after
+    minTime -= 1000; // 1 second before
+    maxTime += 1000; // 1 second after
   }
 
   const timeRange: [number, number] = [minTime, maxTime];
@@ -62,8 +62,8 @@ function calculateHistogram(logs: AnsiLogRow[], binCount: number) {
 
   // Fill bins
   for (const log of logs) {
-    const timeUs = log.timestamp * 1000;
-    const binIndex = Math.min(Math.floor((timeUs - minTime) / binWidth), binCount - 1);
+    const timeMs = log.timestamp;
+    const binIndex = Math.min(Math.floor((timeMs - minTime) / binWidth), binCount - 1);
     if (binIndex >= 0 && binIndex < binCount) {
       bins[binIndex].count++;
     }
@@ -115,60 +115,45 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   // Set log selection callback
   useEffect(() => {
     if (chartRef.current && onLogSelect) {
-      chartRef.current.setOnLogSelect((timestampUs: number) => {
-        // Convert from microseconds to milliseconds
-        const timestampMs = Math.floor(timestampUs / 1000);
-        onLogSelect(timestampMs);
-      });
+      chartRef.current.setOnLogSelect(onLogSelect);
     }
   }, [onLogSelect]);
 
   // Update chart data when logs change
   useEffect(() => {
     if (chartRef.current && timeRange && histogram) {
-      // Convert dashboard time range to microseconds
-      const dashboardRangeUs = dashboardTimeRange
-        ? [dashboardTimeRange.from * 1000, dashboardTimeRange.to * 1000] as [number, number]
+      const dashboardRangeMs = dashboardTimeRange
+        ? [dashboardTimeRange.from, dashboardTimeRange.to] as [number, number]
         : undefined;
-      chartRef.current.setData(timeRange, histogram, dashboardRangeUs);
+      chartRef.current.setData(timeRange, histogram, dashboardRangeMs);
     }
   }, [timeRange, histogram, dashboardTimeRange]);
 
   // Update dashboard time range indicators
   useEffect(() => {
     if (chartRef.current && dashboardTimeRange) {
-      // Convert from milliseconds to microseconds
-      const fromUs = dashboardTimeRange.from * 1000;
-      const toUs = dashboardTimeRange.to * 1000;
-      chartRef.current.setDashboardRange(fromUs, toUs);
+      chartRef.current.setDashboardRange(dashboardTimeRange.from, dashboardTimeRange.to);
     }
   }, [dashboardTimeRange]);
 
   // Update hovered timestamp
   useEffect(() => {
     if (chartRef.current) {
-      // Convert from milliseconds to microseconds
-      const timestampUs = hoveredTimestamp ? hoveredTimestamp * 1000 : null;
-      chartRef.current.setHoveredTimestamp(timestampUs);
+      chartRef.current.setHoveredTimestamp(hoveredTimestamp ?? null);
     }
   }, [hoveredTimestamp]);
 
   // Update selected timestamp
   useEffect(() => {
     if (chartRef.current) {
-      // Convert from milliseconds to microseconds
-      const timestampUs = selectedTimestamp ? selectedTimestamp * 1000 : null;
-      chartRef.current.setSelectedTimestamp(timestampUs);
+      chartRef.current.setSelectedTimestamp(selectedTimestamp ?? null);
     }
   }, [selectedTimestamp]);
 
   // Update visible range indicators
   useEffect(() => {
     if (chartRef.current) {
-      // Convert from milliseconds to microseconds
-      const firstUs = visibleRange.first ? visibleRange.first * 1000 : null;
-      const lastUs = visibleRange.last ? visibleRange.last * 1000 : null;
-      chartRef.current.setVisibleRange(firstUs, lastUs, sortOrder);
+      chartRef.current.setVisibleRange(visibleRange.first ?? null, visibleRange.last ?? null, sortOrder);
     }
   }, [visibleRange, sortOrder]);
 
@@ -184,10 +169,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     if (chartRef.current && onTimeRangeChange) {
       const zoomRange = chartRef.current.getZoomRange();
       if (zoomRange) {
-        // Convert from microseconds to milliseconds
-        const startMs = Math.floor(zoomRange[0] / 1000);
-        const endMs = Math.ceil(zoomRange[1] / 1000);
-        onTimeRangeChange(startMs, endMs);
+        onTimeRangeChange(zoomRange[0], zoomRange[1]);
       }
     }
   }, [onTimeRangeChange]);

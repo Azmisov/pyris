@@ -2,7 +2,8 @@
  * Time axis for the timeline chart
  * Handles conversion between time and pixel coordinates, zoom, and rendering
  */
-
+import { dateTimeParse, dateTimeAsMoment } from '@grafana/data';
+import { Moment, unitOfTime } from 'moment';
 import { ColorScheme } from '../../theme/colorSchemes';
 
 // Helper to convert AnsiColor to CSS color
@@ -15,22 +16,20 @@ export function pad(num: number, digits: number): string {
 	return String(num).padStart(digits, '0');
 }
 
-/** Given microsecond time since 1970 epoch, output string parts */
-function format_time(t: number) : { date: string, time: string, ms: string, us: string } {
-	const ms = Math.floor(t/1000);
-	const us = Math.floor(t%1000);
-	const d = new Date(ms);
+/** Given millisecond time since 1970 epoch, output string parts */
+function format_time(t: number) : { date: string, time: string, ms: string } {
+	const d = new Date(t);
 	return {
 		date: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`,
 		time: `${pad(d.getHours(),2)}:${pad(d.getMinutes(),2)}:${pad(d.getSeconds(),2)}`,
-		ms: pad(d.getMilliseconds(),4),
-		us: pad(us,4)
+		ms: pad(d.getMilliseconds(), 3),
 	};
 }
+
 /** Same as format_time, but not as parts */
 export function format_time_full(t: number) : string {
 	const parts = format_time(t);
-	return `${parts.date} ${parts.time} / ${parts.ms} / ${parts.us}`;
+	return `${parts.date} ${parts.time}.${parts.ms}`;
 }
 
 interface GridSettings {
@@ -43,13 +42,13 @@ interface GridSettings {
   zoomFactor: number;
   /** Scale from wheel scroll pixel coordinates to zoom iterations */
   zoomWheelScale: number;
-  /** Maximum pixel width that for 1 microsecond */
-  maxMicrosecondWidth: number;
+  /** Maximum pixel width that for 1 millisecond */
+  maxMillisecondWidth: number;
   /* Define grid line spacings. They should be ordered from smallest to largest minWidth */
   spacings: Array<{
     /** Time unit */
     unit: string;
-    /** Minimum duration in microseconds that is possible for this unit.
+    /** Minimum duration in milliseconds that is possible for this unit.
      * Used when deciding whether there is enough space to draw axis labels, and use this unit.
      */
     minDuration: number;
@@ -62,55 +61,57 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
   minIntervalWidth: 80,
   zoomFactor: 0.15,
   zoomWheelScale: 120,
-  maxMicrosecondWidth: 100,
+  maxMillisecondWidth: 100,
   spacings: [
-    {
-      unit: 'μs',
-      minDuration: 1,
-      intervals: [1, 2, 5, 15, 25, 50, 100, 250, 500]
-    },
+    // TODO: Grafana dateTime handling is millisecond level, so we'd need to do special handling
+    // if we want to support micro/nanosecond resolution
+    // {
+    //   unit: 'μs',
+    //   minDuration: 1,
+    //   intervals: [500, 250, 100, 50, 25, 15, 5, 2, 1]
+    // },
     {
       unit: 'ms',
-      minDuration: 1000,
-      intervals: [1, 2, 5, 10, 25, 50, 100, 250, 500]
+      minDuration: 1,
+      intervals: [500, 250, 100, 50, 25, 10, 5, 2, 1]
     },
     {
       unit: 's',
-      minDuration: 1000*1000,
+      minDuration: 1000,
       // typical wall clock divisions
-      intervals: [1, 2, 5, 10, 15, 30]
+      intervals: [30, 15, 10, 5, 2, 1]
     },
     {
       unit: 'm',
-      minDuration: 60*1000*1000,
+      minDuration: 60*1000,
       // typical wall clock divisions
-      intervals: [1, 2, 5, 10, 15, 30]
+      intervals: [30, 15, 10, 5, 2, 1]
     },
     {
       unit: 'h',
-      minDuration: 60*60*1000*1000,
+      minDuration: 60*60*1000,
       // 8 to match typical workday; 12 for sensible noon/midnight division
-      intervals: [1, 2, 4, 8, 12]
+      intervals: [12, 8, 4, 2, 1]
     },
     {
       unit: 'd',
       // daylight savings; currently max shift for any timezone is 1hr
-      minDuration: 23*60*60*1000*1000,
+      minDuration: 23*60*60*1000,
       // TODO: multiples of seven aligned to monday?
-      intervals: [1, 2, 5, 10, 15]
+      intervals: [15, 10, 5, 2, 1]
     },
     {
       unit: 'M',
       // february
-      minDuration: 28*24*60*60*1000*1000,
+      minDuration: 28*24*60*60*1000,
       // quartarly and mid-year divisions
-      intervals: [1, 2, 4, 6]
+      intervals: [6, 4, 2, 1]
     },
     {
       unit: 'y',
       // non-leap year
-      minDuration: 365*24*60*60*1000*1000,
-      intervals: [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000]
+      minDuration: 365*24*60*60*1000,
+      intervals: [1000, 500, 250, 100, 50, 25, 10, 5, 2, 1]
     },
   ],
 };
@@ -121,8 +122,8 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
 interface GridLine {
   /** Is this a major grid line? */
   major: boolean;
-  /** Microsecond timestamp */
-  timeUs: number;
+  /** TZ aware timestamp */
+  time: Moment;
   /** Formatted label text, which should be rendered between this and the next grid line */
   label: string;
 }
@@ -135,105 +136,24 @@ class GridLineGenerator {
   /** Grid configuration settings (min spacing, zoom factors, available units) */
   private gridSettings: GridSettings;
 
-  /**
-   * Preprocessed flat array of [duration, {unit, interval, majorUnit}] pairs,
-   * sorted in ascending duration order. Used for binary search to find appropriate
-   * grid spacing based on zoom level.
-   */
-  private durationLookup: Array<[number, { unit: string; interval: number; majorUnit: string }]>;
-
-  /**
-   * Map of unit names to their floor timestamps (most recent boundary at/before range end).
-   * Used as starting points for finding grid boundaries. E.g., 'M' → start of current month.
-   */
-  private offsets: Record<string, number>;
-
   /** Timezone offset in hours (used for title display) */
   private tzOffset: number;
 
   /** Current minor unit for grid lines (e.g., 's', 'm', 'h', 'd', 'M', 'y') */
   private unit: string = '';
 
-  /** Number of minor units between each grid line (e.g., 2 for "every 2 months") */
-  private interval: number = 1;
-
   /** Major unit for emphasized grid lines (e.g., 'h' if unit is 'm') */
   private majorUnit: string = '';
 
+  /** Number of minor units between each grid line (e.g., 2 for "every 2 months") */
+  private interval: number = 1;
+
   constructor(
     gridSettings: GridSettings,
-    offsets: Record<string, number>,
     tzOffset: number
   ) {
     this.gridSettings = gridSettings;
-    this.offsets = offsets;
     this.tzOffset = tzOffset;
-
-    // Preprocess gridSettings into flat duration lookup array
-    this.durationLookup = this.preprocessGridSettings(gridSettings);
-  }
-
-  /**
-   * Preprocess gridSettings into a flat array of [duration, {unit, interval, majorUnit}] pairs.
-   * Each entry represents minDuration * interval for a given spacing configuration.
-   * Validates that the resulting array is in strictly ascending duration order.
-   *
-   * @param gridSettings - Grid configuration with spacings
-   * @returns Sorted array of [duration, metadata] pairs for binary search
-   * @throws Error if durations are not in ascending order
-   */
-  private preprocessGridSettings(
-    gridSettings: GridSettings
-  ): Array<[number, { unit: string; interval: number; majorUnit: string }]> {
-    const result: Array<[number, { unit: string; interval: number; majorUnit: string }]> = [];
-
-    // Flatten all spacings into [duration, metadata] pairs
-    let prev = 0;
-    for (let i = 0; i < gridSettings.spacings.length; i++) {
-      const spacing = gridSettings.spacings[i];
-      // Major unit is the next unit up in the hierarchy (or same if last)
-      const majorUnit = gridSettings.spacings[i + 1]?.unit || spacing.unit;
-
-      for (const interval of spacing.intervals) {
-        const duration = spacing.minDuration * interval;
-        // Validate ascending order
-        if (duration <= prev) {
-          throw new Error(`Grid setting unit=${spacing.unit} interval=${interval} is not in ascending order`);
-        }
-        result.push([duration, { unit: spacing.unit, interval, majorUnit }]);
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * Binary search to find the first duration >= target value.
-   * Returns the metadata (unit, interval, majorUnit) for that duration.
-   *
-   * @param targetDuration - Minimum duration to search for (in microseconds)
-   * @returns Metadata for the first duration >= targetDuration, or null if not found (which means
-   * the target duration is incredibly large)
-   */
-  private findMinDuration(targetDuration: number): { unit: string; interval: number; majorUnit: string } | null {
-    // Binary search for first element >= targetDuration
-    let left = 0;
-    let right = this.durationLookup.length - 1;
-    let result: { unit: string; interval: number; majorUnit: string } | null = null;
-
-    while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
-      const [duration, metadata] = this.durationLookup[mid];
-
-      if (duration >= targetDuration) {
-        result = metadata;
-        right = mid - 1; // Continue searching left for smaller valid duration
-      } else {
-        left = mid + 1;
-      }
-    }
-
-    return result;
   }
 
   /**
@@ -243,25 +163,49 @@ class GridLineGenerator {
    *
    * Sets internal state: unit (minor unit), interval (# of units per line), majorUnit
    *
-   * @param zoomRangeUs Visible time range [start, end] in microseconds
+   * @param zoomRangeMs Visible time range [start, end] in milliseconds
    * @param width Canvas width in pixels
    */
-  updateZoom(zoomRangeUs: [number, number], width: number): void {
-    // Microseconds span for the full grid
-    const us = zoomRangeUs[1] - zoomRangeUs[0];
-    const usPerPx = us / width;
-    // Minimum interval between grid lines in microsecond coordinates
-    const minGridUs = usPerPx * this.gridSettings.minIntervalWidth;
+  updateZoom(zoomRangeMs: [number, number], width: number): void {
+    // Milliseconds span for the full grid
+    const ms = zoomRangeMs[1] - zoomRangeMs[0];
+    const msPerPx = ms / width;
+    // Minimum interval between grid lines in millisecond coordinates
+    // TODO: eventually this will be dynamic per unit
+    const minGridMs = msPerPx * this.gridSettings.minIntervalWidth;
 
-    // Use binary search to find the smallest duration >= minGridUs
-    const config = this.findMinDuration(minGridUs);
-    if (!config) {
-      throw Error("Max zoom duration clamping needs to be increased")
+    // We iterate in order since min grid spacing is dynamic based on how unit is formatted. Which
+    // means the spacing may go up or down so ordering not guaranteed. So need to iterate from min
+    // linearly to find the minimum possible unit
+    const spacings = this.gridSettings.spacings
+    for (let si=0; si<spacings.length; si++) {
+      const spacing = spacings[si];
+      // Check the largest interval first to see if it meets minimum. If it does, we can refine
+      // and check other smaller intervals
+      let best = -1;
+      for (; best < spacing.intervals.length - 1; best++) {
+        // Compute grid spacing in milliseconds for this unit + interval
+        const nextInterval = spacing.intervals[best+1];
+        const gridMs = nextInterval*spacing.minDuration;
+        // Stop once we see an interval that's too small
+        if (gridMs < minGridMs) {
+          break;
+        }
+      }
+
+      // No interval for this unit is sufficient, try next unit
+      if (best == -1) {
+        continue
+      }
+
+      // Found sufficient unit + interval
+      this.unit = spacing.unit;
+      this.majorUnit = spacings[si+1]?.unit || spacing.unit;
+      this.interval = spacing.intervals[best];
+      return;
     }
 
-    this.unit = config.unit;
-    this.interval = config.interval;
-    this.majorUnit = config.majorUnit;
+    throw Error("Max zoom duration clamping needs to be increased")
   }
 
   /**
@@ -269,165 +213,100 @@ class GridLineGenerator {
    * Yields GridLine records with timestamp, major/minor flag, and formatted label.
    *
    * Uses calendar arithmetic to place lines at actual unit boundaries (e.g., month starts),
-   * not fixed microsecond intervals. Major lines fall on major unit boundaries.
+   * not fixed millisecond intervals. Major lines fall on major unit boundaries.
    *
    * Example: If unit='m' (minutes), interval=15, majorUnit='h' (hour):
    *   - Yields lines at :00, :15, :30, :45 of each hour
    *   - Lines at :00 are marked major=true (hour boundary)
    *
-   * @param zoomRangeUs - Visible time range [start, end] in microseconds
-   * @yields GridLine objects with {major, timeUs, label}
+   * @param zoomRangeMs - Visible time range [start, end] in milliseconds
+   * @yields GridLine objects with {major, time, label}
    */
-  *generate(zoomRangeUs: [number, number]): Generator<GridLine> {
+  *generate(zoomRangeMs: [number, number]): Generator<GridLine> {
     if (!this.unit) return;
 
-    // Find first boundary at or before range start
-    let timeUs = this.findFirstBoundary(zoomRangeUs[0]);
-    let n = 0;
-    let iterCount = 0;
-    const maxIters = 1000; // Safety limit
+    const unit = this.unit as unitOfTime.Base;
+    const majorUnit = this.majorUnit as unitOfTime.Base;
 
-    // Generate lines until past range end (+ extra for edge labels)
-    while (timeUs <= zoomRangeUs[1] && iterCount++ < maxIters) {
-      const isMajor = this.isMajorBoundary(timeUs);
-      const label = this.formatLabel(timeUs);
-
-      yield { major: isMajor, timeUs, label };
-
-      // Increment to next boundary
-      timeUs = this.incrementTime(timeUs, this.unit, this.interval);
-      n++;
+    // Start out using the grafana datetime wrapper just to handle possibly grafana-specific
+    // timezones, then switch to moment object since the grafana wrapper lacks the methods we need.
+    let cursor = dateTimeAsMoment(dateTimeParse(zoomRangeMs[0], { timeZone: "America/Boise" }));
+    // Initial goal is to find the minor grid interval which 1) <= start 2) multiple of interval in
+    // wall clock time (not physical UTC time). First truncate to meet condition #1.
+    cursor = cursor.startOf(unit);
+    // Iterate backwards for condition #2. Subtraction occurs in physical/UTC time, but our
+    // condition is based on wall clock / tz-aware time. So where we get DST jumps, we may need
+    // multiple passes to find a time that lies on the correct interval. Okay if we overshoot and
+    // don't get the minor grid which is closest to start, as we'll clip those as we iterate.
+    while (true) {
+      const remainder = cursor.get(unit) % this.interval;
+      if (remainder === 0){
+        break;
+      }
+      cursor = cursor.subtract(remainder, unit);
     }
 
-    if (iterCount >= maxIters) {
-      console.error('Too many iterations in grid line generation');
+    // We want the first interval <= start up until the last interval < end. To clip at the start,
+    // we check that the current and subsequent grid lines aren't both before start.
+    let clippedBefore = cursor.valueOf() < zoomRangeMs[0];
+
+    // Major units we generate separately. Most units we chose intervals that will always line up
+    // evenly with a major unit, e.g. 15min intervals line up on 60min for an hour. But others don't,
+    // like 12hrs fails with daylight savings when there's 25hrs. Or we might want monday-aligned
+    // 7 day intervals for month. So we track the next major unit and whenever it is passed, we
+    // force a major grid line to be generated.
+    let nextMajor = cursor.clone().startOf(majorUnit);
+    let isMajor = cursor.isSame(nextMajor);
+    nextMajor = nextMajor.add(1, majorUnit);
+
+    while (cursor.valueOf() < zoomRangeMs[1]) {
+      // Calculate next interval. We do this first since it helps us identify start clipping,
+      // and we would need to compute next cursor anyways.
+      let nextCursor = cursor.clone().add(this.interval, unit);
+
+      // For DST shift the wall clock interval could be off: greater if wall clocks jumped ahead,
+      // less if they jumped behind. If greater, then the current interval is unavailable because
+      // there's a gap due to the time skip; so we need to skip to the next interval. If less, then
+      // the current interval is available, just ahead by some amount.
+      const remainder = nextCursor.get(unit) % this.interval;
+      if (remainder !== 0) {
+        nextCursor = nextCursor.add(this.interval - remainder, unit);
+      }
+
+      // If >= next major interval, clamp to major
+      let nextIsMajor = nextCursor.isSameOrAfter(nextMajor);
+      if (nextIsMajor) {
+        nextCursor = nextMajor;
+        nextMajor = nextMajor.clone().add(1, majorUnit);
+      }
+
+      // Start clipping
+      if (clippedBefore) {
+        clippedBefore = nextCursor.valueOf() < zoomRangeMs[0];
+      }
+
+      // Not clipped, okay to yield current cursor
+      if (!clippedBefore) {
+        yield {time: cursor, major: isMajor, label: this.formatLabel(cursor.valueOf())};
+      }
+
+      cursor = nextCursor;
+      isMajor = nextIsMajor;
     }
-  }
-
-  /**
-   * Find the first boundary of the current unit at or before startUs.
-   * Starts from the major unit offset (e.g., start of current month) and walks
-   * forward/backward to find the closest boundary.
-   *
-   * @param startUs - Start of zoom range in microseconds
-   * @returns Timestamp in microseconds of the first grid line boundary
-   */
-  private findFirstBoundary(startUs: number): number {
-    // Start from the offset for the major unit
-    let timeUs = this.offsets[this.majorUnit] || 0;
-
-    // Walk forward to the first boundary >= startUs
-    while (timeUs < startUs) {
-      timeUs = this.incrementTime(timeUs, this.unit, this.interval);
-    }
-
-    // Walk back one step if we overshot
-    if (timeUs > startUs) {
-      timeUs = this.decrementTime(timeUs, this.unit, this.interval);
-    }
-
-    return timeUs;
-  }
-
-  /**
-   * Check if a timestamp is at a major unit boundary.
-   * Major boundaries are used for emphasized grid lines (e.g., hour marks when showing minutes).
-   *
-   * @param timeUs - Timestamp in microseconds
-   * @returns true if this timestamp is at a major unit boundary
-   */
-  private isMajorBoundary(timeUs: number): boolean {
-    const timeMs = Math.floor(timeUs / 1000);
-    const date = new Date(timeMs);
-
-    switch (this.majorUnit) {
-      case 'ms':
-        return date.getMilliseconds() === 0;
-      case 's':
-        return date.getSeconds() === 0 && date.getMilliseconds() === 0;
-      case 'm':
-        return date.getMinutes() === 0 && date.getSeconds() === 0;
-      case 'h':
-        return date.getHours() === 0 && date.getMinutes() === 0;
-      case 'd':
-        return date.getHours() === 0 && date.getMinutes() === 0;
-      case 'M':
-        return date.getDate() === 1 && date.getHours() === 0;
-      case 'y':
-        return date.getMonth() === 0 && date.getDate() === 1;
-      default:
-        return false;
-    }
-  }
-
-  /**
-   * Increment time by calendar interval using Date arithmetic.
-   * Handles variable-length periods correctly (e.g., months with 28-31 days, leap years).
-   *
-   * @param timeUs - Starting timestamp in microseconds
-   * @param unit - Time unit ('μs', 'ms', 's', 'm', 'h', 'd', 'M', 'y')
-   * @param interval - Number of units to increment (can be negative)
-   * @returns New timestamp in microseconds
-   */
-  private incrementTime(timeUs: number, unit: string, interval: number): number {
-    const timeMs = Math.floor(timeUs / 1000);
-    const date = new Date(timeMs);
-    const microPart = timeUs % 1000;
-
-    switch (unit) {
-      case 'μs':
-        return timeUs + interval;
-      case 'ms':
-        date.setMilliseconds(date.getMilliseconds() + interval);
-        break;
-      case 's':
-        date.setSeconds(date.getSeconds() + interval);
-        break;
-      case 'm':
-        date.setMinutes(date.getMinutes() + interval);
-        break;
-      case 'h':
-        date.setHours(date.getHours() + interval);
-        break;
-      case 'd':
-        date.setDate(date.getDate() + interval);
-        break;
-      case 'M':
-        date.setMonth(date.getMonth() + interval);
-        break;
-      case 'y':
-        date.setFullYear(date.getFullYear() + interval);
-        break;
-    }
-
-    return date.getTime() * 1000 + microPart;
-  }
-
-  /**
-   * Decrement time by calendar interval using Date arithmetic.
-   *
-   * @param timeUs - Starting timestamp in microseconds
-   * @param unit - Time unit
-   * @param interval - Number of units to decrement
-   * @returns New timestamp in microseconds
-   */
-  private decrementTime(timeUs: number, unit: string, interval: number): number {
-    return this.incrementTime(timeUs, unit, -interval);
   }
 
   /**
    * Format label based on unit.
-   * Returns appropriate portion of timestamp (date, time, ms, or us) depending on unit.
+   * Returns appropriate portion of timestamp (date, time, or ms) depending on unit.
    *
-   * @param timeUs - Timestamp in microseconds
+   * @param timeMs - Timestamp in milliseconds
    * @returns Formatted label string
    */
-  private formatLabel(timeUs: number): string {
-    const fmt = format_time(timeUs);
+  private formatLabel(timeMs: number): string {
+    const fmt = format_time(timeMs);
 
     // Determine label format based on unit
     const lfmt = ({
-      μs: 'us',
       ms: 'ms',
       s: 'time',
       m: 'time',
@@ -435,7 +314,7 @@ class GridLineGenerator {
       d: 'date',
       M: 'date',
       y: 'date',
-    } as Record<string, 'date' | 'time' | 'ms' | 'us'>)[this.unit];
+    } as Record<string, 'date' | 'time' | 'ms'>)[this.unit];
 
     return fmt[lfmt] || '';
   }
@@ -462,7 +341,6 @@ export class TimeAxis {
   private fullRange: [number, number] | null = null;
   private zoomRange: [number, number] | null = null;
   private gridLineGenerator: GridLineGenerator | null = null;
-  private offsets: Record<string, number> = {};
   /** Timezone offset in hours */
   private tzOffset: number = 0;
   /** Holds dragging state; see mousedrag */
@@ -484,43 +362,13 @@ export class TimeAxis {
     this.fullRange = [...timeRange];
     this.zoomRange = initialZoom ? [...initialZoom] : [...timeRange];
 
-    /* Calculate offsets needed to get to the first whole interval <= end of time range. Times
-       will represent UTC +/- a fixed local offset given by end time. We go off end time since
-       probably closer to current wall clock offset. Once whole intervals are found, we assume
-       consistent 1000*1000*60*60*24 microseconds in a day, and so can inc/decrement by the
-       unit's microsecond base to get intervals. */
-    const endUs = timeRange[1];
-    const endMs = Math.floor(endUs / 1000);
+    // Calculate timezone offset from end time (closer to current wall clock offset)
+    const endMs = timeRange[1];
     const date = new Date(endMs);
-
-    const breakdown = {
-      // year/month/day won't get used currently
-      y: date.getFullYear(),
-      M: date.getMonth(),
-      d: date.getDate(),
-      h: date.getHours(),
-      m: date.getMinutes(),
-      // JS doesn't have leapseconds so could handle these manually;
-      // will include to keep code simpler
-      s: date.getSeconds(),
-      ms: date.getMilliseconds(),
-    };
-
-    this.offsets = { μs: 0 };
-    /** Timezone offset in hours */
     this.tzOffset = -date.getTimezoneOffset() / 60;
 
-    const dateArgs: number[] = [0, 0, 0, 0, 0, 0, 0];
-    let di = 0;
-    for (const interval in breakdown) {
-      dateArgs[di++] = breakdown[interval as keyof typeof breakdown];
-      const fd = new Date(...(dateArgs as [number, number, number, number, number, number, number]));
-      const floorUs = fd.getTime() * 1000;
-      this.offsets[interval] = floorUs;
-    }
-
-    // Create grid line generator with updated offsets
-    this.gridLineGenerator = new GridLineGenerator(this.gridSettings, this.offsets, this.tzOffset);
+    // Create grid line generator
+    this.gridLineGenerator = new GridLineGenerator(this.gridSettings, this.tzOffset);
 
     // Update grid configuration for current zoom
     if (this.zoomRange && this.width) {
@@ -545,7 +393,7 @@ export class TimeAxis {
    * @param startX Starting position of drag
    * @param endX Current/ending position of drag
    */
-  mousedrag(id: number | null, startX: number, endX: number): boolean {
+  shift(id: number | null, startX: number, endX: number): boolean {
     if (!this.zoomRange || !this.fullRange) return false;
 
     // New drag; mark starting time to be the fixed reference for drag
@@ -595,7 +443,7 @@ export class TimeAxis {
     const ctrTime = this.pixel2time(centerX);
     const ctrProp = (ctrTime - this.zoomRange[0]) / zoomDur;
     // New duration, with max zoom limits applied
-    const newDur = Math.max(this.width / G.maxMicrosecondWidth, zoomDur * zoom);
+    const newDur = Math.max(this.width / G.maxMillisecondWidth, zoomDur * zoom);
     /* Calculate shift to keep mouse timestamp at the same proportion along duration:
         new_dur*ctr_prop + z0 = ctr_time
       Could implement clamping on this line, but we don't clamp currently
@@ -733,7 +581,7 @@ export class TimeAxis {
     // Generate and draw grid lines
     for (const gridLine of this.gridLineGenerator.generate(this.zoomRange)) {
       // Add 0.5 to get crisp 1px lines (avoids anti-aliasing across 2 pixels)
-      const x = Math.floor(this.time2pixel(gridLine.timeUs)) + 0.5;
+      const x = Math.floor(this.time2pixel(gridLine.time.valueOf())) + 0.5;
       const path = gridLine.major ? majorPath : minorPath;
 
       // Grid lines only extend through histogram area (0 to axis y position)
