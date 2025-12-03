@@ -42,8 +42,10 @@ interface GridSettings {
   zoomFactor: number;
   /** Scale from wheel scroll pixel coordinates to zoom iterations */
   zoomWheelScale: number;
-  /** Maximum pixel width that for 1 millisecond */
+  /** Maximum pixel width for 1 millisecond (limits zoom in) */
   maxMillisecondWidth: number;
+  /** Maximum duration in milliseconds (limits zoom out) */
+  maxDuration: number;
   /* Define grid line spacings. They should be ordered from smallest to largest minWidth */
   spacings: Array<{
     /** Time unit */
@@ -62,6 +64,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
   zoomFactor: 0.15,
   zoomWheelScale: 120,
   maxMillisecondWidth: 100,
+  maxDuration: 50 * 365 * 24 * 60 * 60 * 1000, // 50 years
   spacings: [
     // TODO: Grafana dateTime handling is millisecond level, so we'd need to do special handling
     // if we want to support micro/nanosecond resolution
@@ -105,7 +108,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       // february
       minDuration: 28*24*60*60*1000,
       // quartarly and mid-year divisions
-      intervals: [6, 4, 2, 1]
+      intervals: [6, 3, 2, 1]
     },
     {
       unit: 'y',
@@ -200,7 +203,8 @@ class GridLineGenerator {
 
       // Found sufficient unit + interval
       this.unit = spacing.unit;
-      this.majorUnit = spacings[si+1]?.unit || spacing.unit;
+      // Major unit is the next larger unit; empty string if none (e.g., years have no major)
+      this.majorUnit = spacings[si+1]?.unit || '';
       this.interval = spacing.intervals[best];
       return;
     }
@@ -255,9 +259,14 @@ class GridLineGenerator {
     // like 12hrs fails with daylight savings when there's 25hrs. Or we might want monday-aligned
     // 7 day intervals for month. So we track the next major unit and whenever it is passed, we
     // force a major grid line to be generated.
-    let nextMajor = cursor.clone().startOf(majorUnit);
-    let isMajor = cursor.isSame(nextMajor);
-    nextMajor = nextMajor.add(1, majorUnit);
+    // Note: majorUnit may be empty (e.g., for years) - in that case, no major lines are drawn.
+    let nextMajor: Moment | null = null;
+    let isMajor = false;
+    if (majorUnit) {
+      nextMajor = cursor.clone().startOf(majorUnit);
+      isMajor = cursor.isSame(nextMajor);
+      nextMajor = nextMajor.add(1, majorUnit);
+    }
 
     while (cursor.valueOf() < zoomRangeMs[1]) {
       // Calculate next interval. We do this first since it helps us identify start clipping,
@@ -273,9 +282,10 @@ class GridLineGenerator {
         nextCursor = nextCursor.add(this.interval - remainder, unit);
       }
 
-      // If >= next major interval, clamp to major
-      let nextIsMajor = nextCursor.isSameOrAfter(nextMajor);
-      if (nextIsMajor) {
+      // If >= next major interval, clamp to major (skip if no major unit)
+      let nextIsMajor = false;
+      if (nextMajor && nextCursor.isSameOrAfter(nextMajor)) {
+        nextIsMajor = true;
         nextCursor = nextMajor;
         nextMajor = nextMajor.clone().add(1, majorUnit);
       }
@@ -442,8 +452,8 @@ export class TimeAxis {
     const zoomDur = this.zoomRange[1] - this.zoomRange[0];
     const ctrTime = this.pixel2time(centerX);
     const ctrProp = (ctrTime - this.zoomRange[0]) / zoomDur;
-    // New duration, with max zoom limits applied
-    const newDur = Math.max(this.width / G.maxMillisecondWidth, zoomDur * zoom);
+    // New duration, with zoom limits applied (min: maxMillisecondWidth, max: maxDuration)
+    const newDur = Math.min(G.maxDuration, Math.max(this.width / G.maxMillisecondWidth, zoomDur * zoom));
     /* Calculate shift to keep mouse timestamp at the same proportion along duration:
         new_dur*ctr_prop + z0 = ctr_time
       Could implement clamping on this line, but we don't clamp currently
