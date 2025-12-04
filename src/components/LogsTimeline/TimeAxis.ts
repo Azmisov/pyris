@@ -180,6 +180,9 @@ class GridLineGenerator {
   /** Calculated minimum interval width based on font metrics */
   private minIntervalWidth: number = 80;
 
+  /** Minimum grid spacing in milliseconds (computed from minIntervalWidth and current zoom) */
+  private minGridMs: number = 0;
+
   /** Font family used for label width calculation (for cache invalidation) */
   private fontFamily: string = '';
 
@@ -278,7 +281,7 @@ class GridLineGenerator {
     const ms = zoomRangeMs[1] - zoomRangeMs[0];
     const msPerPx = ms / width;
     // Minimum interval between grid lines in millisecond coordinates
-    const minGridMs = msPerPx * this.minIntervalWidth;
+    this.minGridMs = msPerPx * this.minIntervalWidth;
 
     // We iterate in order since min grid spacing is dynamic based on how unit is formatted. Which
     // means the spacing may go up or down so ordering not guaranteed. So need to iterate from min
@@ -294,7 +297,7 @@ class GridLineGenerator {
         const nextInterval = spacing.intervals[best+1];
         const gridMs = nextInterval*spacing.minDuration;
         // Stop once we see an interval that's too small
-        if (gridMs < minGridMs) {
+        if (gridMs < this.minGridMs) {
           break;
         }
       }
@@ -404,8 +407,17 @@ class GridLineGenerator {
       // Not clipped, okay to yield current cursor
       if (!clippedBefore) {
         // For major grid lines, find the highest unit this timestamp aligns with
-        const formatter = isMajor ? this.findHighestAlignedFormat(cursor) : this.format;
-        yield {time: cursor, major: isMajor, label: formatter(cursor)};
+        // For minor grid lines too close to the next major, use empty label to avoid overlap
+        let label: string;
+        if (isMajor) {
+          label = this.findHighestAlignedFormat(cursor)(cursor);
+        } else if (nextIsMajor && (nextCursor.valueOf() - cursor.valueOf()) < this.minGridMs) {
+          // Minor label would overlap with upcoming major label, skip it
+          label = '';
+        } else {
+          label = this.format(cursor);
+        }
+        yield {time: cursor, major: isMajor, label};
       }
 
       cursor = nextCursor;
