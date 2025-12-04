@@ -14,6 +14,8 @@ interface HistogramBin {
 }
 
 const DRAG_THRESHOLD = 3;
+const SNAP_THRESHOLD = 16; // Pixels within which hover snaps to indicators
+const GRID_SNAP_THRESHOLD = 8; // Pixels within which hover snaps to grid lines
 
 // Helper to convert AnsiColor to CSS color
 function colorToCSS(color: { r: number; g: number; b: number }): string {
@@ -185,16 +187,60 @@ export class TimelineChart {
     }
   }
 
+  /**
+   * Find the closest snap target within threshold of the given pixel X. Checks indicators and grid
+   * lines. Returns the timestamp to snap to, or null if no snap target within threshold.
+   */
+  private findSnapTarget(pixelX: number): number | null {
+    let closestTimestamp: number | null = null;
+    let closestDistance = Infinity;
+
+    // Check indicators with SNAP_THRESHOLD (10px)
+    const snapIndicators: VerticalIndicator[] = [];
+    if (this.selectedIndicator) snapIndicators.push(this.selectedIndicator);
+    if (this.rangeStartIndicator) snapIndicators.push(this.rangeStartIndicator);
+    if (this.rangeEndIndicator) snapIndicators.push(this.rangeEndIndicator);
+    if (this.dashboardStartIndicator) snapIndicators.push(this.dashboardStartIndicator);
+    if (this.dashboardEndIndicator) snapIndicators.push(this.dashboardEndIndicator);
+    snapIndicators.push(...this.indicators);
+
+    for (const indicator of snapIndicators) {
+      const indicatorX = this.axis.time2pixel(indicator.getTimestamp());
+      const distance = Math.abs(indicatorX - pixelX);
+      if (distance < SNAP_THRESHOLD && distance < closestDistance) {
+        closestDistance = distance;
+        closestTimestamp = indicator.getTimestamp();
+      }
+    }
+
+    // Check grid lines with GRID_SNAP_THRESHOLD (5px)
+    const gridTimestamps = this.axis.getGridLineTimestamps();
+    for (const timestamp of gridTimestamps) {
+      const gridX = this.axis.time2pixel(timestamp);
+      const distance = Math.abs(gridX - pixelX);
+      if (distance < GRID_SNAP_THRESHOLD && distance < closestDistance) {
+        closestDistance = distance;
+        closestTimestamp = timestamp;
+      }
+    }
+
+    return closestTimestamp;
+  }
+
   private pointerMove(e: PointerEvent): void {
     const cur = this.mousePos(e);
 
     // Track mouse X position and update hover indicator
     this.mouseX = cur[0];
     if (!this.dragging) {
-      const timestamp = this.axis.pixel2time(this.mouseX);
+      // Check for snap targets first
+      const snapTimestamp = this.findSnapTarget(this.mouseX);
+      const timestamp = snapTimestamp ?? this.axis.pixel2time(this.mouseX);
+      const displayX = snapTimestamp !== null ? this.axis.time2pixel(snapTimestamp) : cur[0];
+
       this.setHoveredTimestamp(timestamp);
       // Update tooltip with position and timestamp
-      this.onTooltip?.({ x: cur[0], y: cur[1], timestamp });
+      this.onTooltip?.({ x: displayX, y: cur[1], timestamp });
     } else {
       // Hide tooltip while dragging
       this.onTooltip?.(null);
