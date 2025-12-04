@@ -465,6 +465,8 @@ export class TimeAxis {
   private fullRange: [number, number] | null = null;
   private zoomRange: [number, number] | null = null;
   private gridLineGenerator: GridLineGenerator | null = null;
+  /** Cached grid line timestamps (invalidated on re-render) */
+  private gridLineTimestamps: number[] | null = null;
   /** Timezone offset in hours */
   private tzOffset: number = 0;
   /** Holds dragging state; see mousedrag */
@@ -694,6 +696,14 @@ export class TimeAxis {
   }
 
   /**
+   * Get all grid line timestamps currently visible in the zoom range.
+   * Returns timestamps cached from the last render() call.
+   */
+  getGridLineTimestamps(): number[] {
+    return this.gridLineTimestamps ?? [];
+  }
+
+  /**
    * Render the time axis
    */
   render(ctx: CanvasRenderingContext2D): void {
@@ -721,9 +731,13 @@ export class TimeAxis {
     const topPadding = Math.round((axisHeight - LABEL_FONT_SIZE) / 2);
     const ly = Math.round(this.y + topPadding);
 
-    // Generate and draw grid lines
+    // Generate and draw grid lines, caching timestamps for snap detection
+    const timestamps: number[] = [];
     for (const gridLine of this.gridLineGenerator.generate(this.zoomRange)) {
-      const rawX = this.time2pixel(gridLine.time.valueOf());
+      const timestamp = gridLine.time.valueOf();
+      timestamps.push(timestamp);
+
+      const rawX = this.time2pixel(timestamp);
       // For grid lines: +0.5 offset for crisp 1px strokes
       const lineX = Math.floor(rawX) + 0.5;
       // For text: round to integer pixel for crisp rendering
@@ -739,6 +753,7 @@ export class TimeAxis {
       ctx.font = gridLine.major ? majorFont : minorFont;
       ctx.fillText(gridLine.label, textX, ly);
     }
+    this.gridLineTimestamps = timestamps;
 
     // Draw grid lines
     ctx.lineWidth = 1;
