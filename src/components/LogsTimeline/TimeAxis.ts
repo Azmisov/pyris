@@ -11,6 +11,18 @@ function colorToCSS(color: { r: number; g: number; b: number }): string {
   return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
+/** Get the unit component as a 0-indexed value for alignment calculations.
+ * - Maps 'd' → 'D' (moment.get('d') = day of week, 'D' = day of month)
+ * - Converts days from 1-indexed (1-31) to 0-indexed for alignment
+ */
+function getAlignedUnitValue(cursor: Moment, unit: string): number {
+  // 'd' for add/subtract = days, but get('d') = day of week; get('D') = day of month
+  const getterUnit = (unit === 'd' ? 'D' : unit) as unitOfTime.All;
+  const value = cursor.get(getterUnit);
+  // Days are 1-indexed (1-31), convert to 0-indexed for alignment
+  return unit === 'd' ? value - 1 : value;
+}
+
 /** Pad number with N digits */
 export function pad(num: number, digits: number): string {
 	return String(num).padStart(digits, '0');
@@ -56,6 +68,8 @@ interface GridSettings {
     minDuration: number;
     /** Allowed multiples of unit to display as grid lines */
     intervals: number[];
+    /** Format the grid value */
+    format: (d: Moment) => string;
   }>;
 }
 
@@ -68,53 +82,56 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
   spacings: [
     // TODO: Grafana dateTime handling is millisecond level, so we'd need to do special handling
     // if we want to support micro/nanosecond resolution
-    // {
-    //   unit: 'μs',
-    //   minDuration: 1,
-    //   intervals: [500, 250, 100, 50, 25, 15, 5, 2, 1]
-    // },
     {
       unit: 'ms',
       minDuration: 1,
-      intervals: [500, 250, 100, 50, 25, 10, 5, 2, 1]
+      intervals: [500, 250, 100, 50, 25, 10, 5, 2, 1],
+      format: d => d.format("SSS")
     },
     {
       unit: 's',
       minDuration: 1000,
       // typical wall clock divisions
-      intervals: [30, 15, 10, 5, 2, 1]
+      intervals: [30, 15, 10, 5, 2, 1],
+      format: d => d.format("s[s]")
     },
     {
       unit: 'm',
       minDuration: 60*1000,
       // typical wall clock divisions
-      intervals: [30, 15, 10, 5, 2, 1]
+      intervals: [30, 15, 10, 5, 2, 1],
+      format: d => d.format("HH:mm")
     },
     {
       unit: 'h',
       minDuration: 60*60*1000,
       // 8 to match typical workday; 12 for sensible noon/midnight division
-      intervals: [12, 8, 4, 2, 1]
+      intervals: [12, 8, 4, 2, 1],
+      format: d => d.format("HH:mm")
     },
     {
       unit: 'd',
       // daylight savings; currently max shift for any timezone is 1hr
       minDuration: 23*60*60*1000,
-      // TODO: multiples of seven aligned to monday?
-      intervals: [15, 10, 5, 2, 1]
+      // TODO: multiples of seven aligned to monday? I think if we do this we'd need to change
+      // labels to be day of week, otherwise it just looks nonsensical and buggy
+      intervals: [15, 10, 5, 2, 1],
+      format: d => d.format("Do")
     },
     {
       unit: 'M',
       // february
       minDuration: 28*24*60*60*1000,
       // quartarly and mid-year divisions
-      intervals: [6, 3, 2, 1]
+      intervals: [6, 3, 2, 1],
+      format: d => d.format("MMM")
     },
     {
       unit: 'y',
       // non-leap year
       minDuration: 365*24*60*60*1000,
-      intervals: [1000, 500, 250, 100, 50, 25, 10, 5, 2, 1]
+      intervals: [1000, 500, 250, 100, 50, 25, 10, 5, 2, 1],
+      format: d => d.format("YYYY")
     },
   ],
 };
@@ -243,7 +260,7 @@ class GridLineGenerator {
     // multiple passes to find a time that lies on the correct interval. Okay if we overshoot and
     // don't get the minor grid which is closest to start, as we'll clip those as we iterate.
     while (true) {
-      const remainder = cursor.get(unit) % this.interval;
+      const remainder = getAlignedUnitValue(cursor, unit) % this.interval;
       if (remainder === 0){
         break;
       }
@@ -277,7 +294,7 @@ class GridLineGenerator {
       // less if they jumped behind. If greater, then the current interval is unavailable because
       // there's a gap due to the time skip; so we need to skip to the next interval. If less, then
       // the current interval is available, just ahead by some amount.
-      const remainder = nextCursor.get(unit) % this.interval;
+      const remainder = getAlignedUnitValue(nextCursor, unit) % this.interval;
       if (remainder !== 0) {
         nextCursor = nextCursor.add(this.interval - remainder, unit);
       }
