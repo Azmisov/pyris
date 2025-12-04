@@ -59,7 +59,7 @@ export class TimelineChart {
   private boundWheel: (e: WheelEvent) => void;
   private boundPointerLeave: (e: PointerEvent) => void;
 
-  constructor(container: HTMLDivElement, colorScheme: ColorScheme, fontFamily?: string) {
+  constructor(container: HTMLDivElement, colorScheme: ColorScheme, fontFamily?: string, timeZone?: string) {
     this.container = container;
     this.colorScheme = colorScheme;
     this.canvas = document.createElement('canvas');
@@ -75,7 +75,7 @@ export class TimelineChart {
     // Disable image smoothing for crisp rendering
     this.ctx.imageSmoothingEnabled = false;
 
-    this.axis = new TimeAxis(this, colorScheme, fontFamily);
+    this.axis = new TimeAxis(this, colorScheme, fontFamily, undefined, timeZone);
 
     // Create dotted pattern for grayed-out areas
     this.grayPattern = this.createDottedPattern();

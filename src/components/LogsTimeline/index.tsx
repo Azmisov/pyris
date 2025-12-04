@@ -22,6 +22,7 @@ interface LogsTimelineProps {
   onLogSelect?: (timestamp: number) => void;
   dashboardTimeRange?: { from: number; to: number };
   fontFamily?: string;
+  timeZone?: string;
 }
 
 const DEFAULT_HEIGHT = 100;
@@ -85,6 +86,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   onLogSelect,
   dashboardTimeRange,
   fontFamily,
+  timeZone,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
@@ -98,7 +100,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const chart = new TimelineChart(containerRef.current, colorScheme, fontFamily);
+    const chart = new TimelineChart(containerRef.current, colorScheme, fontFamily, timeZone);
     chartRef.current = chart;
 
     return () => {
