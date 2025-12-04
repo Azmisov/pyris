@@ -6,15 +6,32 @@
 import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
 import { Icon } from '@grafana/ui';
 import { dateTimeParse } from '@grafana/data';
-import { TimelineChart } from './TimelineChart';
+import { TimelineChart, TooltipData } from './TimelineChart';
+import { IndicatorType, VerticalIndicator } from './VerticalIndicator';
 import { AnsiLogRow } from '../../types';
 import { ColorScheme } from '../../theme/colorSchemes';
 import styles from './index.module.css';
 
-interface TooltipData {
-  x: number;
-  y: number;
-  timestamp: number;
+/** Convert indicator to display label based on type and direction */
+function getIndicatorLabel(indicator: VerticalIndicator): string {
+  const type = indicator.getType();
+  const direction = indicator.getDirection();
+
+  let label: string;
+  switch (type) {
+    case IndicatorType.Selected:
+      return 'Selected log';
+    case IndicatorType.Visible:
+      label = 'Visible logs';
+      break;
+    case IndicatorType.Dashboard:
+      label = 'Dashboard range';
+      break;
+    default:
+      return '';
+  }
+
+  return label + (direction === 'right' ? ' start' : ' end');
 }
 
 interface LogsTimelineProps {
@@ -266,6 +283,11 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
               const secondaryOffset = secondaryDt.format('Z');
               const secondaryLabel = isUtc ? browserTz : 'UTC';
 
+              // Filter indicators to those with labels
+              const labeledIndicators = tooltipData.indicators.filter(
+                ind => getIndicatorLabel(ind) !== ''
+              );
+
               return (
                 <>
                   <div className={styles['timeline-tooltip-primary']}>
@@ -275,6 +297,29 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
                   <div className={styles['timeline-tooltip-secondary']}>
                     {secondaryTime} {secondaryLabel}{!isUtc ? '' : ` (${secondaryOffset})`}
                   </div>
+                  {(labeledIndicators.length > 0 || tooltipData.beyondVisible || tooltipData.beyondDashboard) && (
+                    <div className={styles['timeline-tooltip-details']}>
+                      {labeledIndicators.map((indicator, i) => (
+                        <div
+                          key={i}
+                          className={styles['timeline-tooltip-indicator']}
+                          style={{ color: indicator.getColor() }}
+                        >
+                          {getIndicatorLabel(indicator)}
+                        </div>
+                      ))}
+                      {tooltipData.beyondVisible && (
+                        <div className={styles['timeline-tooltip-beyond']}>
+                          Outside visible logs
+                        </div>
+                      )}
+                      {tooltipData.beyondDashboard && (
+                        <div className={styles['timeline-tooltip-beyond']}>
+                          Outside dashboard range
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </>
               );
             })()}

@@ -13,6 +13,19 @@ interface HistogramBin {
   count: number;
 }
 
+/** Tooltip data passed to the callback */
+export interface TooltipData {
+  x: number;
+  y: number;
+  timestamp: number;
+  /** Indicators at the snapped position */
+  indicators: VerticalIndicator[];
+  /** True if timestamp is outside the visible logs range */
+  beyondVisible: boolean;
+  /** True if timestamp is outside the dashboard time range */
+  beyondDashboard: boolean;
+}
+
 const DRAG_THRESHOLD = 3;
 const SNAP_THRESHOLD = 16; // Pixels within which hover snaps to indicators
 const GRID_SNAP_THRESHOLD = 8; // Pixels within which hover snaps to grid lines
@@ -41,7 +54,9 @@ export class TimelineChart {
   private dashboardStartIndicator: VerticalIndicator | null = null;
   private dashboardEndIndicator: VerticalIndicator | null = null;
   private colorScheme: ColorScheme;
-  private indicators: VerticalIndicator[] = [];
+  // Track ranges for beyondVisible/beyondDashboard checks
+  private visibleRange: [number, number] | null = null;
+  private dashboardRange: [number, number] | null = null;
 
   // Mouse state
   /** Autoincrementing drag identifier to indicate for knowing when a new drag has begun */
@@ -54,8 +69,8 @@ export class TimelineChart {
   // Callback for log selection
   private onLogSelect?: (timestamp: number) => void;
 
-  // Callback for tooltip updates (x position in pixels, timestamp in ms, or null to hide)
-  private onTooltip?: (data: { x: number; y: number; timestamp: number } | null) => void;
+  // Callback for tooltip updates
+  private onTooltip?: (data: TooltipData | null) => void;
 
   // Event handlers (bound methods)
   private boundPointerDown: (e: PointerEvent) => void;
@@ -187,44 +202,56 @@ export class TimelineChart {
     }
   }
 
+  /** Yield all named indicators (excludes hover) */
+  private *getNamedIndicators(): Generator<VerticalIndicator> {
+    if (this.selectedIndicator) yield this.selectedIndicator;
+    if (this.rangeStartIndicator) yield this.rangeStartIndicator;
+    if (this.rangeEndIndicator) yield this.rangeEndIndicator;
+    if (this.dashboardStartIndicator) yield this.dashboardStartIndicator;
+    if (this.dashboardEndIndicator) yield this.dashboardEndIndicator;
+  }
+
   /**
-   * Find the closest snap target within threshold of the given pixel X. Checks indicators and grid
-   * lines. Returns the timestamp to snap to, or null if no snap target within threshold.
+   * Find the closest snap target within threshold of the given pixel X. Checks indicators first,
+   * then grid lines (only if no indicator found). Returns timestamp and matching indicators.
    */
-  private findSnapTarget(pixelX: number): number | null {
+  private findSnapTarget(pixelX: number): { timestamp: number; indicators: VerticalIndicator[] } | null {
     let closestTimestamp: number | null = null;
     let closestDistance = Infinity;
+    let closestIndicators: VerticalIndicator[] = [];
 
-    // Check indicators with SNAP_THRESHOLD (10px)
-    const snapIndicators: VerticalIndicator[] = [];
-    if (this.selectedIndicator) snapIndicators.push(this.selectedIndicator);
-    if (this.rangeStartIndicator) snapIndicators.push(this.rangeStartIndicator);
-    if (this.rangeEndIndicator) snapIndicators.push(this.rangeEndIndicator);
-    if (this.dashboardStartIndicator) snapIndicators.push(this.dashboardStartIndicator);
-    if (this.dashboardEndIndicator) snapIndicators.push(this.dashboardEndIndicator);
-    snapIndicators.push(...this.indicators);
-
-    for (const indicator of snapIndicators) {
+    // Check indicators first (priority over grid lines)
+    for (const indicator of this.getNamedIndicators()) {
       const indicatorX = this.axis.time2pixel(indicator.getTimestamp());
       const distance = Math.abs(indicatorX - pixelX);
-      if (distance < SNAP_THRESHOLD && distance < closestDistance) {
-        closestDistance = distance;
-        closestTimestamp = indicator.getTimestamp();
+      if (distance < SNAP_THRESHOLD) {
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestTimestamp = indicator.getTimestamp();
+          closestIndicators = [indicator];
+        } else if (distance === closestDistance) {
+          closestIndicators.push(indicator);
+        }
       }
     }
 
-    // Check grid lines with GRID_SNAP_THRESHOLD (5px)
-    const gridTimestamps = this.axis.getGridLineTimestamps();
-    for (const timestamp of gridTimestamps) {
-      const gridX = this.axis.time2pixel(timestamp);
-      const distance = Math.abs(gridX - pixelX);
-      if (distance < GRID_SNAP_THRESHOLD && distance < closestDistance) {
-        closestDistance = distance;
-        closestTimestamp = timestamp;
+    // Only check grid lines if no indicator was found
+    if (closestTimestamp === null) {
+      for (const timestamp of this.axis.getGridLineTimestamps()) {
+        const gridX = this.axis.time2pixel(timestamp);
+        const distance = Math.abs(gridX - pixelX);
+        if (distance < GRID_SNAP_THRESHOLD && distance < closestDistance) {
+          closestDistance = distance;
+          closestTimestamp = timestamp;
+        }
       }
     }
 
-    return closestTimestamp;
+    if (closestTimestamp === null) {
+      return null;
+    }
+
+    return { timestamp: closestTimestamp, indicators: closestIndicators };
   }
 
   private pointerMove(e: PointerEvent): void {
@@ -234,13 +261,26 @@ export class TimelineChart {
     this.mouseX = cur[0];
     if (!this.dragging) {
       // Check for snap targets first
-      const snapTimestamp = this.findSnapTarget(this.mouseX);
-      const timestamp = snapTimestamp ?? this.axis.pixel2time(this.mouseX);
-      const displayX = snapTimestamp !== null ? this.axis.time2pixel(snapTimestamp) : cur[0];
+      const snapResult = this.findSnapTarget(this.mouseX);
+      const timestamp = snapResult?.timestamp ?? this.axis.pixel2time(this.mouseX);
+      const displayX = snapResult !== null ? this.axis.time2pixel(snapResult.timestamp) : cur[0];
+
+      // Compute beyond flags
+      const beyondVisible = this.visibleRange !== null &&
+        (timestamp < this.visibleRange[0] || timestamp > this.visibleRange[1]);
+      const beyondDashboard = this.dashboardRange !== null &&
+        (timestamp < this.dashboardRange[0] || timestamp > this.dashboardRange[1]);
 
       this.setHoveredTimestamp(timestamp);
-      // Update tooltip with position and timestamp
-      this.onTooltip?.({ x: displayX, y: cur[1], timestamp });
+      // Update tooltip with position, timestamp, indicators, and beyond flags
+      this.onTooltip?.({
+        x: displayX,
+        y: cur[1],
+        timestamp,
+        indicators: snapResult?.indicators ?? [],
+        beyondVisible,
+        beyondDashboard,
+      });
     } else {
       // Hide tooltip while dragging
       this.onTooltip?.(null);
@@ -316,7 +356,7 @@ export class TimelineChart {
   /**
    * Set callback for tooltip updates
    */
-  setOnTooltip(callback: (data: { x: number; y: number; timestamp: number } | null) => void): void {
+  setOnTooltip(callback: (data: TooltipData | null) => void): void {
     this.onTooltip = callback;
   }
 
@@ -432,8 +472,8 @@ export class TimelineChart {
     if (firstTimestamp !== null) {
       if (!this.rangeStartIndicator) {
         this.rangeStartIndicator = isDescending
-          ? IndicatorFactory.createRangeEnd(firstTimestamp, colorStr)
-          : IndicatorFactory.createRangeStart(firstTimestamp, colorStr);
+          ? IndicatorFactory.createVisibleEnd(firstTimestamp, colorStr)
+          : IndicatorFactory.createVisibleStart(firstTimestamp, colorStr);
       } else {
         this.rangeStartIndicator.updateConfig({
           timestamp: firstTimestamp,
@@ -448,8 +488,8 @@ export class TimelineChart {
     if (lastTimestamp !== null) {
       if (!this.rangeEndIndicator) {
         this.rangeEndIndicator = isDescending
-          ? IndicatorFactory.createRangeStart(lastTimestamp, colorStr)
-          : IndicatorFactory.createRangeEnd(lastTimestamp, colorStr);
+          ? IndicatorFactory.createVisibleStart(lastTimestamp, colorStr)
+          : IndicatorFactory.createVisibleEnd(lastTimestamp, colorStr);
       } else {
         this.rangeEndIndicator.updateConfig({
           timestamp: lastTimestamp,
@@ -459,6 +499,15 @@ export class TimelineChart {
       }
     } else {
       this.rangeEndIndicator = null;
+    }
+
+    // Track visible range for beyondVisible check
+    if (firstTimestamp !== null && lastTimestamp !== null) {
+      this.visibleRange = isDescending
+        ? [lastTimestamp, firstTimestamp]
+        : [firstTimestamp, lastTimestamp];
+    } else {
+      this.visibleRange = null;
     }
 
     this.render();
@@ -474,7 +523,7 @@ export class TimelineChart {
 
     // Start indicator (right bracket pointing inward)
     if (!this.dashboardStartIndicator) {
-      this.dashboardStartIndicator = IndicatorFactory.createRangeStart(fromTimestamp, colorStr);
+      this.dashboardStartIndicator = IndicatorFactory.createDashboardStart(fromTimestamp, colorStr);
     } else {
       this.dashboardStartIndicator.updateConfig({
         timestamp: fromTimestamp,
@@ -485,7 +534,7 @@ export class TimelineChart {
 
     // End indicator (left bracket pointing inward)
     if (!this.dashboardEndIndicator) {
-      this.dashboardEndIndicator = IndicatorFactory.createRangeEnd(toTimestamp, colorStr);
+      this.dashboardEndIndicator = IndicatorFactory.createDashboardEnd(toTimestamp, colorStr);
     } else {
       this.dashboardEndIndicator.updateConfig({
         timestamp: toTimestamp,
@@ -493,6 +542,9 @@ export class TimelineChart {
         style: { color: colorStr, lineWidth: 2, dashed: false }
       });
     }
+
+    // Track dashboard range for beyondDashboard check
+    this.dashboardRange = [fromTimestamp, toTimestamp];
 
     this.render();
   }
@@ -710,51 +762,10 @@ export class TimelineChart {
       allIndicators.push(this.hoverIndicator);
     }
 
-    // Add any additional custom indicators
-    for (const indicator of this.indicators) {
-      if (indicator.isVisible(zoomRange)) {
-        allIndicators.push(indicator);
-      }
-    }
-
     // Render all indicators
     for (const indicator of allIndicators) {
       const x = this.axis.time2pixel(indicator.getTimestamp());
       indicator.render(this.ctx, x, yOffset, availableHeight);
     }
-  }
-
-  /**
-   * Add a custom indicator to the timeline
-   */
-  addIndicator(indicator: VerticalIndicator): void {
-    this.indicators.push(indicator);
-    this.render();
-  }
-
-  /**
-   * Remove an indicator from the timeline
-   */
-  removeIndicator(indicator: VerticalIndicator): void {
-    const index = this.indicators.indexOf(indicator);
-    if (index !== -1) {
-      this.indicators.splice(index, 1);
-      this.render();
-    }
-  }
-
-  /**
-   * Clear all custom indicators
-   */
-  clearIndicators(): void {
-    this.indicators = [];
-    this.render();
-  }
-
-  /**
-   * Get all custom indicators
-   */
-  getIndicators(): VerticalIndicator[] {
-    return [...this.indicators];
   }
 }

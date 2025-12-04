@@ -4,6 +4,14 @@
  * Used for hover indicators, range brackets, and selection markers
  */
 
+/** Semantic type of indicator (direction determines start/end) */
+export enum IndicatorType {
+  Hover = 'hover',
+  Selected = 'selected',
+  Visible = 'visible',
+  Dashboard = 'dashboard',
+}
+
 export type IndicatorDirection = 'left' | 'right' | 'point';
 
 export interface IndicatorStyle {
@@ -14,6 +22,7 @@ export interface IndicatorStyle {
 }
 
 export interface VerticalIndicatorConfig {
+  type: IndicatorType;
   timestamp: number;
   direction: IndicatorDirection;
   style: IndicatorStyle;
@@ -123,70 +132,77 @@ export class VerticalIndicator {
   getDirection(): IndicatorDirection {
     return this.config.direction;
   }
+
+  /**
+   * Get the indicator type
+   */
+  getType(): IndicatorType {
+    return this.config.type;
+  }
+
+  /**
+   * Get the indicator color
+   */
+  getColor(): string {
+    return this.config.style.color;
+  }
 }
 
 /**
  * Factory functions for common indicator types
  */
 export class IndicatorFactory {
-  /**
-   * Create a hover indicator (point, dashed, bright color)
-   */
   static createHover(timestamp: number, color: string): VerticalIndicator {
     return new VerticalIndicator({
+      type: IndicatorType.Hover,
       timestamp,
       direction: 'point',
-      style: {
-        color,
-        lineWidth: 2,
-        dashed: true,
-        dashPattern: [4, 4],
-      },
+      style: { color, lineWidth: 2, dashed: true, dashPattern: [4, 4] },
     });
   }
 
-  /**
-   * Create a range start bracket (left bracket, solid)
-   */
-  static createRangeStart(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      timestamp,
-      direction: 'right',
-      style: {
-        color,
-        lineWidth: 2,
-        dashed: false,
-      },
-    });
-  }
-
-  /**
-   * Create a range end bracket (right bracket, solid)
-   */
-  static createRangeEnd(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      timestamp,
-      direction: 'left',
-      style: {
-        color,
-        lineWidth: 2,
-        dashed: false,
-      },
-    });
-  }
-
-  /**
-   * Create a selection marker (point, solid)
-   */
   static createSelection(timestamp: number, color: string): VerticalIndicator {
     return new VerticalIndicator({
+      type: IndicatorType.Selected,
       timestamp,
       direction: 'point',
-      style: {
-        color,
-        lineWidth: 3,
-        dashed: false,
-      },
+      style: { color, lineWidth: 3, dashed: false },
+    });
+  }
+
+  static createVisibleStart(timestamp: number, color: string): VerticalIndicator {
+    return new VerticalIndicator({
+      type: IndicatorType.Visible,
+      timestamp,
+      direction: 'right',
+      style: { color, lineWidth: 2, dashed: false },
+    });
+  }
+
+  static createVisibleEnd(timestamp: number, color: string): VerticalIndicator {
+    return new VerticalIndicator({
+      type: IndicatorType.Visible,
+      timestamp,
+      direction: 'left',
+      style: { color, lineWidth: 2, dashed: false },
+    });
+  }
+
+  static createDashboardStart(timestamp: number, color: string): VerticalIndicator {
+    return new VerticalIndicator({
+      type: IndicatorType.Dashboard,
+      timestamp,
+      direction: 'right',
+      style: { color, lineWidth: 2, dashed: false },
+    });
+  }
+
+  static createDashboardEnd(timestamp: number, color: string): VerticalIndicator {
+    return new VerticalIndicator({
+      type: IndicatorType.Dashboard,
+      timestamp,
+      direction: 'left',
+      style: { color, lineWidth: 2, dashed: false },
     });
   }
 }
