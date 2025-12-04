@@ -56,7 +56,7 @@ export class TimelineChart {
   private boundWheel: (e: WheelEvent) => void;
   private boundPointerLeave: (e: PointerEvent) => void;
 
-  constructor(container: HTMLDivElement, colorScheme: ColorScheme) {
+  constructor(container: HTMLDivElement, colorScheme: ColorScheme, fontFamily?: string) {
     this.container = container;
     this.colorScheme = colorScheme;
     this.canvas = document.createElement('canvas');
@@ -68,7 +68,7 @@ export class TimelineChart {
     }
     this.ctx = ctx;
 
-    this.axis = new TimeAxis(this, colorScheme);
+    this.axis = new TimeAxis(this, colorScheme, fontFamily);
 
     // Create dotted pattern for grayed-out areas
     this.grayPattern = this.createDottedPattern();
@@ -461,6 +461,14 @@ export class TimelineChart {
       });
     }
 
+    this.render();
+  }
+
+  /**
+   * Update the font family for axis labels
+   */
+  setFontFamily(fontFamily: string): void {
+    this.axis.setFontFamily(fontFamily);
     this.render();
   }
 
