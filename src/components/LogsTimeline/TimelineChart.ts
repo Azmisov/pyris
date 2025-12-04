@@ -52,6 +52,9 @@ export class TimelineChart {
   // Callback for log selection
   private onLogSelect?: (timestamp: number) => void;
 
+  // Callback for tooltip updates (x position in pixels, timestamp in ms, or null to hide)
+  private onTooltip?: (data: { x: number; y: number; timestamp: number } | null) => void;
+
   // Event handlers (bound methods)
   private boundPointerDown: (e: PointerEvent) => void;
   private boundPointerUp: (e: PointerEvent) => void;
@@ -190,6 +193,11 @@ export class TimelineChart {
     if (!this.dragging) {
       const timestamp = this.axis.pixel2time(this.mouseX);
       this.setHoveredTimestamp(timestamp);
+      // Update tooltip with position and timestamp
+      this.onTooltip?.({ x: cur[0], y: cur[1], timestamp });
+    } else {
+      // Hide tooltip while dragging
+      this.onTooltip?.(null);
     }
 
     // Wait until we move a bit before initiating drag
@@ -249,6 +257,7 @@ export class TimelineChart {
   private pointerLeave(e: PointerEvent): void {
     this.mouseX = null;
     this.setHoveredTimestamp(null);
+    this.onTooltip?.(null);
   }
 
   /**
@@ -256,6 +265,13 @@ export class TimelineChart {
    */
   setOnLogSelect(callback: (timestamp: number) => void): void {
     this.onLogSelect = callback;
+  }
+
+  /**
+   * Set callback for tooltip updates
+   */
+  setOnTooltip(callback: (data: { x: number; y: number; timestamp: number } | null) => void): void {
+    this.onTooltip = callback;
   }
 
   updateDims(width: number, height: number): void {

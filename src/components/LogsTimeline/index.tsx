@@ -3,12 +3,19 @@
  * Displays a timeline view of log distribution with zoom/pan controls
  */
 
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
 import { Icon } from '@grafana/ui';
+import { dateTimeParse } from '@grafana/data';
 import { TimelineChart } from './TimelineChart';
 import { AnsiLogRow } from '../../types';
 import { ColorScheme } from '../../theme/colorSchemes';
 import styles from './index.module.css';
+
+interface TooltipData {
+  x: number;
+  y: number;
+  timestamp: number;
+}
 
 interface LogsTimelineProps {
   logs: AnsiLogRow[];
@@ -90,6 +97,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
+  const [tooltipData, setTooltipData] = useState<TooltipData | null>(null);
 
   // Calculate histogram data
   const { timeRange, histogram } = useMemo(() => {
@@ -129,6 +137,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       chartRef.current.setOnLogSelect(onLogSelect);
     }
   }, [onLogSelect]);
+
+  // Set tooltip callback
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.setOnTooltip(setTooltipData);
+    }
+  }, []);
 
   // Update chart data when logs change
   useEffect(() => {
@@ -222,6 +237,50 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
           </button>
         )}
       </div>
+      {/* Tooltip */}
+      {tooltipData && (
+        <div
+          className={styles['timeline-tooltip']}
+          style={{
+            position: 'absolute',
+            left: tooltipData.x,
+            top: 0,
+            transform: 'translateX(-50%)',
+            pointerEvents: 'none',
+          }}
+        >
+          <div className={styles['timeline-tooltip-content']}>
+            {(() => {
+              const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+              const primaryDt = dateTimeParse(tooltipData.timestamp, { timeZone });
+              const primaryTime = primaryDt.format('YYYY-MM-DD HH:mm:ss.SSS');
+              const primaryOffset = primaryDt.format('Z'); // e.g., "-07:00"
+              const tzLabel = timeZone === 'utc' ? 'UTC'
+                : timeZone === 'browser' || !timeZone ? browserTz
+                : timeZone;
+
+              const isUtc = timeZone === 'utc';
+              const secondaryTz = isUtc ? 'browser' : 'utc';
+              const secondaryDt = dateTimeParse(tooltipData.timestamp, { timeZone: secondaryTz });
+              const secondaryTime = secondaryDt.format('YYYY-MM-DD HH:mm:ss.SSS');
+              const secondaryOffset = secondaryDt.format('Z');
+              const secondaryLabel = isUtc ? browserTz : 'UTC';
+
+              return (
+                <>
+                  <div className={styles['timeline-tooltip-primary']}>
+                    {primaryTime}
+                    <span className={styles['timeline-tooltip-tz']}> {tzLabel} ({primaryOffset})</span>
+                  </div>
+                  <div className={styles['timeline-tooltip-secondary']}>
+                    {secondaryTime} {secondaryLabel}{!isUtc ? '' : ` (${secondaryOffset})`}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
