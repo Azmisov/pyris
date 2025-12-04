@@ -2,6 +2,7 @@
 
 .logs-timeline {
   border-bottom: 1px solid var(--ansi-fg-muted-1);
+  overflow: visible;
 }
 
 /* Timeline icon buttons */

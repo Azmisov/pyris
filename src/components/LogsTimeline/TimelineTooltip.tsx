@@ -56,8 +56,8 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, timeZone
       style={{
         position: 'absolute',
         left: data.x,
-        top: 0,
-        transform: 'translateX(-50%)',
+        bottom: 0,
+        transform: 'translate(-50%, 100%)',
         pointerEvents: 'none',
       }}
     >

@@ -3,7 +3,8 @@
 }
 
 .content {
-  background-color: var(--ansi-bg-accent-2);
+  position: relative;
+  background-color: var(--ansi-bg-accent-1);
   border: 1px solid var(--ansi-fg-muted-2);
   border-radius: 4px;
   padding: 6px 10px;
@@ -11,6 +12,34 @@
   font-size: 11px;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Triangle pointer at top */
+.content::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--ansi-fg-muted-2);
+}
+
+/* Inner triangle to create border effect */
+.content::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--ansi-bg-accent-1);
 }
 
 .primary {
