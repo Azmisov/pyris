@@ -63,3 +63,21 @@
   font-size: 10px;
   margin-top: 2px;
 }
+
+.timeline-tooltip-details {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--ansi-fg-muted-2);
+}
+
+.timeline-tooltip-indicator {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ansi-fg);
+}
+
+.timeline-tooltip-beyond {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--ansi-fg-muted-1);
+}
