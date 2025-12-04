@@ -45,11 +45,8 @@ export function format_time_full(t: number) : string {
 }
 
 interface GridSettings {
-  /** Minimum pixel width between grid intervals
-   * TODO: make this dynamic based on what is being
-   * displayed and font, e.g. 05:00 is shorter than 2025-10-12
-   */
-  minIntervalWidth: number;
+  /** Margin between labels in pixels (added to calculated label width) */
+  labelMargin: number;
   /** How much each zoom iteration should scale the current duration */
   zoomFactor: number;
   /** Scale from wheel scroll pixel coordinates to zoom iterations */
@@ -74,7 +71,7 @@ interface GridSettings {
 }
 
 const DEFAULT_GRID_SETTINGS: GridSettings = {
-  minIntervalWidth: 80,
+  labelMargin: 16,
   zoomFactor: 0.15,
   zoomWheelScale: 120,
   maxMillisecondWidth: 100,
@@ -180,12 +177,62 @@ class GridLineGenerator {
   /** Format function for the current (minor) unit */
   private format: (d: Moment) => string = () => '';
 
+  /** Calculated minimum interval width based on font metrics */
+  private minIntervalWidth: number = 80;
+
+  /** Font family used for label width calculation (for cache invalidation) */
+  private fontFamily: string = '';
+
+  /** Font size used for labels */
+  private fontSize: number = 12;
+
   constructor(
     gridSettings: GridSettings,
     tzOffset: number
   ) {
     this.gridSettings = gridSettings;
     this.tzOffset = tzOffset;
+  }
+
+  /**
+   * Calculate the minimum interval width based on the widest possible label.
+   * Uses a sample timestamp (9999-12-31T23:59:59.999) to get max-width formatted strings.
+   * Measures in bold since major labels are bold.
+   */
+  updateLabelMetrics(fontFamily: string, fontSize: number): void {
+    // Skip if font hasn't changed
+    if (this.fontFamily === fontFamily && this.fontSize === fontSize) {
+      return;
+    }
+    this.fontFamily = fontFamily;
+    this.fontSize = fontSize;
+
+    // Create offscreen canvas for text measurement
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      this.minIntervalWidth = 80; // Fallback
+      return;
+    }
+
+    // Use bold font since major labels are bold (widest case)
+    ctx.font = `bold ${fontSize}px ${fontFamily}`;
+
+    // Sample timestamp with wide digits (9s are typically widest)
+    const sampleTime = dateTimeAsMoment(dateTimeParse('9999-12-31T23:59:59.999Z'));
+
+    // Measure width of each spacing's formatted output
+    let maxWidth = 0;
+    for (const spacing of this.gridSettings.spacings) {
+      const label = spacing.format(sampleTime);
+      const width = ctx.measureText(label).width;
+      if (width > maxWidth) {
+        maxWidth = width;
+      }
+    }
+
+    // Add margin for spacing between labels
+    this.minIntervalWidth = Math.ceil(maxWidth) + this.gridSettings.labelMargin;
   }
 
   /**
@@ -231,8 +278,7 @@ class GridLineGenerator {
     const ms = zoomRangeMs[1] - zoomRangeMs[0];
     const msPerPx = ms / width;
     // Minimum interval between grid lines in millisecond coordinates
-    // TODO: eventually this will be dynamic per unit
-    const minGridMs = msPerPx * this.gridSettings.minIntervalWidth;
+    const minGridMs = msPerPx * this.minIntervalWidth;
 
     // We iterate in order since min grid spacing is dynamic based on how unit is formatted. Which
     // means the spacing may go up or down so ordering not guaranteed. So need to iterate from min
@@ -384,6 +430,7 @@ class GridLineGenerator {
 }
 
 const DEFAULT_FONT_FAMILY = 'JetBrains Mono, Cascadia Mono, DejaVu Sans Mono, Consolas, Courier New, monospace';
+const LABEL_FONT_SIZE = 12;
 
 export class TimeAxis {
   private chart: any;
@@ -421,6 +468,7 @@ export class TimeAxis {
 
     // Create grid line generator
     this.gridLineGenerator = new GridLineGenerator(this.gridSettings, this.tzOffset);
+    this.gridLineGenerator.updateLabelMetrics(this.fontFamily, LABEL_FONT_SIZE);
 
     // Update grid configuration for current zoom
     if (this.zoomRange && this.width) {
@@ -595,6 +643,10 @@ export class TimeAxis {
    */
   setFontFamily(fontFamily: string): void {
     this.fontFamily = fontFamily;
+    // Recalculate label metrics for new font
+    if (this.gridLineGenerator) {
+      this.gridLineGenerator.updateLabelMetrics(fontFamily, LABEL_FONT_SIZE);
+    }
   }
 
   /**
@@ -629,15 +681,14 @@ export class TimeAxis {
     const majorPath = new Path2D();
 
     // Label font styling
-    const fontSize = 12;
     ctx.fillStyle = colorToCSS(this.colorScheme.foreground);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    const minorFont = `${fontSize}px ${this.fontFamily}`;
-    const majorFont = `bold ${fontSize}px ${this.fontFamily}`;
+    const minorFont = `${LABEL_FONT_SIZE}px ${this.fontFamily}`;
+    const majorFont = `bold ${LABEL_FONT_SIZE}px ${this.fontFamily}`;
 
     // Label y position - center vertically within axis height, round for crisp text
-    const topPadding = Math.round((axisHeight - fontSize) / 2);
+    const topPadding = Math.round((axisHeight - LABEL_FONT_SIZE) / 2);
     const ly = Math.round(this.y + topPadding);
 
     // Generate and draw grid lines
