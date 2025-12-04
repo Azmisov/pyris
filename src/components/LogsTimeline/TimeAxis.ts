@@ -174,12 +174,46 @@ class GridLineGenerator {
   /** Number of minor units between each grid line (e.g., 2 for "every 2 months") */
   private interval: number = 1;
 
+  /** Index into spacings array for current unit (used for walking up to find max aligned unit) */
+  private spacingIndex: number = 0;
+
+  /** Format function for the current (minor) unit */
+  private format: (d: Moment) => string = () => '';
+
   constructor(
     gridSettings: GridSettings,
     tzOffset: number
   ) {
     this.gridSettings = gridSettings;
     this.tzOffset = tzOffset;
+  }
+
+  /**
+   * Find the highest time unit that the given timestamp aligns with.
+   * Walks up from the current minor unit through all larger units.
+   * Returns the format function for that unit.
+   *
+   * Example: 00:00 on Jan 1st aligns with minute, hour, day, month, AND year.
+   * Returns the year formatter since that's the highest aligned unit.
+   */
+  private findHighestAlignedFormat(cursor: Moment): (d: Moment) => string {
+    const spacings = this.gridSettings.spacings;
+    let highestFormat = this.format;
+
+    // Walk up through all units larger than current
+    for (let i = this.spacingIndex + 1; i < spacings.length; i++) {
+      const spacing = spacings[i];
+      const unitStart = cursor.clone().startOf(spacing.unit as unitOfTime.StartOf);
+      if (cursor.isSame(unitStart)) {
+        // Timestamp aligns with this larger unit, use its formatter
+        highestFormat = spacing.format;
+      } else {
+        // Doesn't align with this unit, won't align with any larger units either
+        break;
+      }
+    }
+
+    return highestFormat;
   }
 
   /**
@@ -226,8 +260,11 @@ class GridLineGenerator {
 
       // Found sufficient unit + interval
       this.unit = spacing.unit;
+      this.format = spacing.format;
+      this.spacingIndex = si;
       // Major unit is the next larger unit; empty string if none (e.g., years have no major)
-      this.majorUnit = spacings[si+1]?.unit || '';
+      const majorSpacing = spacings[si+1];
+      this.majorUnit = majorSpacing?.unit || '';
       this.interval = spacing.intervals[best];
       return;
     }
@@ -320,36 +357,14 @@ class GridLineGenerator {
 
       // Not clipped, okay to yield current cursor
       if (!clippedBefore) {
-        yield {time: cursor, major: isMajor, label: this.formatLabel(cursor.valueOf())};
+        // For major grid lines, find the highest unit this timestamp aligns with
+        const formatter = isMajor ? this.findHighestAlignedFormat(cursor) : this.format;
+        yield {time: cursor, major: isMajor, label: formatter(cursor)};
       }
 
       cursor = nextCursor;
       isMajor = nextIsMajor;
     }
-  }
-
-  /**
-   * Format label based on unit.
-   * Returns appropriate portion of timestamp (date, time, or ms) depending on unit.
-   *
-   * @param timeMs - Timestamp in milliseconds
-   * @returns Formatted label string
-   */
-  private formatLabel(timeMs: number): string {
-    const fmt = format_time(timeMs);
-
-    // Determine label format based on unit
-    const lfmt = ({
-      ms: 'ms',
-      s: 'time',
-      m: 'time',
-      h: 'time',
-      d: 'date',
-      M: 'date',
-      y: 'date',
-    } as Record<string, 'date' | 'time' | 'ms'>)[this.unit];
-
-    return fmt[lfmt] || '';
   }
 
   /**
@@ -586,7 +601,7 @@ export class TimeAxis {
    * Get height of the axis
    */
   getHeight(): number {
-    return 20; // Enough for labels
+    return 19;
   }
 
   updateTitle() {
@@ -614,26 +629,34 @@ export class TimeAxis {
     const majorPath = new Path2D();
 
     // Label font styling
+    const fontSize = 12;
     ctx.fillStyle = colorToCSS(this.colorScheme.foreground);
-    ctx.font = `11px ${this.fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
+    const minorFont = `${fontSize}px ${this.fontFamily}`;
+    const majorFont = `bold ${fontSize}px ${this.fontFamily}`;
 
-    // Label start height
-    const ly = this.y + 5;
+    // Label y position - center vertically within axis height, round for crisp text
+    const topPadding = Math.round((axisHeight - fontSize) / 2);
+    const ly = Math.round(this.y + topPadding);
 
     // Generate and draw grid lines
     for (const gridLine of this.gridLineGenerator.generate(this.zoomRange)) {
-      // Add 0.5 to get crisp 1px lines (avoids anti-aliasing across 2 pixels)
-      const x = Math.floor(this.time2pixel(gridLine.time.valueOf())) + 0.5;
+      const rawX = this.time2pixel(gridLine.time.valueOf());
+      // For grid lines: +0.5 offset for crisp 1px strokes
+      const lineX = Math.floor(rawX) + 0.5;
+      // For text: round to integer pixel for crisp rendering
+      const textX = Math.round(rawX);
+
       const path = gridLine.major ? majorPath : minorPath;
 
       // Grid lines only extend through histogram area (0 to axis y position)
-      path.moveTo(x, 0);
-      path.lineTo(x, this.y);
+      path.moveTo(lineX, 0);
+      path.lineTo(lineX, this.y);
 
-      // Draw label centered on grid line
-      ctx.fillText(gridLine.label, x, ly);
+      // Draw label centered on grid line (bold for major)
+      ctx.font = gridLine.major ? majorFont : minorFont;
+      ctx.fillText(gridLine.label, textX, ly);
     }
 
     // Draw grid lines

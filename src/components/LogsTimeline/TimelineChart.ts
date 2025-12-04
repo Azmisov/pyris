@@ -28,6 +28,9 @@ export class TimelineChart {
   public axis: TimeAxis;
   private histogram: HistogramBin[] = [];
   private fullTimeRange: [number, number] | null = null;
+  // Logical dimensions (CSS pixels, not scaled)
+  private logicalWidth: number = 0;
+  private logicalHeight: number = 0;
   private grayPattern: CanvasPattern | null = null;
   private hoverIndicator: VerticalIndicator | null = null;
   private selectedIndicator: VerticalIndicator | null = null;
@@ -60,6 +63,8 @@ export class TimelineChart {
     this.container = container;
     this.colorScheme = colorScheme;
     this.canvas = document.createElement('canvas');
+    // Apply CSS text rendering optimization for geometric accuracy
+    this.canvas.style.textRendering = 'geometricPrecision';
     container.appendChild(this.canvas);
 
     const ctx = this.canvas.getContext('2d');
@@ -67,6 +72,8 @@ export class TimelineChart {
       throw new Error('Could not get canvas context');
     }
     this.ctx = ctx;
+    // Disable image smoothing for crisp rendering
+    this.ctx.imageSmoothingEnabled = false;
 
     this.axis = new TimeAxis(this, colorScheme, fontFamily);
 
@@ -252,8 +259,32 @@ export class TimelineChart {
   }
 
   updateDims(width: number, height: number): void {
-    this.canvas.width = width;
-    this.canvas.height = height;
+    // Store logical dimensions for rendering calculations
+    this.logicalWidth = width;
+    this.logicalHeight = height;
+
+    // Only apply HiDPI scaling when devicePixelRatio > 1 (retina displays)
+    // When dpr < 1 (zoomed out), scaling would make things blurry
+    const dpr = window.devicePixelRatio || 1;
+    const scaleFactor = dpr > 1 ? dpr : 1;
+
+    // Set canvas buffer size (scaled for HiDPI if applicable)
+    this.canvas.width = Math.floor(width * scaleFactor);
+    this.canvas.height = Math.floor(height * scaleFactor);
+
+    // Set CSS size to logical dimensions
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+
+    // Scale context for HiDPI rendering
+    if (scaleFactor > 1) {
+      this.ctx.scale(scaleFactor, scaleFactor);
+    }
+
+    // Re-apply context settings (reset when canvas size changes)
+    this.ctx.imageSmoothingEnabled = false;
+
+    // Axis works in logical pixels
     this.axis.updateWidth(width);
     this.render();
   }
@@ -494,8 +525,9 @@ export class TimelineChart {
   }
 
   render(): void {
-    const width = this.canvas.width;
-    const height = this.canvas.height;
+    // Use logical dimensions (not scaled canvas buffer size)
+    const width = this.logicalWidth;
+    const height = this.logicalHeight;
 
     // Clear canvas with theme background color
     this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
