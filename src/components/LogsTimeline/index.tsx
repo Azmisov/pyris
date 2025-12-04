@@ -21,6 +21,7 @@ interface LogsTimelineProps {
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
   onLogSelect?: (timestamp: number) => void;
   dashboardTimeRange?: { from: number; to: number };
+  fontFamily?: string;
 }
 
 const DEFAULT_HEIGHT = 100;
@@ -83,6 +84,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   onTimeRangeChange,
   onLogSelect,
   dashboardTimeRange,
+  fontFamily,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
@@ -96,7 +98,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const chart = new TimelineChart(containerRef.current, colorScheme);
+    const chart = new TimelineChart(containerRef.current, colorScheme, fontFamily);
     chartRef.current = chart;
 
     return () => {
@@ -111,6 +113,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       chartRef.current.setColorScheme(colorScheme);
     }
   }, [colorScheme]);
+
+  // Update font family when it changes
+  useEffect(() => {
+    if (chartRef.current && fontFamily) {
+      chartRef.current.setFontFamily(fontFamily);
+    }
+  }, [fontFamily]);
 
   // Set log selection callback
   useEffect(() => {

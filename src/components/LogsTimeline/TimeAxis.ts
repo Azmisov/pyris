@@ -86,6 +86,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       unit: 'ms',
       minDuration: 1,
       intervals: [500, 250, 100, 50, 25, 10, 5, 2, 1],
+      // alternatives: 50ms, 50, .050
       format: d => d.format("SSS")
     },
     {
@@ -93,6 +94,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       minDuration: 1000,
       // typical wall clock divisions
       intervals: [30, 15, 10, 5, 2, 1],
+      // alternatives: 09s,, 12:30:59, :30:59
       format: d => d.format("s[s]")
     },
     {
@@ -100,6 +102,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       minDuration: 60*1000,
       // typical wall clock divisions
       intervals: [30, 15, 10, 5, 2, 1],
+      // alternatives: :30
       format: d => d.format("HH:mm")
     },
     {
@@ -107,6 +110,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       minDuration: 60*60*1000,
       // 8 to match typical workday; 12 for sensible noon/midnight division
       intervals: [12, 8, 4, 2, 1],
+      // alternatives: 12h, 12:
       format: d => d.format("HH:mm")
     },
     {
@@ -116,6 +120,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       // TODO: multiples of seven aligned to monday? I think if we do this we'd need to change
       // labels to be day of week, otherwise it just looks nonsensical and buggy
       intervals: [15, 10, 5, 2, 1],
+      // alternatives: 2025-01-03, 01-03, 1-3, 1/3
       format: d => d.format("Do")
     },
     {
@@ -124,6 +129,7 @@ const DEFAULT_GRID_SETTINGS: GridSettings = {
       minDuration: 28*24*60*60*1000,
       // quartarly and mid-year divisions
       intervals: [6, 3, 2, 1],
+      // alternative: 2025-01, 2025/1
       format: d => d.format("MMM")
     },
     {
@@ -362,6 +368,8 @@ class GridLineGenerator {
   }
 }
 
+const DEFAULT_FONT_FAMILY = 'JetBrains Mono, Cascadia Mono, DejaVu Sans Mono, Consolas, Courier New, monospace';
+
 export class TimeAxis {
   private chart: any;
   private width: number = 0;
@@ -374,11 +382,13 @@ export class TimeAxis {
   private dragData: { id: number; center: number } | null = null;
   private gridSettings: GridSettings;
   private colorScheme: ColorScheme;
+  private fontFamily: string;
   public y: number = 0;
 
-  constructor(chart: any, colorScheme: ColorScheme, gridSettings?: Partial<GridSettings>) {
+  constructor(chart: any, colorScheme: ColorScheme, fontFamily?: string, gridSettings?: Partial<GridSettings>) {
     this.chart = chart;
     this.colorScheme = colorScheme;
+    this.fontFamily = fontFamily || DEFAULT_FONT_FAMILY;
     this.gridSettings = { ...DEFAULT_GRID_SETTINGS, ...gridSettings };
   }
 
@@ -428,7 +438,7 @@ export class TimeAxis {
     if (d?.id !== id) {
       d = this.dragData = {
         // convert null to -1, which forces null to always restart
-        id: id || -1,
+        id: id ?? -1,
         center: this.pixel2time(startX),
       };
     }
@@ -566,6 +576,13 @@ export class TimeAxis {
   }
 
   /**
+   * Update the font family for axis labels
+   */
+  setFontFamily(fontFamily: string): void {
+    this.fontFamily = fontFamily;
+  }
+
+  /**
    * Get height of the axis
    */
   getHeight(): number {
@@ -598,7 +615,7 @@ export class TimeAxis {
 
     // Label font styling
     ctx.fillStyle = colorToCSS(this.colorScheme.foreground);
-    ctx.font = '11px monospace';
+    ctx.font = `11px ${this.fontFamily}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 

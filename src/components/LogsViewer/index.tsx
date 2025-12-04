@@ -590,6 +590,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           onLogSelect={handleLogSelect}
           onTimeRangeChange={onTimeRangeChange}
           dashboardTimeRange={dashboardTimeRange}
+          fontFamily={options.fontFamily}
         />
       )}
 
