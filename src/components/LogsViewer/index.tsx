@@ -38,6 +38,7 @@ export interface LogsViewerProps {
   onRowClick?: (log: LogData, index: number) => void;
   onTimeRangeChange?: (startTimeMs: number, endTimeMs: number) => void;
   dashboardTimeRange?: { from: number; to: number };
+  timeZone?: string;
   className?: string;
 }
 
@@ -72,6 +73,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   onRowClick,
   onTimeRangeChange,
   dashboardTimeRange,
+  timeZone,
   className = '',
 }) => {
   // Merge user options with defaults
@@ -591,6 +593,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           onTimeRangeChange={onTimeRangeChange}
           dashboardTimeRange={dashboardTimeRange}
           fontFamily={options.fontFamily}
+          timeZone={timeZone}
         />
       )}
 

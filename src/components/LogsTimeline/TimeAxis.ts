@@ -189,12 +189,17 @@ class GridLineGenerator {
   /** Font size used for labels */
   private fontSize: number = 12;
 
+  /** Timezone string for date parsing */
+  private timeZone: string = 'browser';
+
   constructor(
     gridSettings: GridSettings,
-    tzOffset: number
+    tzOffset: number,
+    timeZone: string = 'browser'
   ) {
     this.gridSettings = gridSettings;
     this.tzOffset = tzOffset;
+    this.timeZone = timeZone;
   }
 
   /**
@@ -343,7 +348,7 @@ class GridLineGenerator {
 
     // Start out using the grafana datetime wrapper just to handle possibly grafana-specific
     // timezones, then switch to moment object since the grafana wrapper lacks the methods we need.
-    let cursor = dateTimeAsMoment(dateTimeParse(zoomRangeMs[0], { timeZone: "America/Boise" }));
+    let cursor = dateTimeAsMoment(dateTimeParse(zoomRangeMs[0], { timeZone: this.timeZone }));
     // Initial goal is to find the minor grid interval which 1) <= start 2) multiple of interval in
     // wall clock time (not physical UTC time). First truncate to meet condition #1.
     cursor = cursor.startOf(unit);
@@ -382,13 +387,23 @@ class GridLineGenerator {
       // and we would need to compute next cursor anyways.
       let nextCursor = cursor.clone().add(this.interval, unit);
 
-      // For DST shift the wall clock interval could be off: greater if wall clocks jumped ahead,
-      // less if they jumped behind. If greater, then the current interval is unavailable because
-      // there's a gap due to the time skip; so we need to skip to the next interval. If less, then
-      // the current interval is available, just ahead by some amount.
+      // For DST shifts, wall clock may not align with our interval:
+      // - Spring forward: add() overshoots (e.g., 00:00 + 4h = 05:00 instead of 04:00)
+      //   → Try going BACK to the aligned time (04:00 exists, we just overshot it)
+      // - Fall back: add() may land on repeated hour with wrong alignment
+      //   → Go FORWARD to next aligned time
       const remainder = getAlignedUnitValue(nextCursor, unit) % this.interval;
       if (remainder !== 0) {
-        nextCursor = nextCursor.add(this.interval - remainder, unit);
+        // First try going back - this handles spring forward overshoot
+        const backCursor = nextCursor.clone().subtract(remainder, unit);
+        const backRemainder = getAlignedUnitValue(backCursor, unit) % this.interval;
+        // Verify backCursor is actually aligned (DST fall back can cause subtract to land on wrong hour)
+        if (backRemainder === 0 && backCursor.isAfter(cursor)) {
+          nextCursor = backCursor;
+        } else {
+          // Go forward to next aligned time
+          nextCursor = nextCursor.add(this.interval - remainder, unit);
+        }
       }
 
       // If >= next major interval, clamp to major (skip if no major unit)
@@ -457,13 +472,16 @@ export class TimeAxis {
   private gridSettings: GridSettings;
   private colorScheme: ColorScheme;
   private fontFamily: string;
+  /** Timezone string (e.g., "browser", "utc", or IANA timezone like "America/New_York") */
+  private timeZone: string;
   public y: number = 0;
 
-  constructor(chart: any, colorScheme: ColorScheme, fontFamily?: string, gridSettings?: Partial<GridSettings>) {
+  constructor(chart: any, colorScheme: ColorScheme, fontFamily?: string, gridSettings?: Partial<GridSettings>, timeZone?: string) {
     this.chart = chart;
     this.colorScheme = colorScheme;
     this.fontFamily = fontFamily || DEFAULT_FONT_FAMILY;
     this.gridSettings = { ...DEFAULT_GRID_SETTINGS, ...gridSettings };
+    this.timeZone = timeZone || 'browser';
   }
 
   /**
@@ -479,7 +497,7 @@ export class TimeAxis {
     this.tzOffset = -date.getTimezoneOffset() / 60;
 
     // Create grid line generator
-    this.gridLineGenerator = new GridLineGenerator(this.gridSettings, this.tzOffset);
+    this.gridLineGenerator = new GridLineGenerator(this.gridSettings, this.tzOffset, this.timeZone);
     this.gridLineGenerator.updateLabelMetrics(this.fontFamily, LABEL_FONT_SIZE);
 
     // Update grid configuration for current zoom
