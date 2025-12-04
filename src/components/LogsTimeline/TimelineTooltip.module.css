@@ -1,0 +1,48 @@
+.tooltip {
+  z-index: 100;
+}
+
+.content {
+  background-color: var(--ansi-bg-accent-2);
+  border: 1px solid var(--ansi-fg-muted-2);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.primary {
+  color: var(--ansi-fg);
+  font-weight: 500;
+}
+
+.tz {
+  color: var(--ansi-fg-muted-1);
+  font-weight: normal;
+}
+
+.secondary {
+  color: var(--ansi-fg-muted-1);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.details {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--ansi-fg-muted-2);
+}
+
+.indicator {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ansi-fg);
+}
+
+.beyond {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--ansi-fg-muted-1);
+}
