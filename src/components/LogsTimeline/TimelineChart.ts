@@ -6,12 +6,7 @@
 import { TimeAxis } from './TimeAxis';
 import { ColorScheme, colorToCSS } from '../../theme/colorSchemes';
 import { VerticalIndicator, IndicatorFactory } from './VerticalIndicator';
-
-interface HistogramBin {
-  startTime: number;
-  endTime: number;
-  count: number;
-}
+import { LogCountIndex, HistogramBin } from './LogCountIndex';
 
 /** Tooltip data passed to the callback */
 export interface TooltipData {
@@ -20,6 +15,8 @@ export interface TooltipData {
   timestamp: number;
   /** Indicators at the snapped position */
   indicators: VerticalIndicator[];
+  /** Histogram bin containing this timestamp, if any */
+  bin: HistogramBin | null;
   /** True if timestamp is outside the full log data range */
   beyondLogs: boolean;
   /** True if timestamp is outside the visible logs range */
@@ -38,7 +35,7 @@ export class TimelineChart {
   private ctx: CanvasRenderingContext2D;
   private observer: ResizeObserver;
   public axis: TimeAxis;
-  private histogram: HistogramBin[] = [];
+  private logCountIndex: LogCountIndex | null = null;
   private fullTimeRange: [number, number] | null = null;
   // Logical dimensions (CSS pixels, not scaled)
   private logicalWidth: number = 0;
@@ -265,6 +262,9 @@ export class TimelineChart {
       const timestamp = snapResult?.timestamp ?? this.axis.pixel2time(this.mouseX);
       const displayX = snapResult !== null ? this.axis.time2pixel(snapResult.timestamp) : cur[0];
 
+      // Find histogram bin for this timestamp
+      const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
+
       // Compute beyond flags
       const beyondLogs = this.fullTimeRange !== null &&
         (timestamp < this.fullTimeRange[0] || timestamp > this.fullTimeRange[1]);
@@ -274,12 +274,13 @@ export class TimelineChart {
         (timestamp < this.dashboardRange[0] || timestamp > this.dashboardRange[1]);
 
       this.setHoveredTimestamp(timestamp);
-      // Update tooltip with position, timestamp, indicators, and beyond flags
+      // Update tooltip with position, timestamp, indicators, bin, and beyond flags
       this.onTooltip?.({
         x: displayX,
         y: cur[1],
         timestamp,
         indicators: snapResult?.indicators ?? [],
+        bin,
         beyondLogs,
         beyondVisible,
         beyondDashboard,
@@ -390,11 +391,15 @@ export class TimelineChart {
       }
     }
 
+    // Find histogram bin for this timestamp
+    const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
+
     this.onTooltip?.({
       x,
       y: 0,
       timestamp,
       indicators: indicators.filter((i): i is NonNullable<typeof i> => i !== null),
+      bin,
       beyondLogs,
       beyondVisible,
       beyondDashboard,
@@ -433,15 +438,15 @@ export class TimelineChart {
   }
 
   /**
-   * Set the time range and histogram data
+   * Set the time range and raw timestamp data
    * If dashboardRange is provided, use it for initial zoom instead of full log range
    */
-  setData(timeRange: [number, number], histogram: HistogramBin[], dashboardRange?: [number, number]): void {
+  setData(timeRange: [number, number], timestamps: number[], dashboardRange?: [number, number]): void {
     const previousTimeRange = this.fullTimeRange;
     const currentZoom = this.axis.getZoomRange();
 
     this.fullTimeRange = timeRange;
-    this.histogram = histogram;
+    this.logCountIndex = new LogCountIndex(timestamps);
 
     // Preserve zoom if time range hasn't changed
     const rangeUnchanged = previousTimeRange &&
@@ -627,31 +632,36 @@ export class TimelineChart {
   }
 
   private renderHistogram(yOffset: number, availableHeight: number): void {
-    if (this.histogram.length === 0) return;
+    if (!this.logCountIndex) return;
 
     const zoomRange = this.axis.getZoomRange();
     if (!zoomRange) return;
 
-    // Find max count for scaling
+    // Calculate number of bins based on available width
+    // Target ~10 pixels per bin for visible histogram bars
+    const binCount = Math.max(10, Math.floor(this.logicalWidth / 10));
+    const binWidth = (zoomRange[1] - zoomRange[0]) / binCount;
+
+    // Reset index and generate bins dynamically
+    this.logCountIndex.reset(zoomRange[0]);
     let maxCount = 0;
-    for (const bin of this.histogram) {
-      if (bin.count > maxCount) {
-        maxCount = bin.count;
+
+    for (let i = 0; i < binCount; i++) {
+      const endTime = zoomRange[0] + (i + 1) * binWidth;
+      const count = this.logCountIndex.count(endTime);
+      if (count > maxCount) {
+        maxCount = count;
       }
     }
 
+    const bins = this.logCountIndex.getBins();
     if (maxCount === 0) return;
 
-    // Draw histogram bars using bright cyan or bright blue from palette
+    // Draw histogram bars using foreground color
     const histogramColor = this.colorScheme.foreground ?? { r: 255, g: 255, b: 255 };
     this.ctx.fillStyle = colorToCSS(histogramColor);
 
-    for (const bin of this.histogram) {
-      // Skip bins outside zoom range
-      if (bin.endTime < zoomRange[0] || bin.startTime > zoomRange[1]) {
-        continue;
-      }
-
+    for (const bin of bins) {
       const x1 = this.axis.time2pixel(bin.startTime);
       const x2 = this.axis.time2pixel(bin.endTime);
       const barWidth = Math.max(1, x2 - x1);

@@ -34,6 +34,30 @@ interface TimelineTooltipProps {
 
 const EDGE_PADDING = -2; // Tooltip extends past edge to hide border
 
+/**
+ * Format a timestamp with timezone information
+ * Returns formatted time string and timezone label (with offset if not UTC)
+ */
+function formatTimeWithTz(
+  timestamp: number,
+  tz: string | undefined,
+  browserTz: string
+): { time: string; tzLabel: string } {
+  const dt = dateTimeParse(timestamp, { timeZone: tz });
+  const time = dt.format('ddd YYYY-MM-DD HH:mm:ss.SSS');
+
+  // Determine timezone label
+  const tzName = tz === 'utc' ? 'UTC'
+    : tz === 'browser' || !tz ? browserTz
+    : tz;
+
+  // Add offset if not UTC
+  const offset = tzName !== 'UTC' ? ` (${dt.format('Z')})` : '';
+  const tzLabel = `${tzName}${offset}`;
+
+  return { time, tzLabel };
+}
+
 export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containerWidth, timeZone }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [tooltipWidth, setTooltipWidth] = useState(0);
@@ -54,22 +78,19 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
     : data.x; // Use unclamped position until width is measured
   const triangleOffset = data.x - clampedX; // How far the triangle needs to shift from center
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const primaryDt = dateTimeParse(data.timestamp, { timeZone });
-  const primaryTime = primaryDt.format('ddd YYYY-MM-DD HH:mm:ss.SSS');
-  const primaryOffset = primaryDt.format('Z');
-  const tzLabel = timeZone === 'utc' ? 'UTC'
-    : timeZone === 'browser' || !timeZone ? browserTz
-    : timeZone;
 
-  const isUtc = timeZone === 'utc';
-  const secondaryTz = isUtc ? 'browser' : 'utc';
-  const secondaryDt = dateTimeParse(data.timestamp, { timeZone: secondaryTz });
-  const secondaryTime = secondaryDt.format('ddd YYYY-MM-DD HH:mm:ss.SSS');
-  const secondaryOffset = secondaryDt.format('Z');
-  const secondaryLabel = isUtc ? browserTz : 'UTC';
+  // Format primary timezone
+  const primary = formatTimeWithTz(data.timestamp, timeZone, browserTz);
+
+  // Format secondary timezone (opposite of primary: UTC <-> browser)
+  const secondaryTz = timeZone === 'utc' ? 'browser' : 'utc';
+  const secondary = formatTimeWithTz(data.timestamp, secondaryTz, browserTz);
+
+  // Only show secondary timezone if it differs from primary
+  const showSecondary = primary.tzLabel !== secondary.tzLabel;
 
   const labeledIndicators = data.indicators.filter(ind => getIndicatorLabel(ind) !== '');
-  const hasDetails = labeledIndicators.length > 0 || data.beyondLogs || data.beyondVisible || data.beyondDashboard;
+  const hasDetails = labeledIndicators.length > 0 || data.beyondLogs || data.beyondVisible || data.beyondDashboard || data.bin !== null;
 
   return (
     <div
@@ -86,23 +107,17 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
     >
       <div ref={contentRef} className={styles.content}>
         <div className={styles.primary}>
-          {primaryTime}
-          <span className={styles.tz}> {tzLabel} ({primaryOffset})</span>
+          {primary.time}
+          <span className={styles.tz}> {primary.tzLabel}</span>
         </div>
-        <div className={styles.secondary}>
-          {secondaryTime} {secondaryLabel}{!isUtc ? '' : ` (${secondaryOffset})`}
-        </div>
+        {showSecondary && (
+          <div className={styles.secondary}>
+            {secondary.time} {secondary.tzLabel}
+          </div>
+        )}
         {hasDetails && (
+          // ordered from most stable to least stable when moving mouse
           <div className={styles.details}>
-            {labeledIndicators.map((indicator, i) => (
-              <div
-                key={i}
-                className={styles.indicator}
-                style={{ color: indicator.getColor() }}
-              >
-                {getIndicatorLabel(indicator)}
-              </div>
-            ))}
             {data.beyondLogs && (
               <div className={styles.beyond}>
                 Beyond log data
@@ -116,6 +131,20 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
             {data.beyondDashboard && (
               <div className={styles.beyond}>
                 Beyond dashboard range
+              </div>
+            )}
+            {labeledIndicators.map((indicator, i) => (
+              <div
+                key={i}
+                className={styles.indicator}
+                style={{ color: indicator.getColor() }}
+              >
+                {getIndicatorLabel(indicator)}
+              </div>
+            ))}
+            {data.bin && (
+              <div className={`${styles.indicator} ${styles.count}`}>
+                {data.bin.count} {data.bin.count === 1 ? 'log' : 'logs'}
               </div>
             )}
           </div>
