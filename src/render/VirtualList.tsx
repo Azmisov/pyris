@@ -127,6 +127,9 @@ export const VirtualList = memo<VirtualListProps>(({
         followOutput={sortOrder === 'asc' ? 'smooth' : false}
         rangeChanged={handleRangeChanged}
         className="ansi-virtual-list"
+        components={{
+          Header: () => <div style={{ height: 6 }} />,
+        }}
       />
       {rows.length > options.maxRenderableRows && (
         <div className="ansi-truncation-notice">

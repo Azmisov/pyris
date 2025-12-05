@@ -50,12 +50,19 @@
   align-items: center;
   gap: 6px;
 }
+
+/* Header + Timeline wrapper */
+.ansi-logs-top {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 6px var(--ansi-bg);
+}
+
 /* Main content area */
 .ansi-logs-content {
   flex: 1;
   overflow: hidden;
   position: relative;
-  margin-top: 6px;
 }
 
 .ansi-auto-sized-container {

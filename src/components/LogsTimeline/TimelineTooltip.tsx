@@ -55,7 +55,7 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
   const triangleOffset = data.x - clampedX; // How far the triangle needs to shift from center
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const primaryDt = dateTimeParse(data.timestamp, { timeZone });
-  const primaryTime = primaryDt.format('YYYY-MM-DD HH:mm:ss.SSS');
+  const primaryTime = primaryDt.format('ddd YYYY-MM-DD HH:mm:ss.SSS');
   const primaryOffset = primaryDt.format('Z');
   const tzLabel = timeZone === 'utc' ? 'UTC'
     : timeZone === 'browser' || !timeZone ? browserTz
@@ -64,12 +64,12 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
   const isUtc = timeZone === 'utc';
   const secondaryTz = isUtc ? 'browser' : 'utc';
   const secondaryDt = dateTimeParse(data.timestamp, { timeZone: secondaryTz });
-  const secondaryTime = secondaryDt.format('YYYY-MM-DD HH:mm:ss.SSS');
+  const secondaryTime = secondaryDt.format('ddd YYYY-MM-DD HH:mm:ss.SSS');
   const secondaryOffset = secondaryDt.format('Z');
   const secondaryLabel = isUtc ? browserTz : 'UTC';
 
   const labeledIndicators = data.indicators.filter(ind => getIndicatorLabel(ind) !== '');
-  const hasDetails = labeledIndicators.length > 0 || data.beyondVisible || data.beyondDashboard;
+  const hasDetails = labeledIndicators.length > 0 || data.beyondLogs || data.beyondVisible || data.beyondDashboard;
 
   return (
     <div
@@ -103,7 +103,12 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
                 {getIndicatorLabel(indicator)}
               </div>
             ))}
-            {data.beyondVisible && (
+            {data.beyondLogs && (
+              <div className={styles.beyond}>
+                Beyond log data
+              </div>
+            )}
+            {data.beyondVisible && !data.beyondLogs && (
               <div className={styles.beyond}>
                 Beyond visible logs
               </div>
