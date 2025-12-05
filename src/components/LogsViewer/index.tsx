@@ -44,8 +44,6 @@ export interface LogsViewerProps {
   className?: string;
   /** Grafana event bus for cursor synchronization (shared crosshair) */
   eventBus?: EventBus;
-  /** Panel ID for identifying our own events in shared crosshair */
-  panelId?: number;
 }
 
 /**
@@ -82,7 +80,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
   timeZone,
   className = '',
   eventBus,
-  panelId,
 }) => {
   // Merge user options with defaults
   const options = useMemo(
@@ -124,10 +121,58 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const lastVisibleIndexRef = useRef<number | null>(null);
   // Track if mouse is inside the panel (to ignore external events while inside)
   const isMouseInsidePanelRef = useRef(false);
-  // Track when we're publishing (kept for publishing code)
+  // Track when we're publishing events to the event bus
   const isPublishingRef = useRef(false);
+
+  /*
+   * ===================================================================================
+   * SHARED CROSSHAIR / CURSOR SYNC
+   * ===================================================================================
+   *
+   * Grafana's shared crosshair feature allows panels to synchronize hover states via
+   * DataHoverEvent and DataHoverClearEvent on the dashboard's event bus. However, there
+   * are several quirks that require careful handling:
+   *
+   * QUIRK 1: Cross-panel interference (flickering)
+   * ----------------------------------------------
+   * Problem: When hovering panel-A, panel-B might send unrelated clear events (e.g.,
+   * timeseries panels send clears during internal state changes). If we blindly process
+   * all clears, our hover indicator flickers.
+   *
+   * Solution: Per-source state tracking. We track which panel our current hover came
+   * from (currentHoverSourceRef) and only process clears from that same source.
+   * Clears from other panels are ignored.
+   *
+   * QUIRK 2: Stale events after clear
+   * ---------------------------------
+   * Problem: Due to event bus timing, a hover event generated BEFORE a clear can arrive
+   * AFTER the clear, causing the hover indicator to reappear incorrectly.
+   *
+   * Solution: Per-source stale window. When we receive a clear from panel-X, we record
+   * the time. Any hover from panel-X arriving within STALE_WINDOW_MS is ignored as stale.
+   *
+   * QUIRK 3: Quick re-entry filtering
+   * ---------------------------------
+   * Problem: If using RxJS throttleTime() on subscriptions, legitimate hovers during
+   * quick panel re-entry can be dropped before we evaluate them.
+   *
+   * Solution: Process ALL events unthrottled for stale detection, then throttle state
+   * updates. This ensures we see every event for proper filtering while still limiting
+   * React re-renders.
+   *
+   * QUIRK 4: Self-event filtering
+   * -----------------------------
+   * Problem: When we publish hover events, we also receive them back.
+   *
+   * Solution: Use isMouseInsidePanelRef - when mouse is inside our panel, we ignore
+   * all external events and handle everything internally via row hover callbacks.
+   *
+   * Event origin identification uses: evt.origin._eventsOrigin.getPathId() which
+   * returns panel keys like "panel-3".
+   * ===================================================================================
+   */
+
   // Per-source hover state: track hover and clear times independently per source panel
-  // This prevents misbehaving panels (e.g., sending clears without hovers) from affecting other panels' state
   interface SourceHoverState {
     timestamp: number | null;  // Current hover timestamp from this source
     lastClearTime: number;     // When we last received a clear from this source
@@ -139,7 +184,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const STALE_WINDOW_MS = 100;
 
   // Subscribe to Grafana cursor sync events (shared crosshair)
-  // Uses per-source state tracking to handle each panel independently
   useEffect(() => {
     if (!eventBus) return;
 
@@ -168,7 +212,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
     const applyPendingHover = () => {
       if (pendingHoverUpdate) {
         const { timestamp, originPanelKey } = pendingHoverUpdate;
-        console.log('[HoverSync] Applying external hover from', originPanelKey, ':', timestamp);
         currentHoverSourceRef.current = originPanelKey;
         isExternalHoverRef.current = true;
         setHoveredTimestamp(timestamp);
@@ -189,15 +232,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
           const originPanelKey = getOriginPanelKey(evt);
           if (!originPanelKey || typeof timestamp !== 'number') return;
 
-          // Get per-source state
+          // Get per-source state and check for stale hovers
           const sourceState = getSourceState(originPanelKey);
           const timeSinceClear = performance.now() - sourceState.lastClearTime;
 
-          console.log('[HoverSync] Hover event', { timestamp, originPanelKey, timeSinceClear, currentSource: currentHoverSourceRef.current });
-
           // Filter stale hovers: hovers arriving shortly after a clear from the SAME source
           if (timeSinceClear < STALE_WINDOW_MS) {
-            console.log('[HoverSync] Ignoring stale hover from', originPanelKey, '(', timeSinceClear, 'ms after clear)');
             return;
           }
 
@@ -228,8 +268,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
           const originPanelKey = getOriginPanelKey(evt);
           if (!originPanelKey) return;
 
-          console.log('[HoverSync] Clear event from', originPanelKey, '(current source:', currentHoverSourceRef.current, ')');
-
           // Update per-source state: mark clear time for this source
           const sourceState = getSourceState(originPanelKey);
           sourceState.timestamp = null;
@@ -241,14 +279,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
           }
 
           // Only clear our displayed hover if it came from this source
-          // This prevents panel-3's clears from affecting hover from panel-2
           if (currentHoverSourceRef.current === originPanelKey) {
-            console.log('[HoverSync] Clearing external hover (from same source)');
             currentHoverSourceRef.current = null;
             isExternalHoverRef.current = false;
             setHoveredTimestamp(null);
-          } else {
-            console.log('[HoverSync] Ignoring clear from', originPanelKey, '(hover is from', currentHoverSourceRef.current, ')');
           }
         },
       });
@@ -485,7 +519,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
       return;
     }
 
-    console.log('[HoverSync] Row hover', timestamp);
     isExternalHoverRef.current = false; // Row hover is internal
     setHoveredTimestamp(timestamp);
 
@@ -493,7 +526,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
     // Only publish actual hovers, not null - the panel mouse leave handler publishes clear
     // This prevents spurious clears from VirtualList calling onRowHover(null) during re-renders
     if (eventBus && timestamp !== null) {
-      console.log('[HoverSync] Publishing from ROW HOVER:', timestamp);
       isPublishingRef.current = true;
       try {
         eventBus.publish(new DataHoverEvent({ point: { time: timestamp } }));
@@ -507,7 +539,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const handleTimelineHover = useCallback((timestamp: number | null) => {
     if (!eventBus) return;
 
-    console.log('[HoverSync] Publishing from TIMELINE HOVER:', timestamp);
     // Publish to other panels
     isPublishingRef.current = true;
     try {
@@ -523,12 +554,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle mouse entering/leaving the panel for external hover management
   const handlePanelMouseEnter = useCallback(() => {
-    console.log('[HoverSync] Mouse ENTER panel');
     isMouseInsidePanelRef.current = true;
   }, []);
 
   const handlePanelMouseLeave = useCallback(() => {
-    console.log('[HoverSync] Mouse LEAVE panel');
     isMouseInsidePanelRef.current = false;
     // Clear internal hover state
     setHoveredTimestamp(null);
@@ -536,7 +565,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
     // Publish clear event so other panels know we stopped hovering
     if (eventBus) {
-      console.log('[HoverSync] Publishing clear event');
       isPublishingRef.current = true;
       try {
         eventBus.publish(new DataHoverClearEvent());
