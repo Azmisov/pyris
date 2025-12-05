@@ -365,6 +365,44 @@ export class TimelineChart {
     this.onTooltip = callback;
   }
 
+  /**
+   * Show tooltip at a given timestamp (for shared tooltip / external hover)
+   */
+  showTooltipAtTimestamp(timestamp: number | null): void {
+    if (timestamp === null) {
+      this.onTooltip?.(null);
+      return;
+    }
+
+    const x = this.axis.time2pixel(timestamp);
+
+    // Compute beyond flags
+    const beyondLogs = this.fullTimeRange !== null &&
+      (timestamp < this.fullTimeRange[0] || timestamp > this.fullTimeRange[1]);
+    const beyondVisible = this.visibleRange !== null &&
+      (timestamp < this.visibleRange[0] || timestamp > this.visibleRange[1]);
+    const beyondDashboard = this.dashboardRange !== null &&
+      (timestamp < this.dashboardRange[0] || timestamp > this.dashboardRange[1]);
+
+    // Find indicators at this timestamp
+    const indicators: typeof this.selectedIndicator[] = [];
+    for (const ind of this.getNamedIndicators()) {
+      if (ind.getTimestamp() === timestamp) {
+        indicators.push(ind);
+      }
+    }
+
+    this.onTooltip?.({
+      x,
+      y: 0,
+      timestamp,
+      indicators: indicators.filter((i): i is NonNullable<typeof i> => i !== null),
+      beyondLogs,
+      beyondVisible,
+      beyondDashboard,
+    });
+  }
+
   updateDims(width: number, height: number): void {
     // Store logical dimensions for rendering calculations
     this.logicalWidth = width;

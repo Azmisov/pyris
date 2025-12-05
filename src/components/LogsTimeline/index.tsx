@@ -21,9 +21,13 @@ interface LogsTimelineProps {
   sortOrder?: 'asc' | 'desc';
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
   onLogSelect?: (timestamp: number) => void;
+  /** Called when timeline hover changes (for cursor sync) */
+  onHoverChange?: (timestamp: number | null) => void;
   dashboardTimeRange?: { from: number; to: number };
   fontFamily?: string;
   timeZone?: string;
+  /** True if hoveredTimestamp is from external event (shared tooltip) */
+  isExternalHover?: boolean;
 }
 
 const DEFAULT_HEIGHT = 100;
@@ -85,14 +89,20 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   sortOrder = 'asc',
   onTimeRangeChange,
   onLogSelect,
+  onHoverChange,
   dashboardTimeRange,
   fontFamily,
   timeZone,
+  isExternalHover = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
+  // Track if mouse is in the timeline (for determining when to show external tooltip)
+  const isLocalHoverRef = useRef(false);
+  // Track if we're currently showing an external tooltip (to know when to clear it)
+  const isShowingExternalTooltipRef = useRef(false);
 
   // Track container width for tooltip clamping
   useEffect(() => {
@@ -154,6 +164,35 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, []);
 
+  // Track local hover via mouse events on container
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseEnter = () => {
+      isLocalHoverRef.current = true;
+    };
+    const handleMouseLeave = () => {
+      isLocalHoverRef.current = false;
+    };
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  // Notify parent of hover changes (for cursor sync)
+  // Only notify for local hovers, not for external tooltips (to avoid feedback loop)
+  useEffect(() => {
+    if (onHoverChange && isLocalHoverRef.current) {
+      onHoverChange(tooltipData?.timestamp ?? null);
+    }
+  }, [tooltipData, onHoverChange]);
+
   // Update chart data when logs change
   useEffect(() => {
     if (chartRef.current && timeRange && histogram) {
@@ -171,12 +210,27 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, [dashboardTimeRange]);
 
-  // Update hovered timestamp
+  // Update hovered timestamp and show external tooltip (shared tooltip feature)
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.setHoveredTimestamp(hoveredTimestamp ?? null);
+
+      // Only show tooltip for external hovers when mouse is not in the timeline
+      const shouldShowExternalTooltip = isExternalHover && hoveredTimestamp !== null && !isLocalHoverRef.current;
+
+      if (shouldShowExternalTooltip) {
+        chartRef.current.showTooltipAtTimestamp(hoveredTimestamp);
+        isShowingExternalTooltipRef.current = true;
+      } else if (isShowingExternalTooltipRef.current) {
+        // Clear external tooltip when:
+        // - hover ends (hoveredTimestamp is null)
+        // - hover becomes internal (isExternalHover is false)
+        // - mouse enters timeline (isLocalHoverRef.current is true, local tooltip takes over)
+        chartRef.current.showTooltipAtTimestamp(null);
+        isShowingExternalTooltipRef.current = false;
+      }
     }
-  }, [hoveredTimestamp]);
+  }, [hoveredTimestamp, isExternalHover]);
 
   // Update selected timestamp
   useEffect(() => {
