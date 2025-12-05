@@ -4,12 +4,7 @@
  */
 import { dateTimeParse, dateTimeAsMoment } from '@grafana/data';
 import { Moment, unitOfTime } from 'moment';
-import { ColorScheme } from '../../theme/colorSchemes';
-
-// Helper to convert AnsiColor to CSS color
-function colorToCSS(color: { r: number; g: number; b: number }): string {
-  return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
+import { ColorScheme, colorToCSS } from '../../theme/colorSchemes';
 
 /** Get the unit component as a 0-indexed value for alignment calculations.
  * - Maps 'd' → 'D' (moment.get('d') = day of week, 'D' = day of month)

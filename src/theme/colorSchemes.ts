@@ -26,6 +26,13 @@ function hex(hexString: string): AnsiColor {
 }
 
 /**
+ * Convert AnsiColor to CSS color string
+ */
+export function colorToCSS(color: { r: number; g: number; b: number }): string {
+  return `rgb(${color.r}, ${color.g}, ${color.b})`;
+}
+
+/**
  * Convert Gogh theme to ColorScheme format;
  * Indices: 0-7 (normal), 8-15 (bright), 16 (background), 17 (foreground), 18-20 (bg accents)
  */
