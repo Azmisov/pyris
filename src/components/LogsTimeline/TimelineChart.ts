@@ -326,11 +326,11 @@ export class TimelineChart {
     let shift = evt.deltaX;
     // Use vertical scroll as fallback if others are not provided
     if (evt.shiftKey && !shift) {
-      shift = evt.deltaY;
+      shift = -evt.deltaY;
     } else if (!zoom) {
       zoom = evt.deltaY;
     }
-    shift *= fac;
+    shift *= fac*.25; // shift I think benefits from being a little finer
     zoom *= fac;
 
     // Perform view adjustment
