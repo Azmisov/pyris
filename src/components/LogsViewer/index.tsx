@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { EventBus, DataHoverEvent, DataHoverClearEvent } from '@grafana/data';
-import { throttleTime } from 'rxjs/operators';
+// throttleTime no longer used - we do custom throttling after stale detection
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
@@ -159,10 +159,27 @@ export const LogsViewer = memo<LogsViewerProps>(({
       return state;
     };
 
-    // Subscribe to hover events (throttling temporarily disabled for debugging)
+    // Track pending hover update for throttling
+    let pendingHoverUpdate: { timestamp: number; originPanelKey: string } | null = null;
+    let hoverThrottleTimeout: ReturnType<typeof setTimeout> | null = null;
+    const HOVER_THROTTLE_MS = 50;
+
+    // Apply a pending hover update
+    const applyPendingHover = () => {
+      if (pendingHoverUpdate) {
+        const { timestamp, originPanelKey } = pendingHoverUpdate;
+        console.log('[HoverSync] Applying external hover from', originPanelKey, ':', timestamp);
+        currentHoverSourceRef.current = originPanelKey;
+        isExternalHoverRef.current = true;
+        setHoveredTimestamp(timestamp);
+        pendingHoverUpdate = null;
+      }
+      hoverThrottleTimeout = null;
+    };
+
+    // Subscribe to hover events (unthrottled - we do stale detection first, then throttle updates)
     const hoverSub = eventBus
       .getStream(DataHoverEvent)
-      // .pipe(throttleTime(50))  // TEMP DISABLED
       .subscribe({
         next: (evt) => {
           // Filter out events when mouse is inside panel - we handle everything internally
@@ -187,18 +204,22 @@ export const LogsViewer = memo<LogsViewerProps>(({
           // Update per-source state
           sourceState.timestamp = timestamp;
 
-          // Apply hover and track which source it came from
-          console.log('[HoverSync] Applying external hover from', originPanelKey, ':', timestamp);
-          currentHoverSourceRef.current = originPanelKey;
-          isExternalHoverRef.current = true;
-          setHoveredTimestamp(timestamp);
+          // Queue hover update (throttled)
+          pendingHoverUpdate = { timestamp, originPanelKey };
+          if (!hoverThrottleTimeout) {
+            // First event - apply immediately, then start throttle window
+            applyPendingHover();
+            hoverThrottleTimeout = setTimeout(() => {
+              applyPendingHover(); // Apply any pending update at end of window
+            }, HOVER_THROTTLE_MS);
+          }
+          // If throttle active, pendingHoverUpdate will be applied when timeout fires
         },
       });
 
-    // Subscribe to clear events (throttling temporarily disabled for debugging)
+    // Subscribe to clear events (no throttling - clears should be processed immediately)
     const clearSub = eventBus
       .getStream(DataHoverClearEvent)
-      // .pipe(throttleTime(50))  // TEMP DISABLED
       .subscribe({
         next: (evt) => {
           // Filter out events when mouse is inside panel - we handle everything internally
@@ -213,6 +234,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
           const sourceState = getSourceState(originPanelKey);
           sourceState.timestamp = null;
           sourceState.lastClearTime = performance.now();
+
+          // Cancel any pending hover from this source (prevents stale throttled hovers)
+          if (pendingHoverUpdate?.originPanelKey === originPanelKey) {
+            pendingHoverUpdate = null;
+          }
 
           // Only clear our displayed hover if it came from this source
           // This prevents panel-3's clears from affecting hover from panel-2
@@ -230,6 +256,9 @@ export const LogsViewer = memo<LogsViewerProps>(({
     return () => {
       hoverSub.unsubscribe();
       clearSub.unsubscribe();
+      if (hoverThrottleTimeout) {
+        clearTimeout(hoverThrottleTimeout);
+      }
     };
   }, [eventBus]);
 
