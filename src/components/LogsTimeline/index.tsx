@@ -31,53 +31,6 @@ interface LogsTimelineProps {
 }
 
 const DEFAULT_HEIGHT = 100;
-const BIN_TARGET_COUNT = 100;
-
-/**
- * Calculate histogram bins from log data
- */
-function calculateHistogram(logs: AnsiLogRow[], binCount: number) {
-  if (logs.length === 0) {
-    return { timeRange: [0, 0] as [number, number], histogram: [] };
-  }
-
-  // Find time range (timestamps are in milliseconds)
-  let minTime = Infinity;
-  let maxTime = -Infinity;
-
-  for (const log of logs) {
-    const timeMs = log.timestamp;
-    if (timeMs < minTime) minTime = timeMs;
-    if (timeMs > maxTime) maxTime = timeMs;
-  }
-
-  // If all logs have the same timestamp, add some padding
-  if (minTime === maxTime) {
-    minTime -= 1000; // 1 second before
-    maxTime += 1000; // 1 second after
-  }
-
-  const timeRange: [number, number] = [minTime, maxTime];
-  const binWidth = (maxTime - minTime) / binCount;
-
-  // Create bins
-  const bins = new Array(binCount).fill(0).map((_, i) => ({
-    startTime: minTime + i * binWidth,
-    endTime: minTime + (i + 1) * binWidth,
-    count: 0,
-  }));
-
-  // Fill bins
-  for (const log of logs) {
-    const timeMs = log.timestamp;
-    const binIndex = Math.min(Math.floor((timeMs - minTime) / binWidth), binCount - 1);
-    if (binIndex >= 0 && binIndex < binCount) {
-      bins[binIndex].count++;
-    }
-  }
-
-  return { timeRange, histogram: bins };
-}
 
 export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   logs,
@@ -118,9 +71,29 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Calculate histogram data
-  const { timeRange, histogram } = useMemo(() => {
-    return calculateHistogram(logs, BIN_TARGET_COUNT);
+  // Extract timestamps and time range from logs
+  const { timeRange, timestamps } = useMemo(() => {
+    if (logs.length === 0) {
+      return { timeRange: [0, 0] as [number, number], timestamps: [] };
+    }
+
+    // Extract timestamps and find time range
+    const timestamps = logs.map(log => log.timestamp);
+    let minTime = Infinity;
+    let maxTime = -Infinity;
+
+    for (const timestamp of timestamps) {
+      if (timestamp < minTime) minTime = timestamp;
+      if (timestamp > maxTime) maxTime = timestamp;
+    }
+
+    // If all logs have the same timestamp, add some padding
+    if (minTime === maxTime) {
+      minTime -= 1000; // 1 second before
+      maxTime += 1000; // 1 second after
+    }
+
+    return { timeRange: [minTime, maxTime] as [number, number], timestamps };
   }, [logs]);
 
   // Initialize chart (only once)
@@ -195,13 +168,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
 
   // Update chart data when logs change
   useEffect(() => {
-    if (chartRef.current && timeRange && histogram) {
+    if (chartRef.current && timeRange) {
       const dashboardRangeMs = dashboardTimeRange
         ? [dashboardTimeRange.from, dashboardTimeRange.to] as [number, number]
         : undefined;
-      chartRef.current.setData(timeRange, histogram, dashboardRangeMs);
+      chartRef.current.setData(timeRange, timestamps, dashboardRangeMs);
     }
-  }, [timeRange, histogram, dashboardTimeRange]);
+  }, [timeRange, timestamps, dashboardTimeRange]);
 
   // Update dashboard time range indicators
   useEffect(() => {

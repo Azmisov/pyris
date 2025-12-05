@@ -9,7 +9,7 @@
   border-radius: 0 0 4px 4px;
   padding: 6px 10px;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -54,7 +54,7 @@
 
 .secondary {
   color: var(--ansi-fg-muted-1);
-  font-size: 10px;
+  font-size: 11px;
   margin-top: 2px;
 }
 
@@ -65,13 +65,18 @@
 }
 
 .indicator {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--ansi-fg);
 }
 
+.count {
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .beyond {
-  font-size: 10px;
+  font-size: 11px;
   font-style: italic;
   color: var(--ansi-fg-muted-1);
 }
