@@ -92,6 +92,21 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // Track container width for tooltip clamping
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(containerRef.current);
+    // Set initial width
+    setContainerWidth(containerRef.current.offsetWidth);
+    return () => observer.disconnect();
+  }, []);
 
   // Calculate histogram data
   const { timeRange, histogram } = useMemo(() => {
@@ -231,7 +246,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
           </button>
         )}
       </div>
-      {tooltipData && <TimelineTooltip data={tooltipData} timeZone={timeZone} />}
+      {tooltipData && <TimelineTooltip data={tooltipData} containerWidth={containerWidth} timeZone={timeZone} />}
     </div>
   );
 };
