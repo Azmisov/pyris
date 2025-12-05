@@ -1,21 +1,5 @@
 - json logs:
-  - display:
-    - JSON is syntax highlighted using ANSI colors and CSI styles like dim/italic/bold
-    - Nested arrays/objects which are non-empty and whose children are >= N layers deep
-      (magic constant) are collapsed and show an ellipsis as their contents.
-    - When JSON row is selected, it expands so that objects/array contents have block display,
-      instead of inline display. Nested arrays/objects remain showing an elipses as their contents.
-      The ellipsis is clickable, and it expands one level of contents.
-    - Likely we want a tree level structure of components to handle the nested display.
-  - search:
-    - case sensitive / regex buttons disabled
-    - placeholder says "Expression: l => ..."
-    - expression is converted to javascript via Function
-    - expression is used for filtering rows
-    - if expression is invalid JSON, or the filtering raises an error, add error class to search
-      group, which adds a --ansi-color-1 (red) border
   - navigation:
-    - the toggle in the header switches between showing ANSI vs JSON logs
     - when switching between ANSI and JSON logs, we sync the viewport display and selection; these
       only need to be synced lazily when switching
       - viewport display: get first visible row; find match; scroll into view instantaneously with
@@ -26,18 +10,13 @@
       longest common substring length among rows. Use an existing npm lib for longest substring
       algorithm. The one with longest common substring is the match.
 
-
-- changes needed:
-No log data should show in the logs viewer panel, the header and timeline should still be visible.
-The timeline should still show range vertical indicators, but no visible, selected, or hover indicators.
-
-
 - timeline view:
   - show log count as bars; vertical gap between zero and one is stretched to make it more evident
     that that time bin has logs present
     - could breakout log count by log level; something for the future
   - histogram needs to be better
   - show separate histogram for filtered content
+  - log scale for > 1
 - bugs:
   - weird character by []Text link; still there, just not visible anymore
   - changing font size should snap to top visible line
@@ -51,9 +30,8 @@ The timeline should still show range vertical indicators, but no visible, select
   - show dates in timeline axis?
   - showing json + ansi in the timeline?
 - styling tweaks:
-  - tweak modal colors
-  - timeline should use the main font, I think its defaulting to plain monospace
-  - timeline axis labels: too squashed when get to microsecond level
+  - tweak modal colors (double check, might be complete)
+  - select line covers up previous line slightly, like underscores from prev line
 - cleanup:
   - styles are scoped; simplify naming
   - use different prefix for global styles
@@ -61,8 +39,8 @@ The timeline should still show range vertical indicators, but no visible, select
   - test maxLineLength, maxRenderableRows; seems like max line length is truncating when there is
     several OSC8 urls
   - finalize name and logo
-
 - needs more thought:
+  - reset localStorage settings; or maybe just remove the defaults?
   - autoconvert first datetime format to the user's timezone? will be finicky
 
 possible icon replacements:
