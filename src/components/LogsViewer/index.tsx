@@ -538,6 +538,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Main render
   return (
     <div className={`ansi-logs-panel ${className}`} style={{ width, height }} onClick={handlePanelClick}>
+      <div className="ansi-logs-top">
       <LogsViewerHeader
         settingsOpen={settingsOpen}
         onToggleSettings={toggleSettings}
@@ -596,6 +597,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           timeZone={timeZone}
         />
       )}
+      </div>
 
       {/* Main log display */}
       <div className="ansi-logs-content">

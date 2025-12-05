@@ -20,6 +20,8 @@ export interface TooltipData {
   timestamp: number;
   /** Indicators at the snapped position */
   indicators: VerticalIndicator[];
+  /** True if timestamp is outside the full log data range */
+  beyondLogs: boolean;
   /** True if timestamp is outside the visible logs range */
   beyondVisible: boolean;
   /** True if timestamp is outside the dashboard time range */
@@ -266,6 +268,8 @@ export class TimelineChart {
       const displayX = snapResult !== null ? this.axis.time2pixel(snapResult.timestamp) : cur[0];
 
       // Compute beyond flags
+      const beyondLogs = this.fullTimeRange !== null &&
+        (timestamp < this.fullTimeRange[0] || timestamp > this.fullTimeRange[1]);
       const beyondVisible = this.visibleRange !== null &&
         (timestamp < this.visibleRange[0] || timestamp > this.visibleRange[1]);
       const beyondDashboard = this.dashboardRange !== null &&
@@ -278,6 +282,7 @@ export class TimelineChart {
         y: cur[1],
         timestamp,
         indicators: snapResult?.indicators ?? [],
+        beyondLogs,
         beyondVisible,
         beyondDashboard,
       });
