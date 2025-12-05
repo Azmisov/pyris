@@ -1,4 +1,6 @@
 import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { EventBus, DataHoverEvent, DataHoverClearEvent } from '@grafana/data';
+import { throttleTime } from 'rxjs/operators';
 import { AutoSizedVirtualList, useVirtualListSearch } from '../../render/VirtualList';
 import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
@@ -40,6 +42,10 @@ export interface LogsViewerProps {
   dashboardTimeRange?: { from: number; to: number };
   timeZone?: string;
   className?: string;
+  /** Grafana event bus for cursor synchronization (shared crosshair) */
+  eventBus?: EventBus;
+  /** Panel ID for identifying our own events in shared crosshair */
+  panelId?: number;
 }
 
 /**
@@ -75,6 +81,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   dashboardTimeRange,
   timeZone,
   className = '',
+  eventBus,
+  panelId,
 }) => {
   // Merge user options with defaults
   const options = useMemo(
@@ -85,6 +93,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // State management
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | undefined>();
   const [hoveredTimestamp, setHoveredTimestamp] = useState<number | null>(null);
+  // Use ref for isExternalHover to ensure synchronous updates (avoids race conditions with state)
+  const isExternalHoverRef = useRef(false);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
   const [visibleRange, setVisibleRange] = useState<{ firstIndex: number | null; lastIndex: number | null; first: number | null; last: number | null }>({ firstIndex: null, lastIndex: null, first: null, last: null });
   const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
@@ -112,6 +122,116 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const prevSortOrderRef = useRef<'asc' | 'desc'>(sortOrder);
   // Ref to store the last visible index for scroll preservation
   const lastVisibleIndexRef = useRef<number | null>(null);
+  // Track if mouse is inside the panel (to ignore external events while inside)
+  const isMouseInsidePanelRef = useRef(false);
+  // Track when we're publishing (kept for publishing code)
+  const isPublishingRef = useRef(false);
+  // Per-source hover state: track hover and clear times independently per source panel
+  // This prevents misbehaving panels (e.g., sending clears without hovers) from affecting other panels' state
+  interface SourceHoverState {
+    timestamp: number | null;  // Current hover timestamp from this source
+    lastClearTime: number;     // When we last received a clear from this source
+  }
+  const perSourceStateRef = useRef<Map<string, SourceHoverState>>(new Map());
+  // Track which source panel our currently displayed hover came from
+  const currentHoverSourceRef = useRef<string | null>(null);
+  // Window to ignore stale hovers after a clear from the same source
+  const STALE_WINDOW_MS = 100;
+
+  // Subscribe to Grafana cursor sync events (shared crosshair)
+  // Uses per-source state tracking to handle each panel independently
+  useEffect(() => {
+    if (!eventBus) return;
+
+    // Helper to get origin panel key from event
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getOriginPanelKey = (evt: any): string | null => {
+      return evt.origin?._eventsOrigin?.getPathId?.() ?? null;
+    };
+
+    // Helper to get or create source state
+    const getSourceState = (key: string): SourceHoverState => {
+      let state = perSourceStateRef.current.get(key);
+      if (!state) {
+        state = { timestamp: null, lastClearTime: 0 };
+        perSourceStateRef.current.set(key, state);
+      }
+      return state;
+    };
+
+    // Subscribe to hover events (throttling temporarily disabled for debugging)
+    const hoverSub = eventBus
+      .getStream(DataHoverEvent)
+      // .pipe(throttleTime(50))  // TEMP DISABLED
+      .subscribe({
+        next: (evt) => {
+          // Filter out events when mouse is inside panel - we handle everything internally
+          if (isMouseInsidePanelRef.current) return;
+
+          const timestamp = evt.payload?.point?.time;
+          const originPanelKey = getOriginPanelKey(evt);
+          if (!originPanelKey || typeof timestamp !== 'number') return;
+
+          // Get per-source state
+          const sourceState = getSourceState(originPanelKey);
+          const timeSinceClear = performance.now() - sourceState.lastClearTime;
+
+          console.log('[HoverSync] Hover event', { timestamp, originPanelKey, timeSinceClear, currentSource: currentHoverSourceRef.current });
+
+          // Filter stale hovers: hovers arriving shortly after a clear from the SAME source
+          if (timeSinceClear < STALE_WINDOW_MS) {
+            console.log('[HoverSync] Ignoring stale hover from', originPanelKey, '(', timeSinceClear, 'ms after clear)');
+            return;
+          }
+
+          // Update per-source state
+          sourceState.timestamp = timestamp;
+
+          // Apply hover and track which source it came from
+          console.log('[HoverSync] Applying external hover from', originPanelKey, ':', timestamp);
+          currentHoverSourceRef.current = originPanelKey;
+          isExternalHoverRef.current = true;
+          setHoveredTimestamp(timestamp);
+        },
+      });
+
+    // Subscribe to clear events (throttling temporarily disabled for debugging)
+    const clearSub = eventBus
+      .getStream(DataHoverClearEvent)
+      // .pipe(throttleTime(50))  // TEMP DISABLED
+      .subscribe({
+        next: (evt) => {
+          // Filter out events when mouse is inside panel - we handle everything internally
+          if (isMouseInsidePanelRef.current) return;
+
+          const originPanelKey = getOriginPanelKey(evt);
+          if (!originPanelKey) return;
+
+          console.log('[HoverSync] Clear event from', originPanelKey, '(current source:', currentHoverSourceRef.current, ')');
+
+          // Update per-source state: mark clear time for this source
+          const sourceState = getSourceState(originPanelKey);
+          sourceState.timestamp = null;
+          sourceState.lastClearTime = performance.now();
+
+          // Only clear our displayed hover if it came from this source
+          // This prevents panel-3's clears from affecting hover from panel-2
+          if (currentHoverSourceRef.current === originPanelKey) {
+            console.log('[HoverSync] Clearing external hover (from same source)');
+            currentHoverSourceRef.current = null;
+            isExternalHoverRef.current = false;
+            setHoveredTimestamp(null);
+          } else {
+            console.log('[HoverSync] Ignoring clear from', originPanelKey, '(hover is from', currentHoverSourceRef.current, ')');
+          }
+        },
+      });
+
+    return () => {
+      hoverSub.unsubscribe();
+      clearSub.unsubscribe();
+    };
+  }, [eventBus]);
 
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
@@ -325,10 +445,77 @@ export const LogsViewer = memo<LogsViewerProps>(({
     });
   }, []);
 
-  // Handle row hover
+  // Handle row hover - also publishes to Grafana event bus for cursor sync
   const handleRowHover = useCallback((row: LogRow | null) => {
-    setHoveredTimestamp(row ? row.timestamp : null);
+    const timestamp = row ? row.timestamp : null;
+
+    // Only process if mouse is actually in this panel
+    // This prevents feedback loops when receiving external hover events
+    // (VirtualList may call onRowHover during re-renders triggered by external events)
+    if (!isMouseInsidePanelRef.current) {
+      return;
+    }
+
+    console.log('[HoverSync] Row hover', timestamp);
+    isExternalHoverRef.current = false; // Row hover is internal
+    setHoveredTimestamp(timestamp);
+
+    // Publish to Grafana event bus for shared crosshair (other panels will receive this)
+    // Only publish actual hovers, not null - the panel mouse leave handler publishes clear
+    // This prevents spurious clears from VirtualList calling onRowHover(null) during re-renders
+    if (eventBus && timestamp !== null) {
+      console.log('[HoverSync] Publishing from ROW HOVER:', timestamp);
+      isPublishingRef.current = true;
+      try {
+        eventBus.publish(new DataHoverEvent({ point: { time: timestamp } }));
+      } finally {
+        isPublishingRef.current = false;
+      }
+    }
+  }, [eventBus]);
+
+  // Handle timeline hover - only publish to eventBus (timeline shows its own indicator)
+  const handleTimelineHover = useCallback((timestamp: number | null) => {
+    if (!eventBus) return;
+
+    console.log('[HoverSync] Publishing from TIMELINE HOVER:', timestamp);
+    // Publish to other panels
+    isPublishingRef.current = true;
+    try {
+      if (timestamp !== null) {
+        eventBus.publish(new DataHoverEvent({ point: { time: timestamp } }));
+      } else {
+        eventBus.publish(new DataHoverClearEvent());
+      }
+    } finally {
+      isPublishingRef.current = false;
+    }
+  }, [eventBus]);
+
+  // Handle mouse entering/leaving the panel for external hover management
+  const handlePanelMouseEnter = useCallback(() => {
+    console.log('[HoverSync] Mouse ENTER panel');
+    isMouseInsidePanelRef.current = true;
   }, []);
+
+  const handlePanelMouseLeave = useCallback(() => {
+    console.log('[HoverSync] Mouse LEAVE panel');
+    isMouseInsidePanelRef.current = false;
+    // Clear internal hover state
+    setHoveredTimestamp(null);
+    isExternalHoverRef.current = false;
+
+    // Publish clear event so other panels know we stopped hovering
+    if (eventBus) {
+      console.log('[HoverSync] Publishing clear event');
+      isPublishingRef.current = true;
+      try {
+        eventBus.publish(new DataHoverClearEvent());
+      } finally {
+        isPublishingRef.current = false;
+      }
+    }
+  }, [eventBus]);
 
   // Handle visible range change
   const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => {
@@ -537,7 +724,13 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Main render
   return (
-    <div className={`ansi-logs-panel ${className}`} style={{ width, height }} onClick={handlePanelClick}>
+    <div
+      className={`ansi-logs-panel ${className}`}
+      style={{ width, height }}
+      onClick={handlePanelClick}
+      onMouseEnter={handlePanelMouseEnter}
+      onMouseLeave={handlePanelMouseLeave}
+    >
       <div className="ansi-logs-top">
       <LogsViewerHeader
         settingsOpen={settingsOpen}
@@ -591,10 +784,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
           colorScheme={currentColorScheme}
           sortOrder={sortOrder}
           onLogSelect={handleLogSelect}
+          onHoverChange={handleTimelineHover}
           onTimeRangeChange={onTimeRangeChange}
           dashboardTimeRange={dashboardTimeRange}
           fontFamily={options.fontFamily}
           timeZone={timeZone}
+          isExternalHover={isExternalHoverRef.current}
         />
       )}
       </div>

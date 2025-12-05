@@ -7,7 +7,7 @@ import { LogsViewer } from './LogsViewer';
 import { parseDataFrame } from '../utils/frame';
 
 
-export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id, onChangeTimeRange, timeRange, timeZone }) => {
+export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id, onChangeTimeRange, timeRange, timeZone, eventBus }) => {
   // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
 
@@ -25,7 +25,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
     ]
   */
 
-  // Parse data frame into structured log rows
+  // Parse data frame into structured log rowsx
   const parseResult = useMemo(() => {
     const result = parseDataFrame(data);
     console.log("Parsed data:", result);
@@ -80,6 +80,8 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
         onTimeRangeChange={handleTimeRangeChange}
         dashboardTimeRange={dashboardTimeRangeMs}
         timeZone={timeZone}
+        eventBus={eventBus}
+        panelId={id}
       />
   );
 };
