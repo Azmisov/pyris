@@ -4,6 +4,8 @@
  * Used for hover indicators, range brackets, and selection markers
  */
 
+import { ColorScheme, colorToCSS } from '../../theme/colorSchemes';
+
 /** Semantic type of indicator (direction determines start/end) */
 export enum IndicatorType {
   Hover = 'hover',
@@ -14,35 +16,37 @@ export enum IndicatorType {
 
 export type IndicatorDirection = 'left' | 'right' | 'point';
 
-export interface IndicatorStyle {
-  color: string;
-  lineWidth: number;
-  dashed: boolean;
-  dashPattern?: number[];
-}
-
-export interface VerticalIndicatorConfig {
-  type: IndicatorType;
-  timestamp: number;
-  direction: IndicatorDirection;
-  style: IndicatorStyle;
-}
-
 const DEFAULT_DASH_PATTERN = [4, 4];
 const BRACKET_SIZE = 8; // Triangle size for left/right brackets
 
 export class VerticalIndicator {
-  private config: VerticalIndicatorConfig;
+  private type: IndicatorType;
+  private timestamp: number;
+  private direction: IndicatorDirection;
+  private color: string;
+  private lineWidth: number;
+  private dashed: boolean;
+  private dashPattern?: number[];
+  private colorIndex: number;
 
-  constructor(config: VerticalIndicatorConfig) {
-    this.config = config;
-  }
-
-  /**
-   * Update the configuration
-   */
-  updateConfig(config: Partial<VerticalIndicatorConfig>): void {
-    this.config = { ...this.config, ...config };
+  constructor(
+    type: IndicatorType,
+    timestamp: number,
+    direction: IndicatorDirection,
+    colorIndex: number,
+    colorScheme: ColorScheme,
+    lineWidth: number,
+    dashed: boolean,
+    dashPattern?: number[]
+  ) {
+    this.type = type;
+    this.timestamp = timestamp;
+    this.direction = direction;
+    this.colorIndex = colorIndex;
+    this.color = colorToCSS(colorScheme.colors[colorIndex]);
+    this.lineWidth = lineWidth;
+    this.dashed = dashed;
+    this.dashPattern = dashPattern;
   }
 
   /**
@@ -57,11 +61,11 @@ export class VerticalIndicator {
     ctx.save();
 
     // Set up line style
-    ctx.strokeStyle = this.config.style.color;
-    ctx.lineWidth = this.config.style.lineWidth;
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.lineWidth;
 
-    if (this.config.style.dashed) {
-      ctx.setLineDash(this.config.style.dashPattern || DEFAULT_DASH_PATTERN);
+    if (this.dashed) {
+      ctx.setLineDash(this.dashPattern || DEFAULT_DASH_PATTERN);
     }
 
     // Draw the vertical line
@@ -71,7 +75,7 @@ export class VerticalIndicator {
     ctx.stroke();
 
     // Draw direction indicators (triangles for left/right)
-    if (this.config.direction !== 'point') {
+    if (this.direction !== 'point') {
       this.renderBrackets(ctx, x, yOffset, height);
     }
 
@@ -87,12 +91,12 @@ export class VerticalIndicator {
     yOffset: number,
     height: number
   ): void {
-    ctx.fillStyle = this.config.style.color;
+    ctx.fillStyle = this.color;
     ctx.setLineDash([]); // Solid fill for triangles
 
     const topY = yOffset;
     const bottomY = yOffset + height;
-    const direction = this.config.direction === 'left' ? -1 : 1;
+    const direction = this.direction === 'left' ? -1 : 1;
     const size = BRACKET_SIZE;
 
     // Top bracket (pointing inward)
@@ -113,38 +117,59 @@ export class VerticalIndicator {
   }
 
   /**
+   * Update the timestamp
+   */
+  setTimestamp(timestamp: number): void {
+    this.timestamp = timestamp;
+  }
+
+  /**
+   * Update the color
+   */
+  setColor(color: string): void {
+    this.color = color;
+  }
+
+  /**
+   * Update the color based on color scheme
+   */
+  setColorScheme(colorScheme: ColorScheme): void {
+    this.color = colorToCSS(colorScheme.colors[this.colorIndex]);
+  }
+
+  /**
    * Check if this indicator should be visible at the given zoom range
    */
   isVisible(zoomRange: [number, number]): boolean {
-    return this.config.timestamp >= zoomRange[0] && this.config.timestamp <= zoomRange[1];
+    return this.timestamp >= zoomRange[0] && this.timestamp <= zoomRange[1];
   }
 
   /**
    * Get the timestamp this indicator is positioned at
    */
   getTimestamp(): number {
-    return this.config.timestamp;
+    return this.timestamp;
   }
 
   /**
    * Get the current direction
    */
   getDirection(): IndicatorDirection {
-    return this.config.direction;
+    return this.direction;
   }
 
   /**
    * Get the indicator type
    */
   getType(): IndicatorType {
-    return this.config.type;
+    return this.type;
   }
 
   /**
    * Get the indicator color
    */
   getColor(): string {
-    return this.config.style.color;
+    return this.color;
   }
 }
 
@@ -152,57 +177,60 @@ export class VerticalIndicator {
  * Factory functions for common indicator types
  */
 export class IndicatorFactory {
-  static createHover(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Hover,
+  static createHover(timestamp: number, colorScheme: ColorScheme): VerticalIndicator {
+    return new VerticalIndicator(
+      IndicatorType.Hover,
       timestamp,
-      direction: 'point',
-      style: { color, lineWidth: 2, dashed: true, dashPattern: [4, 4] },
-    });
+      'point',
+      4, // Cyan/blue for hover
+      colorScheme,
+      2, // lineWidth
+      true, // dashed
+      [4, 4] // dashPattern
+    );
   }
 
-  static createSelection(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Selected,
+  static createSelection(timestamp: number, colorScheme: ColorScheme): VerticalIndicator {
+    return new VerticalIndicator(
+      IndicatorType.Selected,
       timestamp,
-      direction: 'point',
-      style: { color, lineWidth: 3, dashed: false },
-    });
+      'point',
+      4, // Cyan/blue for selection
+      colorScheme,
+      3, // lineWidth
+      false // dashed
+    );
   }
 
-  static createVisibleStart(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Visible,
+  static createVisible(
+    timestamp: number,
+    direction: IndicatorDirection,
+    colorScheme: ColorScheme
+  ): VerticalIndicator {
+    return new VerticalIndicator(
+      IndicatorType.Visible,
       timestamp,
-      direction: 'right',
-      style: { color, lineWidth: 2, dashed: false },
-    });
+      direction,
+      3, // Yellow/orange for visible range
+      colorScheme,
+      2, // lineWidth
+      false // dashed
+    );
   }
 
-  static createVisibleEnd(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Visible,
+  static createDashboard(
+    timestamp: number,
+    direction: IndicatorDirection,
+    colorScheme: ColorScheme
+  ): VerticalIndicator {
+    return new VerticalIndicator(
+      IndicatorType.Dashboard,
       timestamp,
-      direction: 'left',
-      style: { color, lineWidth: 2, dashed: false },
-    });
-  }
-
-  static createDashboardStart(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Dashboard,
-      timestamp,
-      direction: 'right',
-      style: { color, lineWidth: 2, dashed: false },
-    });
-  }
-
-  static createDashboardEnd(timestamp: number, color: string): VerticalIndicator {
-    return new VerticalIndicator({
-      type: IndicatorType.Dashboard,
-      timestamp,
-      direction: 'left',
-      style: { color, lineWidth: 2, dashed: false },
-    });
+      direction,
+      1, // Red for dashboard range
+      colorScheme,
+      2, // lineWidth
+      false // dashed
+    );
   }
 }
