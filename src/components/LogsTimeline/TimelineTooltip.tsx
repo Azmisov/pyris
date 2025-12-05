@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import { dateTimeParse } from '@grafana/data';
 import { TooltipData } from './TimelineChart';
 import { IndicatorType, VerticalIndicator } from './VerticalIndicator';
@@ -28,10 +28,31 @@ function getIndicatorLabel(indicator: VerticalIndicator): string {
 
 interface TimelineTooltipProps {
   data: TooltipData;
+  containerWidth: number;
   timeZone?: string;
 }
 
-export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, timeZone }) => {
+const EDGE_PADDING = -2; // Tooltip extends past edge to hide border
+
+export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containerWidth, timeZone }) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [tooltipWidth, setTooltipWidth] = useState(0);
+
+  // Measure tooltip width after render
+  useLayoutEffect(() => {
+    if (contentRef.current) {
+      setTooltipWidth(contentRef.current.offsetWidth);
+    }
+  }, [data]);
+
+  // Calculate clamped position and triangle offset
+  const halfWidth = tooltipWidth / 2;
+  const minX = halfWidth + EDGE_PADDING;
+  const maxX = containerWidth - halfWidth - EDGE_PADDING;
+  const clampedX = tooltipWidth > 0
+    ? Math.max(minX, Math.min(maxX, data.x))
+    : data.x; // Use unclamped position until width is measured
+  const triangleOffset = data.x - clampedX; // How far the triangle needs to shift from center
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const primaryDt = dateTimeParse(data.timestamp, { timeZone });
   const primaryTime = primaryDt.format('YYYY-MM-DD HH:mm:ss.SSS');
@@ -55,13 +76,15 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, timeZone
       className={styles.tooltip}
       style={{
         position: 'absolute',
-        left: data.x,
+        left: clampedX,
         bottom: 0,
         transform: 'translate(-50%, 100%)',
         pointerEvents: 'none',
-      }}
+        // Pass triangle offset as CSS variable
+        '--triangle-offset': `${triangleOffset}px`,
+      } as React.CSSProperties}
     >
-      <div className={styles.content}>
+      <div ref={contentRef} className={styles.content}>
         <div className={styles.primary}>
           {primaryTime}
           <span className={styles.tz}> {tzLabel} ({primaryOffset})</span>
