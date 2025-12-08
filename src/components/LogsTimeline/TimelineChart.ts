@@ -658,6 +658,28 @@ export class TimelineChart {
   }
 
   /**
+   * Expand zoom range to reveal logs on the specified side
+   * @param position - 'left' to reveal logs before visible range, 'right' to reveal logs after
+   */
+  expandZoomToRevealLogs(position: 'left' | 'right'): void {
+    if (!this.fullTimeRange) {
+      return;
+    }
+
+    const currentZoom = this.axis.getZoomRange();
+    if (!currentZoom) {
+      return;
+    }
+
+    // Create new zoom range expanding to full range on the specified side
+    const newZoomRange: [number, number] = position === 'left'
+      ? [this.fullTimeRange[0], currentZoom[1]]
+      : [currentZoom[0], this.fullTimeRange[1]];
+
+    this.axis.setZoomRange(newZoomRange);
+  }
+
+  /**
    * Get current zoom range
    */
   getZoomRange(): [number, number] | null {

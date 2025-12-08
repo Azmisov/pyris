@@ -225,6 +225,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, [onTimeRangeChange]);
 
+  // Range info tooltip click handler (expands zoom to reveal logs)
+  const handleTooltipClick = useCallback((position: 'left' | 'right') => {
+    if (chartRef.current) {
+      chartRef.current.expandZoomToRevealLogs(position);
+    }
+  }, []);
+
   return (
     <div className={styles['logs-timeline']} style={{ position: 'relative', height }}>
       <div
@@ -249,7 +256,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         <button
           onClick={handleRecenter}
           className={styles['timeline-icon-button']}
-          title="Center to log's time range"
+          title="Center view to log's time range"
         >
           <Icon name="home-alt" />
         </button>
@@ -264,8 +271,8 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         )}
       </div>
       {tooltipData && <TimelineTooltip data={tooltipData} containerWidth={containerWidth} timeZone={timeZone} />}
-      <RangeInfoTooltip info={rangeInfo} position="left" />
-      <RangeInfoTooltip info={rangeInfo} position="right" />
+      <RangeInfoTooltip info={rangeInfo} position="left" onClick={handleTooltipClick} />
+      <RangeInfoTooltip info={rangeInfo} position="right" onClick={handleTooltipClick} />
     </div>
   );
 };
