@@ -651,6 +651,21 @@ export class TimeAxis {
   }
 
   /**
+   * Set zoom range to a specific range
+   * @param range The zoom range to set [start, end] in milliseconds
+   */
+  setZoomRange(range: [number, number]): void {
+    if (this.gridLineGenerator) {
+      this.zoomRange = [...range];
+
+      // Update grid configuration
+      this.gridLineGenerator.updateZoom(this.zoomRange, this.width);
+
+      this.chart.render();
+    }
+  }
+
+  /**
    * Update the color scheme
    */
   setColorScheme(colorScheme: ColorScheme): void {

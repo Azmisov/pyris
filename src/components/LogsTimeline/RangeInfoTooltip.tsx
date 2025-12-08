@@ -12,12 +12,14 @@ interface RangeInfoTooltipProps {
   info: RangeInfo | null;
   /** Position: 'left' or 'right' */
   position: 'left' | 'right';
+  /** Called when tooltip is clicked to reveal logs */
+  onClick?: (position: 'left' | 'right') => void;
 }
 
 /**
  * Displays log counts outside the visible range at the top corners of the chart
  */
-export const RangeInfoTooltip: React.FC<RangeInfoTooltipProps> = ({ info, position }) => {
+export const RangeInfoTooltip: React.FC<RangeInfoTooltipProps> = ({ info, position, onClick }) => {
   if (!info) {
     return null;
   }
@@ -31,15 +33,15 @@ export const RangeInfoTooltip: React.FC<RangeInfoTooltipProps> = ({ info, positi
 
   const label = count === 1 ? 'log' : 'logs';
 
+  const handleClick = () => {
+    onClick?.(position);
+  };
+
   return (
     <div
       className={`${styles.tooltip} ${position === 'left' ? styles.left : styles.right}`}
-      style={{
-        position: 'absolute',
-        top: 8,
-        [position]: 8,
-        pointerEvents: 'none',
-      }}
+      title="Click to reveal logs"
+      onClick={handleClick}
     >
       <div className={styles.content}>
         {count.toLocaleString()} {label}
