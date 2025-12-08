@@ -225,7 +225,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, [onTimeRangeChange]);
 
-  // Range info tooltip click handler (expands zoom to reveal logs)
+  // Range info tooltip click handler (expands zoom to reveal logs)x
   const handleTooltipClick = useCallback((position: 'left' | 'right') => {
     if (chartRef.current) {
       chartRef.current.expandZoomToRevealLogs(position);
