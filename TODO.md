@@ -1,4 +1,5 @@
 - json logs:
+  - clicking elipsis when row is still collapsed should format the full row + expand that elipses
   - navigation:
     - when switching between ANSI and JSON logs, we sync the viewport display and selection; these
       only need to be synced lazily when switching
@@ -14,13 +15,13 @@
   - show log count as bars; vertical gap between zero and one is stretched to make it more evident
     that that time bin has logs present
     - could breakout log count by log level; something for the future
-  - histogram needs to be better
-  - show separate histogram for filtered content
-  - log scale for > 1
+  - change color
+  - separate histogram for filtered content
+  - log scale for > 1; maybe have count of all records be the limit? or could have it dynamic for
+    the view, which adjusts automatically (can be both positive and negative)
 - bugs:
   - weird character by []Text link; still there, just not visible anymore
   - changing font size should snap to top visible line
-  - wordwrap broken, probably because of the added override styles
 - features:
   - warning message if series errors
   - show log labels
@@ -30,6 +31,7 @@
   - show dates in timeline axis?
   - showing json + ansi in the timeline?
 - styling tweaks:
+  - don't show back color when json selected
   - tweak modal colors (double check, might be complete)
   - select line covers up previous line slightly, like underscores from prev line
 - cleanup:
@@ -42,6 +44,7 @@
 - needs more thought:
   - reset localStorage settings; or maybe just remove the defaults?
   - autoconvert first datetime format to the user's timezone? will be finicky
+  - aligning histogram bins to grid lines
 
 possible icon replacements:
 https://developers.grafana.com/ui/latest/index.html?path=/story/iconography-icon--icons-overview

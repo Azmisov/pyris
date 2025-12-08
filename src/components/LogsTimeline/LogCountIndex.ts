@@ -104,10 +104,15 @@ export class LogCountIndex {
 
     // Only store bin information if count > 0
     if (count > 0) {
+      // Clamp bin boundaries to actual data range
+      const firstTimestamp = this.timestamps[0];
+      const lastTimestamp = this.timestamps[this.timestamps.length - 1];
+
       this.bins.push({
-        startTime: this.binStartTime,
-        // exclusive end time
-        endTime: nextTimestamp,
+        // Clamp start to first timestamp
+        startTime: Math.max(this.binStartTime, firstTimestamp),
+        // Clamp end to last timestamp (exclusive, so use last + small epsilon)
+        endTime: Math.min(nextTimestamp, lastTimestamp),
         count,
       });
     }
