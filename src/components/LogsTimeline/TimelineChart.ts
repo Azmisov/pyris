@@ -29,6 +29,9 @@ const DRAG_THRESHOLD = 3;
 const SNAP_THRESHOLD = 16; // Pixels within which hover snaps to indicators
 const GRID_SNAP_THRESHOLD = 8; // Pixels within which hover snaps to grid lines
 
+// Histogram binning configuration
+const TARGET_PIXELS_PER_BIN = 15; // Target pixels per bin for histogram visibility
+
 export class TimelineChart {
   private container: HTMLDivElement;
   private canvas: HTMLCanvasElement;
@@ -438,26 +441,49 @@ export class TimelineChart {
   }
 
   /**
-   * Set the time range and raw timestamp data
+   * Set the raw timestamp data and calculate the time range
    * If dashboardRange is provided, use it for initial zoom instead of full log range
+   * @param timestamps - list of timestamps for each log record
+   * @param dashboardRange - full time range of the dashboard
    */
-  setData(timeRange: [number, number], timestamps: number[], dashboardRange?: [number, number]): void {
+  setData(timestamps: number[], dashboardRange?: [number, number]): void {
     const previousTimeRange = this.fullTimeRange;
     const currentZoom = this.axis.getZoomRange();
 
-    this.fullTimeRange = timeRange;
+    // Calculate time range from timestamps
+    let minTime = Infinity;
+    let maxTime = -Infinity;
+
+    for (const timestamp of timestamps) {
+      if (timestamp < minTime) minTime = timestamp;
+      if (timestamp > maxTime) maxTime = timestamp;
+    }
+
+    // If all logs have the same timestamp (or no logs), add some padding
+    if (minTime === maxTime || timestamps.length === 0) {
+      if (timestamps.length === 0) {
+        minTime = 0;
+        maxTime = 0;
+      } else {
+        minTime -= 1000; // 1 second before
+        maxTime += 1000; // 1 second after
+      }
+    }
+
+    const fullTimeRange: [number, number] = [minTime, maxTime];
+    this.fullTimeRange = fullTimeRange;
     this.logCountIndex = new LogCountIndex(timestamps);
 
     // Preserve zoom if time range hasn't changed
     const rangeUnchanged = previousTimeRange &&
-      previousTimeRange[0] === timeRange[0] &&
-      previousTimeRange[1] === timeRange[1];
+      previousTimeRange[0] === fullTimeRange[0] &&
+      previousTimeRange[1] === fullTimeRange[1];
 
     const initialRange = rangeUnchanged && currentZoom
       ? currentZoom
-      : (dashboardRange || timeRange);
+      : (dashboardRange || fullTimeRange);
 
-    this.axis.updateRange(timeRange, initialRange);
+    this.axis.updateRange(fullTimeRange, initialRange);
     this.render();
   }
 
@@ -591,7 +617,9 @@ export class TimelineChart {
    * Reset zoom to full range
    */
   recenter(): void {
-    this.axis.resetZoom();
+    if (this.fullTimeRange) {
+      this.axis.resetZoom(this.fullTimeRange);
+    }
   }
 
   /**
@@ -602,52 +630,67 @@ export class TimelineChart {
   }
 
   /**
-   * Get full time range
+   * Calculate optimal bin count for histogram based on full log range
+   * @param zoomRange - Current zoom range [start, end] in milliseconds
+   * @param availableWidth - Width in pixels available for rendering the histogram
+   * @returns Optimal number of bins
    */
-  getFullRange(): [number, number] | null {
-    return this.axis.getFullRange();
+  private calculateOptimalBinCount(zoomRange: [number, number], availableWidth: number): number {
+    if (!this.fullTimeRange) {
+      return 1;
+    }
+
+    const fullTimeRangeMs = this.fullTimeRange[1] - this.fullTimeRange[0];
+    const zoomRangeMs = zoomRange[1] - zoomRange[0];
+
+    // Find max bins where each bin is >= TARGET_PIXELS_PER_BIN pixels wide on screen
+    const maxBins = Math.floor(
+      (fullTimeRangeMs * availableWidth) / (TARGET_PIXELS_PER_BIN * zoomRangeMs)
+    );
+    return Math.max(1, maxBins);
   }
 
   render(): void {
+    const zoomRange = this.getZoomRange();
+    // setData not called yet
+    if (!zoomRange) return
+
     // Use logical dimensions (not scaled canvas buffer size)
     const width = this.logicalWidth;
     const height = this.logicalHeight;
-
-    // Clear canvas with theme background color
-    this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
-    this.ctx.fillRect(0, 0, width, height);
-
     const axisHeight = this.axis.getHeight();
     const histogramHeight = height - axisHeight;
 
-    // Render histogram
-    this.renderHistogram(0, histogramHeight);
-
-    // Render time axis
+    this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
+    this.ctx.fillRect(0, 0, width, height);
+    this.renderHistogram(zoomRange, histogramHeight);
+    this.renderBeyondLogs(zoomRange, histogramHeight);
     this.axis.y = histogramHeight;
     this.axis.render(this.ctx);
-
-    // Render all indicators
-    this.renderIndicators(0, histogramHeight);
+    this.renderIndicators(zoomRange, histogramHeight);
   }
 
-  private renderHistogram(yOffset: number, availableHeight: number): void {
-    if (!this.logCountIndex) return;
+  private renderHistogram(zoomRange: [number, number], availableHeight: number): void {
+    if (!this.logCountIndex || !this.fullTimeRange) return;
 
-    const zoomRange = this.axis.getZoomRange();
-    if (!zoomRange) return;
+    // Divide the full log range evenly. This ensures bins have consistent boundaries regardless of
+    // zoom level. I considered having bins tied to the major/minor grid lines, however we'd get
+    // some bins (clamped start/end, or DST/month length differences) which are not the same size.
+    // My thinking for now is consistent bin widths is more desirable than alignment.
+    const binCount = this.calculateOptimalBinCount(zoomRange, this.logicalWidth);
+    const binWidth = (this.fullTimeRange[1] - this.fullTimeRange[0]) / binCount;
 
-    // Calculate number of bins based on available width
-    // Target ~10 pixels per bin for visible histogram bars
-    const binCount = Math.max(10, Math.floor(this.logicalWidth / 10));
-    const binWidth = (zoomRange[1] - zoomRange[0]) / binCount;
+    // Calculate which bins are visible in the current zoom range
+    const firstBinIndex = Math.floor((zoomRange[0] - this.fullTimeRange[0]) / binWidth);
+    const lastBinIndex = Math.ceil((zoomRange[1] - this.fullTimeRange[0]) / binWidth);
 
-    // Reset index and generate bins dynamically
-    this.logCountIndex.reset(zoomRange[0]);
+    // Reset index and generate only the visible bins
+    const firstBinStart = this.fullTimeRange[0] + firstBinIndex * binWidth;
+    this.logCountIndex.reset(firstBinStart);
     let maxCount = 0;
 
-    for (let i = 0; i < binCount; i++) {
-      const endTime = zoomRange[0] + (i + 1) * binWidth;
+    for (let i = firstBinIndex; i < lastBinIndex && i < binCount; i++) {
+      const endTime = this.fullTimeRange[0] + (i + 1) * binWidth;
       const count = this.logCountIndex.count(endTime);
       if (count > maxCount) {
         maxCount = count;
@@ -678,9 +721,14 @@ export class TimelineChart {
         barHeight = availableHeight * (0.15 + 0.85 * logScale);
       }
 
-      this.ctx.fillRect(x1, yOffset + availableHeight - barHeight, barWidth, barHeight);
+      this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
     }
+  }
 
+  /**
+   * Render grayed out area where there is no log data
+   */
+  private renderBeyondLogs(zoomRange: [number, number], availableHeight: number): void {
     // Draw grayed out areas where no data exists (with dotted pattern)
     if (this.fullTimeRange && this.grayPattern) {
       this.ctx.fillStyle = this.grayPattern;
@@ -689,14 +737,14 @@ export class TimelineChart {
       if (zoomRange[0] < this.fullTimeRange[0]) {
         const x1 = this.axis.time2pixel(zoomRange[0]);
         const x2 = this.axis.time2pixel(this.fullTimeRange[0]);
-        this.ctx.fillRect(x1, yOffset, x2 - x1, availableHeight);
+        this.ctx.fillRect(x1, 0, x2 - x1, availableHeight);
       }
 
       // Right gray area
       if (zoomRange[1] > this.fullTimeRange[1]) {
         const x1 = this.axis.time2pixel(this.fullTimeRange[1]);
         const x2 = this.axis.time2pixel(zoomRange[1]);
-        this.ctx.fillRect(x1, yOffset, x2 - x1, availableHeight);
+        this.ctx.fillRect(x1, 0, x2 - x1, availableHeight);
       }
     }
   }
@@ -704,15 +752,12 @@ export class TimelineChart {
   /**
    * Render all indicators (hover, selections, ranges, etc.)
    */
-  private renderIndicators(yOffset: number, availableHeight: number): void {
-    const zoomRange = this.axis.getZoomRange();
-    if (!zoomRange) return;
-
+  private renderIndicators(zoomRange: [number, number], availableHeight: number): void {
     // Render all indicators in proper z-order (including hover on top)
     for (const indicator of this.getNamedIndicators(true)) {
       if (indicator.isVisible(zoomRange)) {
         const x = this.axis.time2pixel(indicator.getTimestamp());
-        indicator.render(this.ctx, x, yOffset, availableHeight);
+        indicator.render(this.ctx, x, 0, availableHeight);
       }
     }
   }

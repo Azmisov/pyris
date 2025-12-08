@@ -457,7 +457,6 @@ const LABEL_FONT_SIZE = 12;
 export class TimeAxis {
   private chart: any;
   private width: number = 0;
-  private fullRange: [number, number] | null = null;
   private zoomRange: [number, number] | null = null;
   private gridLineGenerator: GridLineGenerator | null = null;
   /** Cached grid line timestamps (invalidated on re-render) */
@@ -485,7 +484,6 @@ export class TimeAxis {
    * Update time range, optionally setting initial zoom
    */
   updateRange(timeRange: [number, number], initialZoom?: [number, number]): void {
-    this.fullRange = [...timeRange];
     this.zoomRange = initialZoom ? [...initialZoom] : [...timeRange];
 
     // Calculate timezone offset from end time (closer to current wall clock offset)
@@ -521,7 +519,7 @@ export class TimeAxis {
    * @param endX Current/ending position of drag
    */
   shift(id: number | null, startX: number, endX: number): boolean {
-    if (!this.zoomRange || !this.fullRange) return false;
+    if (!this.zoomRange) return false;
 
     // New drag; mark starting time to be the fixed reference for drag
     let d = this.dragData;
@@ -554,7 +552,7 @@ export class TimeAxis {
    * @param centerX Mouse coordinate to center the zoom on
    */
   zoom(factor: number, centerX: number): boolean {
-    if (!this.zoomRange || !this.fullRange) return false;
+    if (!this.zoomRange) return false;
     const G = this.gridSettings;
 
     // How many zoom scaling iterations to perform
@@ -631,13 +629,6 @@ export class TimeAxis {
   }
 
   /**
-   * Get full time range
-   */
-  getFullRange(): [number, number] | null {
-    return this.fullRange ? [...this.fullRange] : null;
-  }
-
-  /**
    * Get timezone offset in hours
    */
   getTzOffset(): number {
@@ -646,10 +637,11 @@ export class TimeAxis {
 
   /**
    * Reset zoom to full range
+   * @param fullRange The full time range to reset to
    */
-  resetZoom(): void {
-    if (this.fullRange && this.gridLineGenerator) {
-      this.zoomRange = [...this.fullRange];
+  resetZoom(fullRange: [number, number]): void {
+    if (this.gridLineGenerator) {
+      this.zoomRange = [...fullRange];
 
       // Update grid configuration for full range
       this.gridLineGenerator.updateZoom(this.zoomRange, this.width);
@@ -702,7 +694,7 @@ export class TimeAxis {
    * Render the time axis
    */
   render(ctx: CanvasRenderingContext2D): void {
-    if (!this.gridLineGenerator || !this.fullRange || !this.zoomRange) {
+    if (!this.gridLineGenerator || !this.zoomRange) {
       return;
     }
 

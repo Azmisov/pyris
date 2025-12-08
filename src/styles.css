@@ -92,7 +92,8 @@
 }
 
 /* Override Virtuoso's viewport width to allow hover to extend across full scrollable width */
-.ansi-virtual-list [data-viewport-type="element"] {
+/* Only apply when wrap mode is disabled, as max-content prevents text wrapping */
+.ansi-virtual-list:not(.wrap-mode-enabled) [data-viewport-type="element"] {
   width: max-content !important;
   min-width: 100%;
 }

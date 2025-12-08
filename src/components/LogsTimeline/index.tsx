@@ -71,29 +71,9 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Extract timestamps and time range from logs
-  const { timeRange, timestamps } = useMemo(() => {
-    if (logs.length === 0) {
-      return { timeRange: [0, 0] as [number, number], timestamps: [] };
-    }
-
-    // Extract timestamps and find time range
-    const timestamps = logs.map(log => log.timestamp);
-    let minTime = Infinity;
-    let maxTime = -Infinity;
-
-    for (const timestamp of timestamps) {
-      if (timestamp < minTime) minTime = timestamp;
-      if (timestamp > maxTime) maxTime = timestamp;
-    }
-
-    // If all logs have the same timestamp, add some padding
-    if (minTime === maxTime) {
-      minTime -= 1000; // 1 second before
-      maxTime += 1000; // 1 second after
-    }
-
-    return { timeRange: [minTime, maxTime] as [number, number], timestamps };
+  // Extract timestamps from logs
+  const timestamps = useMemo(() => {
+    return logs.map(log => log.timestamp);
   }, [logs]);
 
   // Initialize chart (only once)
@@ -168,13 +148,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
 
   // Update chart data when logs change
   useEffect(() => {
-    if (chartRef.current && timeRange) {
+    if (chartRef.current) {
       const dashboardRangeMs = dashboardTimeRange
         ? [dashboardTimeRange.from, dashboardTimeRange.to] as [number, number]
         : undefined;
-      chartRef.current.setData(timeRange, timestamps, dashboardRangeMs);
+      chartRef.current.setData(timestamps, dashboardRangeMs);
     }
-  }, [timeRange, timestamps, dashboardTimeRange]);
+  }, [timestamps, dashboardTimeRange]);
 
   // Update dashboard time range indicators
   useEffect(() => {

@@ -115,6 +115,15 @@ export const VirtualList = memo<VirtualListProps>(({
     ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom for ascending (oldest first)
     : 0;  // Top for descending (newest first)
 
+  // Compute className based on wrap mode
+  const virtualListClassName = useMemo(() => {
+    const classes = ['ansi-virtual-list'];
+    if (options.wrapMode === 'soft-wrap') {
+      classes.push('wrap-mode-enabled');
+    }
+    return classes.join(' ');
+  }, [options.wrapMode]);
+
   return (
     <div ref={containerRef} className="ansi-logs-container" style={{ height, width }}>
       <Virtuoso
@@ -126,7 +135,7 @@ export const VirtualList = memo<VirtualListProps>(({
         initialTopMostItemIndex={initialIndex}
         followOutput={sortOrder === 'asc' ? 'smooth' : false}
         rangeChanged={handleRangeChanged}
-        className="ansi-virtual-list"
+        className={virtualListClassName}
         components={{
           Header: () => <div style={{ height: 6 }} />,
         }}
