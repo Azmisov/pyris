@@ -5,8 +5,9 @@
 
 import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
 import { Icon } from '@grafana/ui';
-import { TimelineChart, TooltipData } from './TimelineChart';
+import { TimelineChart, TooltipData, RangeInfo } from './TimelineChart';
 import { TimelineTooltip } from './TimelineTooltip';
+import { RangeInfoTooltip } from './RangeInfoTooltip';
 import { AnsiLogRow } from '../../types';
 import { ColorScheme } from '../../theme/colorSchemes';
 import styles from './index.module.css';
@@ -51,6 +52,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<TimelineChart | null>(null);
   const [tooltipData, setTooltipData] = useState<TooltipData | null>(null);
+  const [rangeInfo, setRangeInfo] = useState<RangeInfo | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   // Track if mouse is in the timeline (for determining when to show external tooltip)
   const isLocalHoverRef = useRef(false);
@@ -114,6 +116,13 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.setOnTooltip(setTooltipData);
+    }
+  }, []);
+
+  // Set range info callback
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.setOnRangeInfo(setRangeInfo);
     }
   }, []);
 
@@ -231,7 +240,8 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         style={{
           position: 'absolute',
           top: 5,
-          right: 10,
+          left: '50%',
+          transform: 'translateX(-50%)',
           display: 'flex',
           gap: '5px',
         }}
@@ -254,6 +264,8 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         )}
       </div>
       {tooltipData && <TimelineTooltip data={tooltipData} containerWidth={containerWidth} timeZone={timeZone} />}
+      <RangeInfoTooltip info={rangeInfo} position="left" />
+      <RangeInfoTooltip info={rangeInfo} position="right" />
     </div>
   );
 };

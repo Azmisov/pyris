@@ -25,6 +25,14 @@ export interface TooltipData {
   beyondDashboard: boolean;
 }
 
+/** Range info data showing log counts outside visible range */
+export interface RangeInfo {
+  /** Number of logs before the visible range */
+  before: number;
+  /** Number of logs after the visible range */
+  after: number;
+}
+
 const DRAG_THRESHOLD = 3;
 const SNAP_THRESHOLD = 16; // Pixels within which hover snaps to indicators
 const GRID_SNAP_THRESHOLD = 8; // Pixels within which hover snaps to grid lines
@@ -68,6 +76,9 @@ export class TimelineChart {
 
   // Callback for tooltip updates
   private onTooltip?: (data: TooltipData | null) => void;
+
+  // Callback for range info updates
+  private onRangeInfo?: (info: RangeInfo | null) => void;
 
   // Event handlers (bound methods)
   private boundPointerDown: (e: PointerEvent) => void;
@@ -368,6 +379,13 @@ export class TimelineChart {
   }
 
   /**
+   * Set callback for range info updates
+   */
+  setOnRangeInfo(callback: (info: RangeInfo | null) => void): void {
+    this.onRangeInfo = callback;
+  }
+
+  /**
    * Show tooltip at a given timestamp (for shared tooltip / external hover)
    */
   showTooltipAtTimestamp(timestamp: number | null): void {
@@ -564,6 +582,23 @@ export class TimelineChart {
   }
 
   /**
+   * Update and emit range info (logs outside zoom range)
+   * Called after visible range changes or timeline navigation
+   */
+  private updateRangeInfo(): void {
+    const zoomRange = this.axis.getZoomRange();
+    if (this.logCountIndex && zoomRange) {
+      const counts = this.logCountIndex.countByRange(zoomRange[0], zoomRange[1]);
+      this.onRangeInfo?.({
+        before: counts.before,
+        after: counts.after,
+      });
+    } else {
+      this.onRangeInfo?.(null);
+    }
+  }
+
+  /**
    * Set the dashboard time range to display red bracket indicators
    */
   setDashboardRange(fromTimestamp: number, toTimestamp: number): void {
@@ -668,6 +703,9 @@ export class TimelineChart {
     this.axis.y = histogramHeight;
     this.axis.render(this.ctx);
     this.renderIndicators(zoomRange, histogramHeight);
+
+    // Update range info after rendering (for zoom/pan navigation)
+    this.updateRangeInfo();
   }
 
   private renderHistogram(zoomRange: [number, number], availableHeight: number): void {

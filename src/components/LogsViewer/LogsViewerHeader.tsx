@@ -168,7 +168,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
 
       <div className="ansi-logs-stats">
         <span className="ansi-row-count">
-          {hasFilter ? `${filteredRowsLength} of ` : ''}{totalRowsLength} rows
+          {hasFilter ? `${filteredRowsLength} of ` : ''}{totalRowsLength} logs
         </span>
         <ToggleSwitch
           options={[
