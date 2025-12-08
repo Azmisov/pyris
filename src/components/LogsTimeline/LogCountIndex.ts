@@ -156,6 +156,30 @@ export class LogCountIndex {
   }
 
   /**
+   * Count logs in different ranges relative to a visible range
+   * @param visibleStart - Start of the visible range (inclusive)
+   * @param visibleEnd - End of the visible range (exclusive)
+   * @returns Object with counts of logs before, within, and after the visible range
+   */
+  countByRange(visibleStart: number, visibleEnd: number): { before: number; within: number; after: number } {
+    if (this.timestamps.length === 0) {
+      return { before: 0, within: 0, after: 0 };
+    }
+
+    // Find first timestamp >= visibleStart
+    const startIndex = this.binarySearch(visibleStart, 0, this.timestamps.length);
+
+    // Find first timestamp >= visibleEnd
+    const endIndex = this.binarySearch(visibleEnd, 0, this.timestamps.length);
+
+    return {
+      before: startIndex,
+      within: endIndex - startIndex,
+      after: this.timestamps.length - endIndex,
+    };
+  }
+
+  /**
    * Find the bin that contains the given timestamp
    * Uses cached last bin index with exponential search for efficient hover lookups
    * Searches forward or backward based on timestamp relative to cached bin
