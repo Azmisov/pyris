@@ -1,6 +1,4 @@
 - json logs:
-  - word wrap not working
-  - clicking elipsis when row is still collapsed should format the full row + expand that elipses
   - navigation:
     - when switching between ANSI and JSON logs, we sync the viewport display and selection; these
       only need to be synced lazily when switching
@@ -22,11 +20,12 @@
     - log scale for > 1; maybe have count of all records be the limit? or could have it dynamic for
       the view, which adjusts automatically (can be both positive and negative)
 - bugs:
-  - copy selected log should be hidden if no selected?
+  - abstract out line snapping logic; apply it for all of: font size, word wrap, order changes
   - weird character by []Text link; still there, just not visible anymore
-  - changing font size should snap to top visible line
   - vitrius logs the colon for line number might need escaping in osc8 link; its not working
 - features:
+  - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
+  - show colored level for JSON level values
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
     updating dashboard, it should try and preserve the current view so you don't lose your place
     each refresh
@@ -39,7 +38,6 @@
   - warning if line count is truncated
 - styling tweaks:
   - if time is beyond zoom range either hide tooltip or switch to a tooltip with left/right arrow
-  - don't show back color when json selected
   - tweak modal colors (double check, might be complete)
   - select line covers up previous line slightly, like underscores from prev line
 - cleanup:

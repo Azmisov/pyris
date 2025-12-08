@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { JsonLogRow, LogsPanelOptions } from '../types';
-import { formatJsonToAnsi } from '../utils/jsonFormatter';
+import { JsonValue } from './JsonComponents';
 
 interface JsonRowProps {
   row: JsonLogRow;
@@ -26,32 +26,22 @@ export const JsonRow = memo<JsonRowProps>(({
   onToggleExpand,
   style
 }) => {
-  // Format JSON with syntax highlighting
-  const processedJson = useMemo(() => {
-    return formatJsonToAnsi(row.data, {
-      compact: !isSelected, // Compact when not selected, multi-line when selected
-      depth: 0,
-      indentSize: 2,
-      expandedPaths: isSelected ? expandedPaths : new Set(), // Only use expanded paths when selected
-      rowIndex: index,
-    });
-  }, [row.data, isSelected, expandedPaths, index]);
-
   const handleClick = useMemo(() => {
     return onRowClick ? () => onRowClick(row) : undefined;
   }, [onRowClick, row]);
 
-  // Handle clicks on ellipsis and collapse elements
-  const handleContentClick = useCallback((event: React.MouseEvent<HTMLSpanElement>) => {
-    const target = event.target as HTMLElement;
-    if (target.classList.contains('json-ellipsis') || target.classList.contains('json-collapse')) {
-      event.stopPropagation(); // Don't trigger row click
-      const path = target.getAttribute('data-path');
-      if (path && onToggleExpand) {
-        onToggleExpand(path);
-      }
+  // Wrap onToggleExpand to select row first if not selected
+  const handleToggleExpand = useCallback((path: string) => {
+    // If row is not selected, select it first
+    if (!isSelected && onRowClick) {
+      onRowClick(row);
     }
-  }, [onToggleExpand]);
+
+    // Then toggle the expand state
+    if (onToggleExpand) {
+      onToggleExpand(path);
+    }
+  }, [onToggleExpand, isSelected, onRowClick, row]);
 
   const handleMouseEnter = useMemo(() => {
     return onRowHover ? () => onRowHover(row) : undefined;
@@ -63,9 +53,15 @@ export const JsonRow = memo<JsonRowProps>(({
 
   const className = useMemo(() => {
     const classes = ['json-row'];
-    if (isSelected) classes.push('selected');
-    if (row.level) classes.push(`level-${row.level.toLowerCase()}`);
-    if (options.wrapMode === 'soft-wrap') classes.push('wrap-mode-soft');
+    if (isSelected) {
+      classes.push('selected');
+    }
+    if (row.level) {
+      classes.push(`level-${row.level.toLowerCase()}`);
+    }
+    if (options.wrapMode === 'soft-wrap') {
+      classes.push('wrap-mode-soft');
+    }
     return classes.join(' ');
   }, [isSelected, row.level, options.wrapMode]);
 
@@ -80,11 +76,17 @@ export const JsonRow = memo<JsonRowProps>(({
       {options.showLabels && row.labels && (
         <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} />
       )}
-      <span
-        className={isSelected ? 'json-content' : 'json-content compact'}
-        dangerouslySetInnerHTML={{ __html: processedJson }}
-        onClick={handleContentClick}
-      />
+      <span className={isSelected ? 'json-content' : 'json-content compact'}>
+        <JsonValue
+          value={row.data}
+          depth={0}
+          path={[]}
+          rowIndex={index}
+          expandedPaths={isSelected ? expandedPaths : new Set()}
+          onToggleExpand={handleToggleExpand}
+          indentSize={2}
+        />
+      </span>
     </div>
   );
 });

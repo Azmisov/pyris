@@ -475,7 +475,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle row selection
   const handleRowClick = useCallback((row: LogRow, index: number) => {
-    // Clear expand paths when switching to a different row
+    // Clear expand/collapse state when switching to a different row
     if (selectedRowIndex !== index) {
       setJsonExpandedPaths(new Set());
     }
@@ -500,9 +500,9 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setJsonExpandedPaths(prev => {
       const next = new Set(prev);
       if (next.has(path)) {
-        next.delete(path);
+        next.delete(path); // Toggle off
       } else {
-        next.add(path);
+        next.add(path); // Toggle on
       }
       return next;
     });

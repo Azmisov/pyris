@@ -98,9 +98,10 @@ function formatObject(
     const nextIndent = ' '.repeat((depth + 1) * indentSize);
 
     // If this object is expanded from a collapsed state, make the opening bracket clickable to collapse
+    // Add flash animation since this is a newly created element
     const isExpanded = depth >= 2 && expandedPaths.has(pathString);
     const openBracket = isExpanded
-      ? `<span class="json-collapse" data-path="${escapeHtml(pathString)}" title="Click to collapse">{</span>`
+      ? `<span class="json-collapse json-expanded-flash" data-path="${escapeHtml(pathString)}" title="Click to collapse">{</span>`
       : '{';
 
     const parts = entries.map(([key, val], i) => {
@@ -146,9 +147,10 @@ function formatArray(
     const nextIndent = ' '.repeat((depth + 1) * indentSize);
 
     // If this array is expanded from a collapsed state, make the opening bracket clickable to collapse
+    // Add flash animation since this is a newly created element
     const isExpanded = depth >= 2 && expandedPaths.has(pathString);
     const openBracket = isExpanded
-      ? `<span class="json-collapse" data-path="${escapeHtml(pathString)}" title="Click to collapse">[</span>`
+      ? `<span class="json-collapse json-expanded-flash" data-path="${escapeHtml(pathString)}" title="Click to collapse">[</span>`
       : '[';
 
     const parts = arr.map((item, i) => {

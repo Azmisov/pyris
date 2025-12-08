@@ -452,6 +452,9 @@ a:hover {
   font-size: var(--ansi-logs-row-font-size);
   line-height: var(--ansi-logs-row-height);
   min-height: var(--ansi-logs-row-height);
+
+  /* JSON indentation */
+  --json-indent: 16px; /* 2 spaces * 8px per space in monospace */
 }
 
 .json-row:hover {
@@ -459,7 +462,8 @@ a:hover {
 }
 
 .json-row.selected {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--ansi-bg-accent-1);
+  border-left: 8px solid var(--ansi-bg-accent-3);
 }
 
 /* Soft wrap mode for JSON rows */
@@ -476,12 +480,40 @@ a:hover {
   white-space: pre;
 }
 
+/* JSON indented content wrapper - only active when row is selected */
+.json-indent {
+  display: inline; /* Inline by default (compact) */
+  padding-left: 0;
+}
+
+/* Each item in multi-line arrays/objects should be on its own line - only when selected */
+.json-indent > span {
+  display: inline; /* Inline by default */
+}
+
+/* When row is selected, enable indentation and block layout */
+.json-row.selected .json-indent {
+  display: block;
+  padding-left: var(--json-indent);
+}
+
+.json-row.selected .json-indent > span {
+  display: block;
+}
+
 /* Compact mode - single line */
 .json-content.compact {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+}
+
+/* Wrap mode for JSON content - inherit from parent row */
+.json-row.wrap-mode-soft .json-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Empty state for logs */
@@ -499,7 +531,7 @@ a:hover {
 /* JSON ellipsis for collapsed structures */
 .json-ellipsis {
   cursor: pointer;
-  color: var(--ansi-fg-4); /* blue */
+  color: var(--ansi-color-12);
   text-decoration: none;
   user-select: none;
   padding: 0 2px;
@@ -507,9 +539,8 @@ a:hover {
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.json-ellipsis:hover {
-  color: var(--ansi-fg-12); /* bright blue */
-  background-color: var(--ansi-bg-accent-1);
+.json-ellipsis:hover, .json-collapse:hover {
+  background-color: var(--ansi-bg-accent-3);
   text-decoration: none;
 }
 
@@ -522,11 +553,23 @@ a:hover {
   padding: 0 2px;
   border-radius: 2px;
   transition: background-color 0.15s ease, color 0.15s ease;
+  pointer-events: auto; /* Ensure hover works even in compact mode */
 }
 
-.json-collapse:hover {
-  color: var(--ansi-fg-12); /* bright blue */
-  background-color: var(--ansi-bg-accent-1);
-  text-decoration: none;
+/* Flash bright blue animation for newly expanded JSON structures */
+@keyframes json-expand-flash {
+  0% {
+    background-color: var(--ansi-bg-accent-3);
+  }
+  50% {
+    background-color: var(--ansi-bg-accent-3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.json-expanded-flash {
+  animation: json-expand-flash .7s ease-out;
 }
 
