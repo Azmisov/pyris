@@ -531,7 +531,6 @@ a:hover {
 /* JSON ellipsis for collapsed structures */
 .json-ellipsis {
   cursor: pointer;
-  color: var(--ansi-color-12);
   text-decoration: none;
   user-select: none;
   padding: 0 2px;
@@ -558,14 +557,8 @@ a:hover {
   background-color: var(--ansi-bg-accent-3);
 }
 
-/* JSON copy toast notification using ::after */
-.json-show-toast::after {
-  content: 'Copied!';
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 8px;
+/* JSON copy toast notification */
+.json-copy-toast {
   padding: 0.08em 0.5em;
   background-color: var(--ansi-color-2);
   color: var(--ansi-bg);
@@ -574,32 +567,26 @@ a:hover {
   font-weight: 500;
   white-space: nowrap;
   animation: json-toast-fade 1.5s ease-out;
-  pointer-events: none;
 }
 
 @keyframes json-toast-fade {
   0% {
     opacity: 0;
-    transform: translateY(-50%) translateX(-4px);
   }
   10% {
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
   }
   80% {
     opacity: 1;
-    transform: translateY(-50%) translateX(0);
   }
   100% {
     opacity: 0;
-    transform: translateY(-50%) translateX(-4px);
   }
 }
 
 /* JSON collapse button for expanded structures */
 .json-collapse {
   cursor: pointer;
-  color: var(--ansi-fg-4); /* blue */
   text-decoration: none;
   user-select: none;
   padding: 0 2px;

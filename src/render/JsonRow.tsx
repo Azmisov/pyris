@@ -31,7 +31,7 @@ export const JsonRow = memo<JsonRowProps>(({
   }, [onRowClick, row]);
 
   // Wrap onToggleExpand to select row first if not selected
-  const handleToggleExpand = useCallback((path: string) => {
+  const handleToggleExpand = useCallback((path: string | string[]) => {
     // If row is not selected, select it first
     if (!isSelected && onRowClick) {
       onRowClick(row);
