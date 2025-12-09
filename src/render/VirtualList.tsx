@@ -19,7 +19,7 @@ interface VirtualListProps {
   sortOrder?: 'asc' | 'desc';
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
-  onToggleExpand?: (path: string) => void;
+  onToggleExpand?: (path: string | string[]) => void;
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -164,7 +164,7 @@ interface AutoSizedVirtualListProps {
   sortOrder?: 'asc' | 'desc';
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
-  onToggleExpand?: (path: string) => void;
+  onToggleExpand?: (path: string | string[]) => void;
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({

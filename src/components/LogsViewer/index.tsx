@@ -496,14 +496,22 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, [onRowClick, selectedRowIndex]);
 
   // Handle expand/collapse toggle for JSON nested structures
-  const handleToggleExpand = useCallback((path: string) => {
+  const handleToggleExpand = useCallback((path: string | string[]) => {
     setJsonExpandedPaths(prev => {
       const next = new Set(prev);
-      if (next.has(path)) {
-        next.delete(path); // Toggle off
-      } else {
-        next.add(path); // Toggle on
-      }
+      const paths = Array.isArray(path) ? path : [path];
+
+      // Determine action based on first path (expand or collapse)
+      const shouldExpand = !next.has(paths[0]);
+
+      paths.forEach(p => {
+        if (shouldExpand) {
+          next.add(p);
+        } else {
+          next.delete(p);
+        }
+      });
+
       return next;
     });
   }, []);
