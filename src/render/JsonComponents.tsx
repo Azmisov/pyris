@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 /**
  * JSON rendering components for the logs viewer.
@@ -185,7 +186,7 @@ JsonContainer.displayName = 'JsonContainer';
  * Primitive value component (string, number, boolean, null)
  */
 export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?: boolean; levelHint?: boolean }>(({ value, hasComma, copyEnabled = false, levelHint = false }) => {
-  const [showToast, setShowToast] = useState(false);
+  const [toastPosition, setToastPosition] = useState<{ x: number; y: number } | null>(null);
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (!copyEnabled) {
@@ -208,8 +209,9 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
 
     // Copy to clipboard
     navigator.clipboard.writeText(copyText).then(() => {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 1500);
+      // Store click position for toast
+      setToastPosition({ x: e.clientX, y: e.clientY });
+      setTimeout(() => setToastPosition(null), 1500);
     }).catch(err => {
       console.error('Failed to copy:', err);
     });
@@ -262,14 +264,32 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
   })();
 
   return (
-    <span
-      className={copyEnabled ? `json-primitive-copyable${showToast ? ' json-show-toast' : ''}` : ''}
-      onClick={copyEnabled ? handleClick : undefined}
-      title={copyEnabled ? "Click to copy" : undefined}
-    >
-      {content}
-      {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
-    </span>
+    <>
+      <span
+        className={copyEnabled ? 'json-primitive-copyable' : ''}
+        onClick={copyEnabled ? handleClick : undefined}
+        title={copyEnabled ? "Click to copy" : undefined}
+      >
+        {content}
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
+      {toastPosition && createPortal(
+        <span
+          className="json-copy-toast"
+          style={{
+            position: 'fixed',
+            left: `${toastPosition.x}px`,
+            top: `${toastPosition.y}px`,
+            transform: 'translate(-50%, calc(-100% - 4px))',
+            pointerEvents: 'none',
+            zIndex: 9999,
+          }}
+        >
+          Copied!
+        </span>,
+        document.body
+      )}
+    </>
   );
 });
 
