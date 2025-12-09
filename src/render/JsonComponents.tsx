@@ -143,17 +143,17 @@ const JsonContainer = memo<JsonContainerProps>(({
   // Collapsed state - show ellipsis
   if (shouldCollapse) {
     return (
-      <>
+      <span>
         <span
-          className="json-ellipsis"
+          className="json-ellipsis ansi-fg-14"
           data-path={pathString}
           title="Click to expand (Shift+Click for recursive)"
           onClick={handleClick}
         >
           {ellipsis}
         </span>
-        {hasComma && ','}
-      </>
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
     );
   }
 
@@ -161,7 +161,7 @@ const JsonContainer = memo<JsonContainerProps>(({
   return (
     <span>
       <span
-        className='json-collapse'
+        className='json-collapse ansi-fg-14'
         data-path={pathString}
         title="Click to collapse (Shift+Click for recursive)"
         onClick={handleClick}
@@ -171,7 +171,10 @@ const JsonContainer = memo<JsonContainerProps>(({
       <span className={`json-indent${shouldFlash ? ' json-expanded-flash' : ''}`}>
         {children}
       </span>
-      {closeBracket}{hasComma && ','}
+      <span className="ansi-fg-14">
+        {closeBracket}
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
     </span>
   );
 });
@@ -259,16 +262,14 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
   })();
 
   return (
-    <>
-      <span
-        className={copyEnabled ? `json-primitive-copyable${showToast ? ' json-show-toast' : ''}` : ''}
-        onClick={copyEnabled ? handleClick : undefined}
-        title={copyEnabled ? "Click to copy" : undefined}
-      >
-        {content}
-      </span>
-      {hasComma && ','}
-    </>
+    <span
+      className={copyEnabled ? `json-primitive-copyable${showToast ? ' json-show-toast' : ''}` : ''}
+      onClick={copyEnabled ? handleClick : undefined}
+      title={copyEnabled ? "Click to copy" : undefined}
+    >
+      {content}
+      {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+    </span>
   );
 });
 
@@ -292,10 +293,10 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
 
   if (entries.length === 0) {
     return (
-      <>
-        <span>&#123;&#125;</span>
-        {hasComma && ','}
-      </>
+      <span className="ansi-fg-14">
+        &#123;&#125;
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
     );
   }
 
@@ -326,7 +327,7 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
         return (
           <span key={key}>
             <span className="ansi-faint ansi-italic">{key}</span>
-            {': '}
+            <span className="ansi-faint ansi-fg-5">: </span>
             <JsonValue
               value={val}
               depth={depth + 1}
@@ -364,10 +365,10 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
 }) => {
   if (arr.length === 0) {
     return (
-      <>
-        <span>&#91;&#93;</span>
-        {hasComma && ','}
-      </>
+      <span className="ansi-fg-14">
+        &#91;&#93;
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
     );
   }
 
