@@ -20,12 +20,17 @@
     - log scale for > 1; maybe have count of all records be the limit? or could have it dynamic for
       the view, which adjusts automatically (can be both positive and negative)
 - bugs:
-  - abstract out line snapping logic; apply it for all of: font size, word wrap, order changes
+  - collapsed JSON resets then goes back again when toggling sort direction
+  - abstract out line snapping logic; apply it for all of: font size, word wrap, order changes; also
+    a variant for when json line is selected and expands
   - weird character by []Text link; still there, just not visible anymore
   - vitrius logs the colon for line number might need escaping in osc8 link; its not working
 - features:
-  - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
-  - show colored level for JSON level values
+  - special JSON styling:
+    - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
+  - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
+    copy if only contains punctuation characters
+  - detect timestamps within ANSI styled elements; do the tooltip conversion thing for ANSI too
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
     updating dashboard, it should try and preserve the current view so you don't lose your place
     each refresh
