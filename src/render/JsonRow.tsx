@@ -10,7 +10,7 @@ interface JsonRowProps {
   expandedPaths?: Set<string>;
   onRowClick?: (row: JsonLogRow) => void;
   onRowHover?: (row: JsonLogRow | null) => void;
-  onToggleExpand?: (path: string) => void;
+  onToggleExpand?: (path: string | string[]) => void;
   style?: React.CSSProperties;
 }
 
@@ -85,6 +85,7 @@ export const JsonRow = memo<JsonRowProps>(({
           expandedPaths={isSelected ? expandedPaths : new Set()}
           onToggleExpand={handleToggleExpand}
           indentSize={2}
+          copyEnabled={isSelected}
         />
       </span>
     </div>

@@ -6,6 +6,38 @@ import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
  */
 
 /**
+ * Recursively gather all nested paths in a JSON structure
+ */
+function gatherNestedPaths(
+  value: any,
+  currentPath: string[],
+  rowIndex: number,
+  depth: number,
+  paths: string[]
+): void {
+  if (value === null || typeof value !== 'object') {
+    return;
+  }
+
+  const pathString = `${rowIndex}:${currentPath.join('.')}`;
+
+  // Only add paths for depth >= 2 (where collapse/expand is applicable)
+  if (depth >= 2) {
+    paths.push(pathString);
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, i) => {
+      gatherNestedPaths(item, [...currentPath, String(i)], rowIndex, depth + 1, paths);
+    });
+  } else {
+    Object.keys(value).forEach(key => {
+      gatherNestedPaths(value[key], [...currentPath, key], rowIndex, depth + 1, paths);
+    });
+  }
+}
+
+/**
  * Custom hook for managing collapse/expand state and flash animation
  */
 function useJsonCollapse(
@@ -13,7 +45,8 @@ function useJsonCollapse(
   path: string[],
   rowIndex: number,
   expandedPaths: Set<string>,
-  onToggleExpand: (path: string) => void
+  onToggleExpand: (path: string | string[]) => void,
+  value?: any
 ) {
   const pathString = `${rowIndex}:${path.join('.')}`;
   const isInSet = expandedPaths.has(pathString);
@@ -41,8 +74,18 @@ function useJsonCollapse(
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleExpand(pathString);
-  }, [onToggleExpand, pathString]);
+
+    // Shift+click for recursive expand/collapse
+    if (e.shiftKey && value) {
+      const allPaths: string[] = [pathString];
+      gatherNestedPaths(value, path, rowIndex, depth, allPaths);
+
+      // Pass all paths at once for batch toggle
+      onToggleExpand(allPaths);
+    } else {
+      onToggleExpand(pathString);
+    }
+  }, [onToggleExpand, pathString, value, path, rowIndex, depth]);
 
   return { pathString, shouldCollapse, isExpanded, shouldFlash, handleClick };
 }
@@ -53,8 +96,9 @@ interface BaseJsonProps {
   path: string[];
   rowIndex: number;
   expandedPaths: Set<string>;
-  onToggleExpand: (path: string) => void;
+  onToggleExpand: (path: string | string[]) => void;
   indentSize: number;
+  copyEnabled?: boolean;
 }
 
 interface JsonValueProps {
@@ -63,9 +107,11 @@ interface JsonValueProps {
   path: string[];
   rowIndex: number;
   expandedPaths: Set<string>;
-  onToggleExpand: (path: string) => void;
+  onToggleExpand: (path: string | string[]) => void;
   indentSize: number;
   hasComma?: boolean;
+  copyEnabled?: boolean;
+  levelHint?: boolean;
 }
 
 /**
@@ -101,6 +147,7 @@ const JsonContainer = memo<JsonContainerProps>(({
         <span
           className="json-ellipsis"
           data-path={pathString}
+          title="Click to expand (Shift+Click for recursive)"
           onClick={handleClick}
         >
           {ellipsis}
@@ -116,7 +163,7 @@ const JsonContainer = memo<JsonContainerProps>(({
       <span
         className='json-collapse'
         data-path={pathString}
-        title="Click to collapse"
+        title="Click to collapse (Shift+Click for recursive)"
         onClick={handleClick}
       >
         {openBracket}
@@ -134,7 +181,37 @@ JsonContainer.displayName = 'JsonContainer';
 /**
  * Primitive value component (string, number, boolean, null)
  */
-export const JsonPrimitive = memo<{ value: any; hasComma?: boolean }>(({ value, hasComma }) => {
+export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?: boolean; levelHint?: boolean }>(({ value, hasComma, copyEnabled = false, levelHint = false }) => {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    if (!copyEnabled) {
+      return;
+    }
+
+    e.stopPropagation();
+
+    // Format value for copying
+    let copyText: string;
+    if (value === null) {
+      copyText = 'null';
+    } else if (typeof value === 'string') {
+      copyText = value; // No quotes for strings
+    } else if (typeof value === 'boolean' || typeof value === 'number') {
+      copyText = String(value);
+    } else {
+      copyText = JSON.stringify(value);
+    }
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(copyText).then(() => {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 1500);
+    }).catch(err => {
+      console.error('Failed to copy:', err);
+    });
+  }, [value, copyEnabled]);
+
   const content = (() => {
     if (value === null) {
       return <span className="ansi-fg-8">null</span>;
@@ -151,7 +228,30 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean }>(({ value, 
     }
 
     if (type === 'string') {
-      return <span className="ansi-fg-2">{JSON.stringify(value)}</span>;
+      let className: string;
+
+      if (levelHint) {
+        // Determine color based on level string content
+        const lowerValue = value.toLowerCase();
+
+        if (/inf/.test(lowerValue)) {
+          className = "ansi-fg-2 ansi-bold"; // info: green
+        } else if (/err/.test(lowerValue)) {
+          className = "ansi-fg-1 ansi-bold"; // error: red
+        } else if (/ftl|crit|crt|fat/.test(lowerValue)) {
+          className = "ansi-fg-5 ansi-bold"; // fatal/critical: magenta
+        } else if (/dbg|debug/.test(lowerValue)) {
+          className = "ansi-fg-6 ansi-bold"; // debug: cyan
+        } else if (/wrn|warn/.test(lowerValue)) {
+          className = "ansi-fg-3 ansi-bold"; // warning: yellow
+        } else {
+          className = "ansi-faint ansi-bold"; // default: dim
+        }
+      } else {
+        className = "";
+      }
+
+      return <span className={className}>{JSON.stringify(value)}</span>;
     }
 
     // Fallback for undefined, functions, etc.
@@ -160,7 +260,13 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean }>(({ value, 
 
   return (
     <>
-      {content}
+      <span
+        className={copyEnabled ? `json-primitive-copyable${showToast ? ' json-show-toast' : ''}` : ''}
+        onClick={copyEnabled ? handleClick : undefined}
+        title={copyEnabled ? "Click to copy" : undefined}
+      >
+        {content}
+      </span>
       {hasComma && ','}
     </>
   );
@@ -180,6 +286,7 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
   onToggleExpand,
   indentSize,
   hasComma,
+  copyEnabled,
 }) => {
   const entries = Object.entries(obj);
 
@@ -197,7 +304,8 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
     path,
     rowIndex,
     expandedPaths,
-    onToggleExpand
+    onToggleExpand,
+    obj
   );
 
   return (
@@ -211,22 +319,29 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
       ellipsis="&#123;…&#125;"
       hasComma={hasComma}
     >
-      {entries.map(([key, val], i) => (
-        <span key={key}>
-          <span className="ansi-dim ansi-italic">{key}</span>
-          {': '}
-          <JsonValue
-            value={val}
-            depth={depth + 1}
-            path={[...path, key]}
-            rowIndex={rowIndex}
-            expandedPaths={expandedPaths}
-            onToggleExpand={onToggleExpand}
-            indentSize={indentSize}
-            hasComma={i < entries.length - 1}
-          />
-        </span>
-      ))}
+      {entries.map(([key, val], i) => {
+        // Check if key contains "lvl" or "level" case-insensitively
+        const isLevelKey = /lvl|level/i.test(key);
+
+        return (
+          <span key={key}>
+            <span className="ansi-faint ansi-italic">{key}</span>
+            {': '}
+            <JsonValue
+              value={val}
+              depth={depth + 1}
+              path={[...path, key]}
+              rowIndex={rowIndex}
+              expandedPaths={expandedPaths}
+              onToggleExpand={onToggleExpand}
+              indentSize={indentSize}
+              hasComma={i < entries.length - 1}
+              copyEnabled={copyEnabled}
+              levelHint={isLevelKey}
+            />
+          </span>
+        );
+      })}
     </JsonContainer>
   );
 });
@@ -245,6 +360,7 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
   onToggleExpand,
   indentSize,
   hasComma,
+  copyEnabled,
 }) => {
   if (arr.length === 0) {
     return (
@@ -260,7 +376,8 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
     path,
     rowIndex,
     expandedPaths,
-    onToggleExpand
+    onToggleExpand,
+    arr
   );
 
   return (
@@ -285,6 +402,7 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
             onToggleExpand={onToggleExpand}
             indentSize={indentSize}
             hasComma={i < arr.length - 1}
+            copyEnabled={copyEnabled}
           />
         </span>
       ))}
@@ -306,10 +424,12 @@ export const JsonValue = memo<JsonValueProps>(({
   onToggleExpand,
   indentSize,
   hasComma,
+  copyEnabled,
+  levelHint,
 }) => {
   // Check type and route to appropriate component
   if (value === null || typeof value !== 'object') {
-    return <JsonPrimitive value={value} hasComma={hasComma} />;
+    return <JsonPrimitive value={value} hasComma={hasComma} copyEnabled={copyEnabled} levelHint={levelHint} />;
   }
 
   if (Array.isArray(value)) {
@@ -323,6 +443,7 @@ export const JsonValue = memo<JsonValueProps>(({
         onToggleExpand={onToggleExpand}
         indentSize={indentSize}
         hasComma={hasComma}
+        copyEnabled={copyEnabled}
       />
     );
   }
@@ -337,6 +458,7 @@ export const JsonValue = memo<JsonValueProps>(({
       onToggleExpand={onToggleExpand}
       indentSize={indentSize}
       hasComma={hasComma}
+      copyEnabled={copyEnabled}
     />
   );
 });

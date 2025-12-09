@@ -105,7 +105,7 @@ function formatObject(
       : '{';
 
     const parts = entries.map(([key, val], i) => {
-      const keyHtml = `<span class="ansi-dim ansi-italic">${escapeHtml(key)}</span>`;
+      const keyHtml = `<span class="ansi-faint ansi-italic">${escapeHtml(key)}</span>`;
       const valHtml = formatValue(val, [...path, key], depth + 1, false, indentSize, expandedPaths, rowIndex);
       const comma = i < entries.length - 1 ? ',' : '';
       return `${nextIndent}${keyHtml}: ${valHtml}${comma}`;
