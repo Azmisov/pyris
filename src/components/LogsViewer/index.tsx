@@ -115,8 +115,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [showTimeline, setShowTimeline] = useLocalStorage('showTimeline', true);
   const [viewMode, setViewMode] = useLocalStorage<'ansi' | 'json'>('viewMode', 'ansi');
 
-  // Ref to track previous sort order to detect changes from other panels
-  const prevSortOrderRef = useRef<'asc' | 'desc'>(sortOrder);
   // Ref to store the last visible index for scroll preservation
   const lastVisibleIndexRef = useRef<number | null>(null);
   // Track if mouse is inside the panel (to ignore external events while inside)
@@ -324,17 +322,16 @@ export const LogsViewer = memo<LogsViewerProps>(({
             level: log.level,
           }));
 
-      // Sort by timestamp, then by seriesIndex for stable ordering
+      // Always sort by timestamp ascending, then by seriesIndex for stable ordering
+      // VirtualList will handle reversing the display for desc mode
       rows.sort((a, b) => {
-        const timeDiff = sortOrder === 'asc'
-          ? a.timestamp - b.timestamp
-          : b.timestamp - a.timestamp;
+        const timeDiff = a.timestamp - b.timestamp;
 
         // If timestamps are equal, use seriesIndex to maintain original order
         if (timeDiff === 0) {
           const indexA = a.seriesIndex ?? 0;
           const indexB = b.seriesIndex ?? 0;
-          return sortOrder === 'asc' ? indexA - indexB : indexB - indexA;
+          return indexA - indexB;
         }
 
         return timeDiff;
@@ -347,7 +344,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
       console.warn('Logs processing error:', err);
       return [];
     }
-  }, [parsedData.ansiLogs, parsedData.jsonLogs, sortOrder, viewMode]);
+  }, [parsedData.ansiLogs, parsedData.jsonLogs, viewMode]);
 
   // Memoize ANSI-only rows for search hook to prevent infinite re-renders
   const ansiOnlyRows = useMemo(() => {
@@ -598,8 +595,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const handleLogSelect = useCallback((timestamp: number) => {
     if (filteredRows.length === 0) return;
 
-    // Binary search to find nearest log by timestamp
-    // Need to account for sort order (asc vs desc)
+    // Binary search for nearest timestamp (rows are always in ascending order)
     let left = 0;
     let right = filteredRows.length - 1;
     let nearestIndex = 0;
@@ -615,28 +611,41 @@ export const LogsViewer = memo<LogsViewerProps>(({
         nearestIndex = mid;
       }
 
-      // Adjust comparison based on sort order
-      if (sortOrder === 'asc') {
-        if (midTimestamp < timestamp) {
-          left = mid + 1;
-        } else {
-          right = mid - 1;
-        }
+      if (midTimestamp < timestamp) {
+        left = mid + 1;
       } else {
-        // For descending order, reverse the comparison
-        if (midTimestamp > timestamp) {
-          left = mid + 1;
-        } else {
-          right = mid - 1;
-        }
+        right = mid - 1;
       }
     }
+
+    // Find the leftmost occurrence of this timestamp (for multiple logs at same time)
+    const nearestTimestamp = filteredRows[nearestIndex].timestamp;
+    left = 0;
+    right = filteredRows.length - 1;
+    let result = nearestIndex;
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      const midTimestamp = filteredRows[mid].timestamp;
+
+      if (midTimestamp < nearestTimestamp) {
+        left = mid + 1;
+      } else if (midTimestamp > nearestTimestamp) {
+        right = mid - 1;
+      } else {
+        // Found matching timestamp, continue searching left
+        result = mid;
+        right = mid - 1;
+      }
+    }
+
+    nearestIndex = result;
 
     // Select and scroll to the nearest log
     setSelectedRowIndex(nearestIndex);
     setSelectedTimestamp(filteredRows[nearestIndex].timestamp);
     setScrollToIndex({ index: nearestIndex, timestamp: Date.now() });
-  }, [filteredRows, sortOrder]);
+  }, [filteredRows]);
 
   // Handle search input
   const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -738,35 +747,16 @@ export const LogsViewer = memo<LogsViewerProps>(({
     };
   }, []);
 
-  // Preserve scroll position and selection when sort order changes (from any source)
+  // Update selected row index when rows change (e.g., filtering)
+  // Since data is always in ascending order, we just need to find by timestamp
   useEffect(() => {
-    // Check if sort order actually changed
-    if (prevSortOrderRef.current !== sortOrder) {
-      // Use the last visible index captured before sort changes
-      if (lastVisibleIndexRef.current !== null && filteredRows.length > 0) {
-        const oldIndex = lastVisibleIndexRef.current;
-
-        // When sort order is toggled, the array is reversed
-        // So the new index is the inverse position
-        const newIndex = filteredRows.length - 1 - oldIndex;
-
-        // Scroll to the index instantly (no smooth scroll to avoid jank)
-        setScrollToIndex({ index: newIndex, timestamp: Date.now(), behavior: 'auto', align: 'start' });
+    if (selectedTimestamp !== null && filteredRows.length > 0) {
+      const newSelectedIndex = filteredRows.findIndex(row => row.timestamp === selectedTimestamp);
+      if (newSelectedIndex !== -1 && newSelectedIndex !== selectedRowIndex) {
+        setSelectedRowIndex(newSelectedIndex);
       }
-
-      // Update selected row index if a row is selected
-      // Find the selected row by its timestamp and update its index
-      if (selectedTimestamp !== null && filteredRows.length > 0) {
-        const newSelectedIndex = filteredRows.findIndex(row => row.timestamp === selectedTimestamp);
-        if (newSelectedIndex !== -1) {
-          setSelectedRowIndex(newSelectedIndex);
-        }
-      }
-
-      // Update the ref for next comparison
-      prevSortOrderRef.current = sortOrder;
     }
-  }, [sortOrder, filteredRows, selectedTimestamp]);
+  }, [filteredRows, selectedTimestamp, selectedRowIndex]);
 
   // Render error state
   if (error) {
@@ -847,7 +837,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
           selectedTimestamp={filteredRows.length === 0 ? null : selectedTimestamp}
           visibleRange={filteredRows.length === 0 ? { firstIndex: null, lastIndex: null, first: null, last: null } : visibleRange}
           colorScheme={currentColorScheme}
-          sortOrder={sortOrder}
           onLogSelect={handleLogSelect}
           onHoverChange={handleTimelineHover}
           onTimeRangeChange={onTimeRangeChange}

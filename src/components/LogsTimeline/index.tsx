@@ -19,7 +19,6 @@ interface LogsTimelineProps {
   selectedTimestamp?: number | null;
   visibleRange?: { first: number | null; last: number | null };
   colorScheme: ColorScheme;
-  sortOrder?: 'asc' | 'desc';
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
   onLogSelect?: (timestamp: number) => void;
   /** Called when timeline hover changes (for cursor sync) */
@@ -40,7 +39,6 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   selectedTimestamp = null,
   visibleRange = { first: null, last: null },
   colorScheme,
-  sortOrder = 'asc',
   onTimeRangeChange,
   onLogSelect,
   onHoverChange,
@@ -204,9 +202,9 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   // Update visible range indicators
   useEffect(() => {
     if (chartRef.current) {
-      chartRef.current.setVisibleRange(visibleRange.first ?? null, visibleRange.last ?? null, sortOrder);
+      chartRef.current.setVisibleRange(visibleRange.first ?? null, visibleRange.last ?? null);
     }
-  }, [visibleRange, sortOrder]);
+  }, [visibleRange]);
 
   // Recenter button handler
   const handleRecenter = useCallback(() => {

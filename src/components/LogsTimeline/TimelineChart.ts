@@ -539,18 +539,12 @@ export class TimelineChart {
 
   /**
    * Set the visible range to display bracket indicators
-   * When sortOrder is 'desc', indicators are swapped because first visible row has later timestamp
+   * firstTimestamp and lastTimestamp are always in ascending order (first < last)
    */
-  setVisibleRange(firstTimestamp: number | null, lastTimestamp: number | null, sortOrder: 'asc' | 'desc' = 'asc'): void {
-    // In descending order, swap the indicators:
-    // - First visible row has later timestamp → needs left bracket (range end)
-    // - Last visible row has earlier timestamp → needs right bracket (range start)
-    const isDescending = sortOrder === 'desc';
-
+  setVisibleRange(firstTimestamp: number | null, lastTimestamp: number | null): void {
     if (firstTimestamp !== null) {
       if (!this.rangeStartIndicator) {
-        const direction = isDescending ? 'left' : 'right';
-        this.rangeStartIndicator = IndicatorFactory.createVisible(firstTimestamp, direction, this.colorScheme);
+        this.rangeStartIndicator = IndicatorFactory.createVisible(firstTimestamp, 'right', this.colorScheme);
       } else {
         this.rangeStartIndicator.setTimestamp(firstTimestamp);
       }
@@ -560,8 +554,7 @@ export class TimelineChart {
 
     if (lastTimestamp !== null) {
       if (!this.rangeEndIndicator) {
-        const direction = isDescending ? 'right' : 'left';
-        this.rangeEndIndicator = IndicatorFactory.createVisible(lastTimestamp, direction, this.colorScheme);
+        this.rangeEndIndicator = IndicatorFactory.createVisible(lastTimestamp, 'left', this.colorScheme);
       } else {
         this.rangeEndIndicator.setTimestamp(lastTimestamp);
       }
@@ -571,9 +564,7 @@ export class TimelineChart {
 
     // Track visible range for beyondVisible check
     if (firstTimestamp !== null && lastTimestamp !== null) {
-      this.visibleRange = isDescending
-        ? [lastTimestamp, firstTimestamp]
-        : [firstTimestamp, lastTimestamp];
+      this.visibleRange = [firstTimestamp, lastTimestamp];
     } else {
       this.visibleRange = null;
     }
