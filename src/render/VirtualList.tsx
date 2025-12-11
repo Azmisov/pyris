@@ -44,20 +44,50 @@ export const VirtualList = memo<VirtualListProps>(({
   // For 14px font: ~18px height
   const itemHeight = options.rowHeight === 'fixed' ? options.fixedRowHeight : 18;
   const maxRows = Math.min(rows.length, options.maxRenderableRows);
-  const displayRows = rows.slice(0, maxRows);
 
-  const renderItem = useCallback((index: number, row: LogRow) => {
-    const handleClick = onRowClick ? () => onRowClick(row, index) : undefined;
-    const handleHover = onRowHover ? (hoveredRow: LogRow | null) => onRowHover(hoveredRow, hoveredRow ? index : null) : undefined;
+  // Rows are already in ascending order from LogsViewer
+  // Just reverse for desc display
+  const displayRows = useMemo(() => {
+    let displayRows = rows;
+    let desc = sortOrder == 'desc';
+    if (rows.length > maxRows || desc) {
+      displayRows = rows.slice(0, maxRows);
+      if (desc) {
+        displayRows.reverse();
+      }
+    }
+    return displayRows;
+  }, [rows, maxRows, sortOrder]);
+
+  // Map display index to logical index (ascending order index)
+  const displayToLogical = useCallback((displayIndex: number): number => {
+    if (sortOrder === 'desc') {
+      return displayRows.length - 1 - displayIndex;
+    }
+    return displayIndex;
+  }, [sortOrder, displayRows.length]);
+
+  // Map logical index to display index
+  const logicalToDisplay = useCallback((logicalIndex: number): number => {
+    if (sortOrder === 'desc') {
+      return displayRows.length - 1 - logicalIndex;
+    }
+    return logicalIndex;
+  }, [sortOrder, displayRows.length]);
+
+  const renderItem = useCallback((displayIndex: number, row: LogRow) => {
+    const logicalIndex = displayToLogical(displayIndex);
+    const handleClick = onRowClick ? () => onRowClick(row, logicalIndex) : undefined;
+    const handleHover = onRowHover ? (hoveredRow: LogRow | null) => onRowHover(hoveredRow, hoveredRow ? logicalIndex : null) : undefined;
 
     // Render JSON row
     if ('data' in row) {
       return (
         <JsonRow
           row={row}
-          index={index}
+          index={logicalIndex}
           options={options}
-          isSelected={selectedIndex === index}
+          isSelected={selectedIndex === logicalIndex}
           expandedPaths={expandedPaths}
           onRowClick={handleClick}
           onRowHover={handleHover}
@@ -72,7 +102,7 @@ export const VirtualList = memo<VirtualListProps>(({
         <Row
           row={row as AnsiLogRow}
           options={options}
-          isSelected={selectedIndex === index}
+          isSelected={selectedIndex === logicalIndex}
           onRowClick={handleClick}
           onRowHover={handleHover}
         />
@@ -81,16 +111,18 @@ export const VirtualList = memo<VirtualListProps>(({
 
     // Fallback for invalid row type
     return <div>Invalid row type</div>;
-  }, [options, selectedIndex, onRowClick, onRowHover, expandedPaths, onToggleExpand]);
+  }, [options, selectedIndex, onRowClick, onRowHover, expandedPaths, onToggleExpand, displayToLogical]);
 
-  // Handle visible range changes
+  // Handle visible range changes - convert display indices to logical indices
   const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
     if (!onVisibleRangeChange) return;
 
     const firstRow = displayRows[range.startIndex] || null;
     const lastRow = displayRows[range.endIndex] || null;
-    onVisibleRangeChange(firstRow, lastRow, range.startIndex, range.endIndex);
-  }, [displayRows, onVisibleRangeChange]);
+    const logicalStartIndex = displayToLogical(range.startIndex);
+    const logicalEndIndex = displayToLogical(range.endIndex);
+    onVisibleRangeChange(firstRow, lastRow, logicalStartIndex, logicalEndIndex);
+  }, [displayRows, onVisibleRangeChange, displayToLogical]);
 
   // Apply font sizing CSS variables when row height or font family changes
   useEffect(() => {
@@ -99,21 +131,23 @@ export const VirtualList = memo<VirtualListProps>(({
     }
   }, [itemHeight, options.fontFamily]);
 
-  // Handle scrollToIndex
+  // Handle scrollToIndex - convert logical index to display index
   useEffect(() => {
     if (scrollToIndex && virtuosoRef.current) {
+      const displayIndex = logicalToDisplay(scrollToIndex.index);
       virtuosoRef.current.scrollToIndex({
-        index: scrollToIndex.index,
+        index: displayIndex,
         align: scrollToIndex.align || 'center',
         behavior: scrollToIndex.behavior || 'smooth',
       });
     }
-  }, [scrollToIndex]);
+  }, [scrollToIndex, logicalToDisplay]);
 
-  // Configure initial scroll position and follow behavior based on sort order
+  // Configure initial scroll position based on sort order
+  // Both modes now start at the "newest" logs position in their respective arrays
   const initialIndex = sortOrder === 'asc'
-    ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom for ascending (oldest first)
-    : 0;  // Top for descending (newest first)
+    ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom (newest at end)
+    : 0;  // Top (newest at start after reverse)
 
   // Compute className based on wrap mode
   const virtualListClassName = useMemo(() => {
