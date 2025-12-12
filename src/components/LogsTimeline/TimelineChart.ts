@@ -46,6 +46,7 @@ export class TimelineChart {
   private observer: ResizeObserver;
   public axis: TimeAxis;
   private logCountIndex: LogCountIndex | null = null;
+  private filteredLogCountIndex: LogCountIndex | null = null;
   private fullTimeRange: [number, number] | null = null;
   // Logical dimensions (CSS pixels, not scaled)
   private logicalWidth: number = 0;
@@ -374,7 +375,8 @@ export class TimelineChart {
     }
 
     // Find histogram bin and update hover state BEFORE render
-    this.hoveredBin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
+    // When filtered, use filtered index so hover highlights the filtered layer
+    this.hoveredBin = (this.filteredLogCountIndex ?? this.logCountIndex)?.findBinForTimestamp(timestamp) ?? null;
     this.setHoveredTimestamp(timestamp);
 
     // Compute beyond flags
@@ -439,12 +441,20 @@ export class TimelineChart {
   }
 
   /**
-   * Set the raw timestamp data and calculate the time range
-   * If dashboardRange is provided, use it for initial zoom instead of full log range
-   * @param timestamps - list of timestamps for each log record
-   * @param dashboardRange - full time range of the dashboard
+   * Set the initial zoom range (e.g., to dashboard time range on first load)
    */
-  setData(timestamps: number[], dashboardRange?: [number, number]): void {
+  setInitialZoom(zoomRange: [number, number]): void {
+    if (this.fullTimeRange) {
+      this.axis.updateRange(this.fullTimeRange, zoomRange);
+      this.render();
+    }
+  }
+
+  /**
+   * Set the raw timestamp data and calculate the time range
+   * @param timestamps - list of timestamps for each log record
+   */
+  setData(timestamps: number[]): void {
     const previousTimeRange = this.fullTimeRange;
     const currentZoom = this.axis.getZoomRange();
 
@@ -472,16 +482,27 @@ export class TimelineChart {
     this.fullTimeRange = fullTimeRange;
     this.logCountIndex = new LogCountIndex(timestamps);
 
-    // Preserve zoom if time range hasn't changed
+    // Preserve zoom if time range hasn't changed, otherwise zoom to full range
     const rangeUnchanged = previousTimeRange &&
       previousTimeRange[0] === fullTimeRange[0] &&
       previousTimeRange[1] === fullTimeRange[1];
 
     const initialRange = rangeUnchanged && currentZoom
       ? currentZoom
-      : (dashboardRange || fullTimeRange);
+      : fullTimeRange;
 
     this.axis.updateRange(fullTimeRange, initialRange);
+    this.render();
+  }
+
+  /**
+   * Set the filtered data for overlay histogram
+   * @param timestamps - filtered timestamps, or undefined to clear
+   */
+  setFilteredData(timestamps: number[] | undefined): void {
+    this.filteredLogCountIndex = timestamps
+      ? new LogCountIndex(timestamps)
+      : null;
     this.render();
   }
 
@@ -701,6 +722,21 @@ export class TimelineChart {
     this.updateRangeInfo();
   }
 
+  /**
+   * Calculate bar height using logarithmic scaling
+   */
+  private calculateBarHeight(count: number, maxCount: number, availableHeight: number): number {
+    if (count === 0) {
+      return 0;
+    } else if (count === 1) {
+      return availableHeight * 0.15; // 15% height for single log
+    } else {
+      // Logarithmic scale for counts > 1
+      const logScale = Math.log(count + 1) / Math.log(maxCount + 1);
+      return availableHeight * (0.15 + 0.85 * logScale);
+    }
+  }
+
   private renderHistogram(zoomRange: [number, number], availableHeight: number): void {
     if (!this.logCountIndex || !this.fullTimeRange) return;
 
@@ -715,7 +751,7 @@ export class TimelineChart {
     const firstBinIndex = Math.floor((zoomRange[0] - this.fullTimeRange[0]) / binWidth);
     const lastBinIndex = Math.ceil((zoomRange[1] - this.fullTimeRange[0]) / binWidth);
 
-    // Reset index and generate only the visible bins
+    // Reset index and generate only the visible bins for unfiltered data
     const firstBinStart = this.fullTimeRange[0] + firstBinIndex * binWidth;
     this.logCountIndex.reset(firstBinStart);
     let maxCount = 0;
@@ -728,35 +764,59 @@ export class TimelineChart {
       }
     }
 
-    const bins = this.logCountIndex.getBins();
+    const allBins = this.logCountIndex.getBins();
     if (maxCount === 0) return;
 
-    // Draw histogram bars using foreground color
-    const histogramColor = this.colorScheme.foreground ?? { r: 255, g: 255, b: 255 };
+    // Generate bins for filtered data (if active)
+    let filteredBins: HistogramBin[] = [];
+    if (this.filteredLogCountIndex) {
+      this.filteredLogCountIndex.reset(firstBinStart);
+      for (let i = firstBinIndex; i < lastBinIndex && i < binCount; i++) {
+        const endTime = this.fullTimeRange[0] + (i + 1) * binWidth;
+        this.filteredLogCountIndex.count(endTime);
+      }
+      filteredBins = this.filteredLogCountIndex.getBins();
+    }
 
-    for (const bin of bins) {
+    const hasFilter = this.filteredLogCountIndex !== null;
+    const histogramColor = this.colorScheme.foreground;
+    const filteredColor = this.colorScheme.colors[12]; // Bright blue
+
+    // PASS 1: Draw unfiltered histogram
+    for (const bin of allBins) {
       const x1 = this.axis.time2pixel(bin.startTime);
       const x2 = this.axis.time2pixel(bin.endTime);
       const barWidth = Math.max(1, x2 - x1);
+      const barHeight = this.calculateBarHeight(bin.count, maxCount, availableHeight);
 
-      // Apply logarithmic scaling with stretched gap between 0 and 1
-      let barHeight: number;
-      if (bin.count === 0) {
-        barHeight = 0;
-      } else if (bin.count === 1) {
-        barHeight = availableHeight * 0.15; // 15% height for single log
+      // When filtered: 0.3 opacity, no hover highlight
+      // When unfiltered: current behavior (0.6 default, 1.0 on hover)
+      let opacity: number;
+      if (hasFilter) {
+        opacity = 0.3;
       } else {
-        // Logarithmic scale for counts > 1
-        const logScale = Math.log(bin.count + 1) / Math.log(maxCount + 1);
-        barHeight = availableHeight * (0.15 + 0.85 * logScale);
+        const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
+        opacity = isHovered ? 1 : 0.6;
       }
-
-      // Use slight opacity for non-hovered bars, full opacity for hovered
-      const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
-      const opacity = isHovered ? 1 : 0.6;
       this.ctx.fillStyle = `rgba(${histogramColor.r}, ${histogramColor.g}, ${histogramColor.b}, ${opacity})`;
-
       this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
+    }
+
+    // PASS 2: Draw filtered histogram (if active)
+    if (hasFilter) {
+      for (const bin of filteredBins) {
+        const x1 = this.axis.time2pixel(bin.startTime);
+        const x2 = this.axis.time2pixel(bin.endTime);
+        const barWidth = Math.max(1, x2 - x1);
+        // Use same maxCount from unfiltered data - ensures filtered bars ≤ unfiltered
+        const barHeight = this.calculateBarHeight(bin.count, maxCount, availableHeight);
+
+        // Hover only highlights filtered layer
+        const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
+        const opacity = isHovered ? 1 : 0.8;
+        this.ctx.fillStyle = `rgba(${filteredColor.r}, ${filteredColor.g}, ${filteredColor.b}, ${opacity})`;
+        this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
+      }
     }
   }
 
