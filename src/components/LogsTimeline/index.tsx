@@ -14,6 +14,8 @@ import styles from './index.module.css';
 
 interface LogsTimelineProps {
   logs: AnsiLogRow[];
+  /** Filtered logs subset (when filter is active) */
+  filteredLogs?: AnsiLogRow[];
   height?: number;
   hoveredTimestamp?: number | null;
   selectedTimestamp?: number | null;
@@ -34,6 +36,7 @@ const DEFAULT_HEIGHT = 100;
 
 export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   logs,
+  filteredLogs,
   height = DEFAULT_HEIGHT,
   hoveredTimestamp = null,
   selectedTimestamp = null,
@@ -75,6 +78,11 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   const timestamps = useMemo(() => {
     return logs.map(log => log.timestamp);
   }, [logs]);
+
+  // Extract filtered timestamps (when filter is active)
+  const filteredTimestamps = useMemo(() => {
+    return filteredLogs?.map(log => log.timestamp);
+  }, [filteredLogs]);
 
   // Initialize chart (only once)
   useEffect(() => {
@@ -153,15 +161,28 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
     }
   }, [tooltipData, onHoverChange]);
 
+  // Set initial zoom to dashboard range on first load
+  const hasSetInitialZoom = useRef(false);
+  useEffect(() => {
+    if (chartRef.current && dashboardTimeRange && !hasSetInitialZoom.current) {
+      chartRef.current.setInitialZoom([dashboardTimeRange.from, dashboardTimeRange.to]);
+      hasSetInitialZoom.current = true;
+    }
+  }, [dashboardTimeRange]);
+
   // Update chart data when logs change
   useEffect(() => {
     if (chartRef.current) {
-      const dashboardRangeMs = dashboardTimeRange
-        ? [dashboardTimeRange.from, dashboardTimeRange.to] as [number, number]
-        : undefined;
-      chartRef.current.setData(timestamps, dashboardRangeMs);
+      chartRef.current.setData(timestamps);
     }
-  }, [timestamps, dashboardTimeRange]);
+  }, [timestamps]);
+
+  // Update filtered data separately (avoids rebuilding main index on filter change)
+  useEffect(() => {
+    if (chartRef.current) {
+      chartRef.current.setFilteredData(filteredTimestamps);
+    }
+  }, [filteredTimestamps]);
 
   // Update dashboard time range indicators
   useEffect(() => {

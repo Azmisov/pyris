@@ -838,6 +838,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
       {showTimeline && (
         <LogsTimeline
           logs={logRows as any}
+          filteredLogs={hasFilter ? filteredRows as any : undefined}
           height={timelineHeight}
           hoveredTimestamp={filteredRows.length === 0 ? null : hoveredTimestamp}
           selectedTimestamp={filteredRows.length === 0 ? null : selectedTimestamp}
