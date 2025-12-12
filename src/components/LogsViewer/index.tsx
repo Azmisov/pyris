@@ -115,15 +115,6 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [showTimeline, setShowTimeline] = useLocalStorage('showTimeline', true);
   const [viewMode, setViewMode] = useLocalStorage<'ansi' | 'json'>('viewMode', 'ansi');
 
-  // Refs for scroll preservation
-  // Always track the current visible firstIndex
-  const currentFirstIndexRef = useRef<number | null>(null);
-  // Track if we're currently restoring scroll (to prevent capturing during restoration)
-  const isRestoringRef = useRef(false);
-  // Track previous sortOrder to detect when it changes
-  const prevSortOrderRef = useRef<'asc' | 'desc'>(sortOrder);
-  // Track pending RAF ID so we can cancel it if a new restoration is scheduled
-  const pendingRafIdRef = useRef<number | null>(null);
   // Track if mouse is inside the panel (to ignore external events while inside)
   const isMouseInsidePanelRef = useRef(false);
   // Track when we're publishing events to the event bus
@@ -479,6 +470,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle row selection
   const handleRowClick = useCallback((row: LogRow, index: number) => {
+    console.log('[LogsViewer] Row clicked:', {
+      index,
+      timestamp: row.timestamp,
+      message: 'message' in row ? row.message?.substring(0, 50) : 'JSON log'
+    });
+
     // Clear expand/collapse state when switching to a different row
     if (selectedRowIndex !== index) {
       setJsonExpandedPaths(new Set());
@@ -586,7 +583,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
     }
   }, [eventBus]);
 
-  // Handle visible range change
+  // Handle visible range change - just update state for timeline display
+  // Scroll preservation is handled internally by VirtualList
   const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => {
     setVisibleRange({
       firstIndex: startIndex,
@@ -594,70 +592,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
       first: firstRow ? firstRow.timestamp : null,
       last: lastRow ? lastRow.timestamp : null,
     });
-    // Only track the first visible index if we're not currently restoring scroll
-    // This prevents capturing intermediate values during restoration
-    if (!isRestoringRef.current) {
-      currentFirstIndexRef.current = startIndex;
-    }
   }, []);
-
-  // Restore scroll when settings that affect layout change
-  // Capture the current first visible index and restore after React re-renders
-  useEffect(() => {
-    // Cancel any pending restoration from a previous effect run
-    // This ensures only the latest restoration executes
-    if (pendingRafIdRef.current !== null) {
-      cancelAnimationFrame(pendingRafIdRef.current);
-      pendingRafIdRef.current = null;
-      isRestoringRef.current = false;
-    }
-
-    const capturedIndex = currentFirstIndexRef.current;
-    if (capturedIndex === null) return;
-
-    // Set flag to prevent capturing during restoration
-    isRestoringRef.current = true;
-
-    // Check if sort order changed by comparing to previous value
-    const sortOrderChanged = prevSortOrderRef.current !== sortOrder;
-
-    // Update the ref for next time
-    prevSortOrderRef.current = sortOrder;
-
-    // Schedule restoration for after React finishes rendering with new settings
-    // Use requestAnimationFrame to wait for layout to complete
-    const rafId = requestAnimationFrame(() => {
-      pendingRafIdRef.current = null;
-      // If sort order changed, the display reversed, so use 'end' to move the tracked
-      // top row to the bottom (maintaining visual context after the reversal)
-      // Otherwise, keep the tracked row at the top with 'start'
-      const align = sortOrderChanged ? 'end' : 'start';
-
-      setScrollToIndex({
-        index: capturedIndex,
-        timestamp: Date.now(),
-        behavior: 'auto',
-        align,
-      });
-
-      // Clear flag after next frame
-      requestAnimationFrame(() => {
-        isRestoringRef.current = false;
-      });
-    });
-
-    // Store RAF ID so it can be cancelled by next effect run
-    pendingRafIdRef.current = rafId;
-
-    return () => {
-      // Cleanup: cancel pending RAF if effect unmounts/re-runs
-      if (pendingRafIdRef.current !== null) {
-        cancelAnimationFrame(pendingRafIdRef.current);
-        pendingRafIdRef.current = null;
-        isRestoringRef.current = false;
-      }
-    };
-  }, [wrapMode, fixedRowHeight, rowHeight, sortOrder, jsonExpandedPaths.size]);
 
   // Handle log selection from timeline (binary search for nearest log)
   const handleLogSelect = useCallback((timestamp: number) => {

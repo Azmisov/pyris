@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import React, { memo, useMemo, useCallback, useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { AnsiLogRow, LogRow, LogsPanelOptions } from '../types';
@@ -39,6 +39,21 @@ export const VirtualList = memo<VirtualListProps>(({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
+
+  // ============================================================================
+  // SCROLL PRESERVATION
+  // ============================================================================
+  // Track current visible range using DISPLAY indices (not logical)
+  // Display indices are what Virtuoso actually uses for scrolling
+  const currentDisplayFirstRef = useRef<number | null>(null);
+  const currentDisplayLastRef = useRef<number | null>(null);
+  // Track previous props to detect changes
+  const prevSortOrderRef = useRef<'asc' | 'desc'>(sortOrder);
+  const prevWrapModeRef = useRef(options.wrapMode);
+  const prevRowHeightRef = useRef(options.rowHeight);
+  const prevFixedRowHeightRef = useRef(options.fixedRowHeight);
+  // Flag to disable followOutput during scroll restoration
+  const isRestoringRef = useRef(false);
 
   // With line-height: normal, rows are naturally ~1.2-1.3x font-size
   // For 14px font: ~18px height
@@ -113,16 +128,126 @@ export const VirtualList = memo<VirtualListProps>(({
     return <div>Invalid row type</div>;
   }, [options, selectedIndex, onRowClick, onRowHover, expandedPaths, onToggleExpand, displayToLogical]);
 
-  // Handle visible range changes - convert display indices to logical indices
+  // Handle visible range changes - track display indices and notify parent with logical indices
   const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
-    if (!onVisibleRangeChange) return;
+    // Always track display indices (this is synchronous, no async issues)
+    // Only skip during active restoration to avoid capturing intermediate values
+    if (!isRestoringRef.current) {
+      currentDisplayFirstRef.current = range.startIndex;
+      currentDisplayLastRef.current = range.endIndex;
+    }
 
-    const firstRow = displayRows[range.startIndex] || null;
-    const lastRow = displayRows[range.endIndex] || null;
-    const logicalStartIndex = displayToLogical(range.startIndex);
-    const logicalEndIndex = displayToLogical(range.endIndex);
-    onVisibleRangeChange(firstRow, lastRow, logicalStartIndex, logicalEndIndex);
+    // Notify parent with logical indices
+    if (onVisibleRangeChange) {
+      const firstRow = displayRows[range.startIndex] || null;
+      const lastRow = displayRows[range.endIndex] || null;
+      const logicalStartIndex = displayToLogical(range.startIndex);
+      const logicalEndIndex = displayToLogical(range.endIndex);
+      onVisibleRangeChange(firstRow, lastRow, logicalStartIndex, logicalEndIndex);
+    }
   }, [displayRows, onVisibleRangeChange, displayToLogical]);
+
+  // ============================================================================
+  // SCROLL RESTORATION ON PROP CHANGES
+  // ============================================================================
+  // Use useLayoutEffect to detect prop changes BEFORE paint
+  // This allows us to restore scroll position synchronously
+  useLayoutEffect(() => {
+    const sortOrderChanged = prevSortOrderRef.current !== sortOrder;
+    const wrapModeChanged = prevWrapModeRef.current !== options.wrapMode;
+    const rowHeightChanged = prevRowHeightRef.current !== options.rowHeight;
+    const fixedRowHeightChanged = prevFixedRowHeightRef.current !== options.fixedRowHeight;
+
+    const needsRestoration = sortOrderChanged || wrapModeChanged || rowHeightChanged || fixedRowHeightChanged;
+
+    if (!needsRestoration || !virtuosoRef.current) {
+      // Update refs even when no restoration needed
+      prevSortOrderRef.current = sortOrder;
+      prevWrapModeRef.current = options.wrapMode;
+      prevRowHeightRef.current = options.rowHeight;
+      prevFixedRowHeightRef.current = options.fixedRowHeight;
+      return;
+    }
+
+    // Capture the display indices BEFORE updating refs
+    // These are from the PREVIOUS render (before prop change)
+    const prevDisplayFirst = currentDisplayFirstRef.current;
+    const prevDisplayLast = currentDisplayLastRef.current;
+    const prevSortOrder = prevSortOrderRef.current;
+    const N = displayRows.length;
+
+    // Update refs for next time
+    prevSortOrderRef.current = sortOrder;
+    prevWrapModeRef.current = options.wrapMode;
+    prevRowHeightRef.current = options.rowHeight;
+    prevFixedRowHeightRef.current = options.fixedRowHeight;
+
+    if (prevDisplayFirst === null || prevDisplayLast === null || N === 0) {
+      return;
+    }
+
+    // Calculate target display index based on what changed
+    let targetDisplayIndex: number;
+
+    if (sortOrderChanged) {
+      // When sort order flips, the display array reverses
+      // The row that was at prevDisplayLast is now at (N - 1 - prevDisplayLast)
+      // We want that row to be at the TOP of the viewport
+      //
+      // In ASC mode: newest at bottom (high display index)
+      // In DESC mode: newest at top (low display index)
+      // When toggling, the "bottom" row should become the "top" row
+      targetDisplayIndex = N - 1 - prevDisplayLast;
+    } else {
+      // For non-sort-order changes (wrapMode, rowHeight), keep same position
+      // The first visible row should stay at the top
+      targetDisplayIndex = prevDisplayFirst;
+    }
+
+    // Clamp to valid range
+    targetDisplayIndex = Math.max(0, Math.min(targetDisplayIndex, N - 1));
+
+    console.log('[VirtualList] Restoring scroll:', {
+      sortOrderChanged,
+      prevSortOrder,
+      newSortOrder: sortOrder,
+      prevDisplayFirst,
+      prevDisplayLast,
+      targetDisplayIndex,
+      N
+    });
+
+    // Set restoring flag to disable followOutput and prevent capturing intermediate values
+    isRestoringRef.current = true;
+
+    // Scroll immediately (synchronously in layout phase)
+    virtuosoRef.current.scrollToIndex({
+      index: targetDisplayIndex,
+      align: 'start',
+      behavior: 'auto',
+    });
+
+    // IMMEDIATELY update refs with the expected new position
+    // This is critical: if the user toggles again before rangeChanged fires,
+    // we need valid refs. The viewport size stays roughly the same.
+    const viewportSize = prevDisplayLast - prevDisplayFirst;
+    currentDisplayFirstRef.current = targetDisplayIndex;
+    currentDisplayLastRef.current = Math.min(targetDisplayIndex + viewportSize, N - 1);
+
+    console.log('[VirtualList] Updated refs after scroll:', {
+      newFirst: currentDisplayFirstRef.current,
+      newLast: currentDisplayLastRef.current
+    });
+
+    // Clear restoring flag after Virtuoso has processed the scroll
+    // Use RAF to ensure we're past the scroll event handlers
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        isRestoringRef.current = false;
+        console.log('[VirtualList] Scroll restoration complete');
+      });
+    });
+  }, [sortOrder, options.wrapMode, options.rowHeight, options.fixedRowHeight, displayRows.length]);
 
   // Apply font sizing CSS variables when row height or font family changes
   useEffect(() => {
@@ -131,7 +256,7 @@ export const VirtualList = memo<VirtualListProps>(({
     }
   }, [itemHeight, options.fontFamily]);
 
-  // Handle scrollToIndex - convert logical index to display index
+  // Handle external scrollToIndex requests - convert logical index to display index
   useEffect(() => {
     if (scrollToIndex && virtuosoRef.current) {
       const displayIndex = logicalToDisplay(scrollToIndex.index);
@@ -158,6 +283,9 @@ export const VirtualList = memo<VirtualListProps>(({
     return classes.join(' ');
   }, [options.wrapMode]);
 
+  // Disable followOutput during restoration to prevent interference
+  const followOutputValue = isRestoringRef.current ? false : (sortOrder === 'asc' ? 'smooth' : false);
+
   return (
     <div ref={containerRef} className="ansi-logs-container" style={{ height, width }}>
       <Virtuoso
@@ -167,7 +295,7 @@ export const VirtualList = memo<VirtualListProps>(({
         itemContent={renderItem}
         style={{ height, width }}
         initialTopMostItemIndex={initialIndex}
-        followOutput={sortOrder === 'asc' ? 'smooth' : false}
+        followOutput={followOutputValue}
         rangeChanged={handleRangeChanged}
         className={virtualListClassName}
         components={{
