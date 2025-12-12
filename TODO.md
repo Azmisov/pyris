@@ -11,17 +11,13 @@
       algorithm. The one with longest common substring is the match.
 
 - timeline view:
-  - separate histogram for filtered content
   - end bound for log counts (in tooltips) and snapping seem to be off; need to investigate
-  - test:
-    - show log count as bars; vertical gap between zero and one is stretched to make it more evident
-      that that time bin has logs present
-    - log scale for > 1; maybe have count of all records be the limit? or could have it dynamic for
-      the view, which adjusts automatically (can be both positive and negative)
 - bugs:
+  - select snapping to nearest log should respect filtering
   - weird character by []Text link; still there, just not visible anymore
   - vitrius logs the colon for line number might need escaping in osc8 link; its not working
 - features:
+  - adjust positioning when filtering is toggled somehow; e.g. center the selected line I guess?
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
     updating dashboard, it should try and preserve the current view so you don't lose your place
     each refresh
@@ -45,6 +41,8 @@
     several OSC8 urls
   - finalize name and logo
 - future version or needs more thought:
+  - save search expression in local storage
+  - have count of all records be the limit for histogram scaling, rather than view dependent?
   - special JSON styling:
     - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
   - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
