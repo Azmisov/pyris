@@ -16,6 +16,8 @@ export interface TooltipData {
   indicators: VerticalIndicator[];
   /** Histogram bin containing this timestamp, if any */
   bin: HistogramBin | null;
+  /** Filtered histogram bin containing this timestamp, if any */
+  filteredBin: HistogramBin | null;
   /** True if timestamp is outside the full log data range */
   beyondLogs: boolean;
   /** True if timestamp is outside the visible logs range */
@@ -374,9 +376,12 @@ export class TimelineChart {
       return;
     }
 
-    // Find histogram bin and update hover state BEFORE render
-    // When filtered, use filtered index so hover highlights the filtered layer
-    this.hoveredBin = (this.filteredLogCountIndex ?? this.logCountIndex)?.findBinForTimestamp(timestamp) ?? null;
+    // Find histogram bins for both unfiltered and filtered data
+    const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
+    const filteredBin = this.filteredLogCountIndex?.findBinForTimestamp(timestamp) ?? null;
+
+    // Update hover state BEFORE render - use filtered bin if available for highlighting
+    this.hoveredBin = filteredBin ?? bin;
     this.setHoveredTimestamp(timestamp);
 
     // Compute beyond flags
@@ -391,7 +396,8 @@ export class TimelineChart {
       x: this.axis.time2pixel(timestamp),
       timestamp,
       indicators: this.findIndicatorsAtTimestamp(timestamp),
-      bin: this.hoveredBin,
+      bin,
+      filteredBin,
       beyondLogs,
       beyondVisible,
       beyondDashboard,

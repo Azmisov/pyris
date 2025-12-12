@@ -144,6 +144,12 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
             ))}
             {data.bin && (
               <div className={`${styles.indicator} ${styles.count}`}>
+                {data.filteredBin ? (
+                  <>
+                    <span className={styles.filtered}>{data.filteredBin.count}</span>
+                    {' of '}
+                  </>
+                ) : null}
                 {data.bin.count} {data.bin.count === 1 ? 'log' : 'logs'}
               </div>
             )}
