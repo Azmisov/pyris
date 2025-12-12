@@ -546,32 +546,44 @@ export class TimelineChart {
 
   /**
    * Set the visible range to display bracket indicators
-   * firstTimestamp and lastTimestamp are always in ascending order (first < last)
+   * Timestamps may be in any order depending on sort direction
+   * Brackets always point inward toward the visible area
    */
   setVisibleRange(firstTimestamp: number | null, lastTimestamp: number | null): void {
-    if (firstTimestamp !== null) {
+    // Determine which timestamp is left (earlier) vs right (later) on timeline
+    // Timeline always shows earlier times on left, later on right
+    const leftTimestamp = firstTimestamp !== null && lastTimestamp !== null
+      ? Math.min(firstTimestamp, lastTimestamp)
+      : firstTimestamp ?? lastTimestamp;
+    const rightTimestamp = firstTimestamp !== null && lastTimestamp !== null
+      ? Math.max(firstTimestamp, lastTimestamp)
+      : lastTimestamp ?? firstTimestamp;
+
+    // Left indicator (bracket points right, toward visible area)
+    if (leftTimestamp !== null) {
       if (!this.rangeStartIndicator) {
-        this.rangeStartIndicator = IndicatorFactory.createVisible(firstTimestamp, 'right', this.colorScheme);
+        this.rangeStartIndicator = IndicatorFactory.createVisible(leftTimestamp, 'right', this.colorScheme);
       } else {
-        this.rangeStartIndicator.setTimestamp(firstTimestamp);
+        this.rangeStartIndicator.setTimestamp(leftTimestamp);
       }
     } else {
       this.rangeStartIndicator = null;
     }
 
-    if (lastTimestamp !== null) {
+    // Right indicator (bracket points left, toward visible area)
+    if (rightTimestamp !== null) {
       if (!this.rangeEndIndicator) {
-        this.rangeEndIndicator = IndicatorFactory.createVisible(lastTimestamp, 'left', this.colorScheme);
+        this.rangeEndIndicator = IndicatorFactory.createVisible(rightTimestamp, 'left', this.colorScheme);
       } else {
-        this.rangeEndIndicator.setTimestamp(lastTimestamp);
+        this.rangeEndIndicator.setTimestamp(rightTimestamp);
       }
     } else {
       this.rangeEndIndicator = null;
     }
 
-    // Track visible range for beyondVisible check
-    if (firstTimestamp !== null && lastTimestamp !== null) {
-      this.visibleRange = [firstTimestamp, lastTimestamp];
+    // Track visible range for beyondVisible check (always store as [min, max])
+    if (leftTimestamp !== null && rightTimestamp !== null) {
+      this.visibleRange = [leftTimestamp, rightTimestamp];
     } else {
       this.visibleRange = null;
     }
