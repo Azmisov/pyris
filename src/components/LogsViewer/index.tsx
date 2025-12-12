@@ -102,7 +102,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [jsonExpandedPaths, setJsonExpandedPaths] = useState<Set<string>>(new Set());
   const [expressionError, setExpressionError] = useState<string | null>(null);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [jsonSearchTerm, setJsonSearchTerm] = useState('');
+  const [debouncedJsonSearchTerm, setDebouncedJsonSearchTerm] = useState('');
 
   // LocalStorage-backed state
   const [wrapMode, setWrapMode] = useLocalStorage('wrapMode', options.wrapMode || 'nowrap');
@@ -357,40 +358,49 @@ export const LogsViewer = memo<LogsViewerProps>(({
     hasFilter: ansiHasFilter
   } = useVirtualListSearch(ansiOnlyRows as any, { caseSensitive, useRegex });
 
-  // Debounce search term for expression evaluation (300ms delay)
+  // Debounce JSON search term for expression evaluation (300ms delay)
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setDebouncedJsonSearchTerm(jsonSearchTerm);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [jsonSearchTerm]);
+
+  // Active search term based on current view mode
+  const activeSearchTerm = viewMode === 'json' ? jsonSearchTerm : searchTerm;
 
   // Parse expression immediately for error display (no debounce)
   const immediateExpression = useMemo(() => {
-    if (viewMode !== 'json' || !searchTerm.trim()) {
+    if (viewMode !== 'json' || !jsonSearchTerm.trim()) {
       return null;
     }
-    const result = parseExpression(searchTerm);
+    const result = parseExpression(jsonSearchTerm);
     if (result.error) {
       console.log('[Expression] Syntax error detected:', result.error);
     }
     return result;
-  }, [viewMode, searchTerm]);
+  }, [viewMode, jsonSearchTerm]);
 
   // Parse expression with debounce for filtering
   const parsedExpression = useMemo(() => {
-    if (viewMode !== 'json' || !debouncedSearchTerm.trim()) {
+    if (viewMode !== 'json' || !debouncedJsonSearchTerm.trim()) {
       return null;
     }
-    return parseExpression(debouncedSearchTerm);
-  }, [viewMode, debouncedSearchTerm]);
+    return parseExpression(debouncedJsonSearchTerm);
+  }, [viewMode, debouncedJsonSearchTerm]);
 
   // Apply expression filtering for JSON logs
+  // Filtering is only active when searchExpanded is true (toggle behavior)
   const { filteredRows, hasFilter, runtimeError } = useMemo(() => {
+    // When search is collapsed, disable filtering but preserve the search term
+    if (!searchExpanded) {
+      return { filteredRows: logRows, hasFilter: false, runtimeError: null };
+    }
+
     if (viewMode === 'json') {
       // Apply expression filtering for JSON mode
-      if (!debouncedSearchTerm.trim()) {
+      if (!debouncedJsonSearchTerm.trim()) {
         return { filteredRows: logRows, hasFilter: false, runtimeError: null };
       }
 
@@ -411,27 +421,22 @@ export const LogsViewer = memo<LogsViewerProps>(({
       // Use ANSI search results
       return { filteredRows: searchFilteredRows, hasFilter: ansiHasFilter, runtimeError: null };
     }
-  }, [viewMode, logRows, debouncedSearchTerm, parsedExpression, searchFilteredRows, ansiHasFilter]);
+  }, [viewMode, logRows, debouncedJsonSearchTerm, parsedExpression, searchFilteredRows, ansiHasFilter, searchExpanded]);
 
   // Update expression error to include runtime errors
   useEffect(() => {
     if (viewMode !== 'json') {
-      console.log('[Expression] Not in JSON mode, clearing error');
       setExpressionError(null);
-    } else if (!searchTerm.trim()) {
-      console.log('[Expression] Empty search term, clearing error');
+    } else if (!jsonSearchTerm.trim()) {
       setExpressionError(null);
     } else if (runtimeError) {
       // Runtime error takes precedence
-      console.log('[Expression] Setting runtime error:', runtimeError);
       setExpressionError(runtimeError);
     } else if (immediateExpression) {
       // Syntax/parse error
-      const error = immediateExpression.error || null;
-      console.log('[Expression] Setting syntax error:', error);
-      setExpressionError(error);
+      setExpressionError(immediateExpression.error || null);
     }
-  }, [viewMode, searchTerm, immediateExpression, runtimeError]);
+  }, [viewMode, jsonSearchTerm, immediateExpression, runtimeError]);
 
   // Update options with local state
   const effectiveOptions = useMemo(() => ({
@@ -650,27 +655,32 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setScrollToIndex({ index: nearestIndex, timestamp: Date.now() });
   }, [filteredRows]);
 
-  // Handle search input
+  // Handle search input (uses appropriate search term based on view mode)
   const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    if (viewMode === 'json') {
+      setJsonSearchTerm(event.target.value);
+    } else {
+      setSearchTerm(event.target.value);
+    }
     setSelectedRowIndex(undefined);
     setSelectedTimestamp(null);
-  }, [setSearchTerm]);
+  }, [viewMode, setSearchTerm]);
 
-  // Clear search
+  // Clear search (clears appropriate search term based on view mode)
   const clearSearch = useCallback(() => {
-    setSearchTerm('');
-    setSelectedRowIndex(undefined);
-    setSelectedTimestamp(null);
-  }, [setSearchTerm]);
-
-  // Toggle search expansion
-  const toggleSearch = useCallback(() => {
-    if (searchExpanded && searchTerm) {
+    if (viewMode === 'json') {
+      setJsonSearchTerm('');
+    } else {
       setSearchTerm('');
     }
+    setSelectedRowIndex(undefined);
+    setSelectedTimestamp(null);
+  }, [viewMode, setSearchTerm]);
+
+  // Toggle search expansion (preserve search term when collapsing)
+  const toggleSearch = useCallback(() => {
     setSearchExpanded(!searchExpanded);
-  }, [searchExpanded, searchTerm, setSearchTerm]);
+  }, [searchExpanded]);
 
   // Toggle word wrap
   const toggleWrapMode = useCallback(() => {
@@ -814,7 +824,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onToggleSortOrder={toggleSortOrder}
         showTimeline={showTimeline}
         onToggleTimeline={toggleTimeline}
-        searchTerm={searchTerm}
+        searchTerm={activeSearchTerm}
         onSearchChange={handleSearchChange}
         caseSensitive={caseSensitive}
         onCaseSensitiveToggle={() => setCaseSensitive(!caseSensitive)}
@@ -859,7 +869,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
       <div className="ansi-logs-content">
         {filteredRows.length === 0 ? (
           <div className="empty-state">
-            <p>No {viewMode === 'json' ? 'JSON' : 'ANSI'} logs</p>
+            <p>No {hasFilter ? 'filtered ' : ''}{viewMode === 'json' ? 'JSON' : 'ANSI'} logs</p>
           </div>
         ) : (
           <AutoSizedVirtualList
