@@ -20,9 +20,6 @@
     - log scale for > 1; maybe have count of all records be the limit? or could have it dynamic for
       the view, which adjusts automatically (can be both positive and negative)
 - bugs:
-  - collapsed JSON resets then goes back again when toggling sort direction
-  - abstract out line snapping logic; apply it for all of: font size, word wrap, order changes; also
-    a variant for when json line is selected and expands
   - weird character by []Text link; still there, just not visible anymore
   - vitrius logs the colon for line number might need escaping in osc8 link; its not working
 - features:
