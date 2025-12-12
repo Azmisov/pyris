@@ -23,11 +23,6 @@
   - weird character by []Text link; still there, just not visible anymore
   - vitrius logs the colon for line number might need escaping in osc8 link; its not working
 - features:
-  - special JSON styling:
-    - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
-  - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
-    copy if only contains punctuation characters
-  - detect timestamps within ANSI styled elements; do the tooltip conversion thing for ANSI too
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
     updating dashboard, it should try and preserve the current view so you don't lose your place
     each refresh
@@ -43,6 +38,7 @@
   - tweak modal colors (double check, might be complete)
   - select line covers up previous line slightly, like underscores from prev line
 - cleanup:
+  - remove debug logging
   - styles are scoped; simplify naming; move inline styles to css modules as necessary
   - use different prefix for global styles
   - are there unused CSS classes
@@ -50,6 +46,11 @@
     several OSC8 urls
   - finalize name and logo
 - future version or needs more thought:
+  - special JSON styling:
+    - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
+  - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
+    copy if only contains punctuation characters
+  - detect timestamps within ANSI styled elements; do the tooltip conversion thing for ANSI too
   - shift/ctrl select to extend line selection
   - reset localStorage settings; or maybe just remove the defaults?
   - autoconvert first datetime format to the user's timezone? will be finicky
