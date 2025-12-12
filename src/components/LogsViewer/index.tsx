@@ -93,7 +93,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Use ref for isExternalHover to ensure synchronous updates (avoids race conditions with state)
   const isExternalHoverRef = useRef(false);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
-  const [visibleRange, setVisibleRange] = useState<{ firstIndex: number | null; lastIndex: number | null; first: number | null; last: number | null }>({ firstIndex: null, lastIndex: null, first: null, last: null });
+  const [visibleRange, setVisibleRange] = useState<{ first: number | null; last: number | null }>({ first: null, last: null });
   const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
@@ -590,10 +590,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle visible range change - just update state for timeline display
   // Scroll preservation is handled internally by VirtualList
-  const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => {
+  const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null) => {
     setVisibleRange({
-      firstIndex: startIndex,
-      lastIndex: endIndex,
       first: firstRow ? firstRow.timestamp : null,
       last: lastRow ? lastRow.timestamp : null,
     });
@@ -852,7 +850,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           height={timelineHeight}
           hoveredTimestamp={filteredRows.length === 0 ? null : hoveredTimestamp}
           selectedTimestamp={filteredRows.length === 0 ? null : selectedTimestamp}
-          visibleRange={filteredRows.length === 0 ? { firstIndex: null, lastIndex: null, first: null, last: null } : visibleRange}
+          visibleRange={filteredRows.length === 0 ? { first: null, last: null } : visibleRange}
           colorScheme={currentColorScheme}
           onLogSelect={handleLogSelect}
           onHoverChange={handleTimelineHover}

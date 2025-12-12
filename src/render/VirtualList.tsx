@@ -13,7 +13,7 @@ interface VirtualListProps {
   width: number;
   onRowClick?: (row: LogRow, index: number) => void;
   onRowHover?: (row: LogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => void;
+  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
@@ -128,24 +128,22 @@ export const VirtualList = memo<VirtualListProps>(({
     return <div>Invalid row type</div>;
   }, [options, selectedIndex, onRowClick, onRowHover, expandedPaths, onToggleExpand, displayToLogical]);
 
-  // Handle visible range changes - track display indices and notify parent with logical indices
+  // Handle visible range changes - track display indices for scroll restoration
   const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
-    // Always track display indices (this is synchronous, no async issues)
+    // Track display indices for internal scroll restoration
     // Only skip during active restoration to avoid capturing intermediate values
     if (!isRestoringRef.current) {
       currentDisplayFirstRef.current = range.startIndex;
       currentDisplayLastRef.current = range.endIndex;
     }
 
-    // Notify parent with logical indices
+    // Notify parent with visible rows (for timeline indicators)
     if (onVisibleRangeChange) {
       const firstRow = displayRows[range.startIndex] || null;
       const lastRow = displayRows[range.endIndex] || null;
-      const logicalStartIndex = displayToLogical(range.startIndex);
-      const logicalEndIndex = displayToLogical(range.endIndex);
-      onVisibleRangeChange(firstRow, lastRow, logicalStartIndex, logicalEndIndex);
+      onVisibleRangeChange(firstRow, lastRow);
     }
-  }, [displayRows, onVisibleRangeChange, displayToLogical]);
+  }, [displayRows, onVisibleRangeChange]);
 
   // ============================================================================
   // SCROLL RESTORATION ON PROP CHANGES
@@ -319,7 +317,7 @@ interface AutoSizedVirtualListProps {
   options: LogsPanelOptions;
   onRowClick?: (row: LogRow, index: number) => void;
   onRowHover?: (row: LogRow | null, index: number | null) => void;
-  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null, startIndex: number, endIndex: number) => void;
+  onVisibleRangeChange?: (firstRow: LogRow | null, lastRow: LogRow | null) => void;
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;
