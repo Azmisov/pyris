@@ -11,7 +11,6 @@
       algorithm. The one with longest common substring is the match.
 
 - timeline view:
-  - change color
   - separate histogram for filtered content
   - end bound for log counts (in tooltips) and snapping seem to be off; need to investigate
   - test:
