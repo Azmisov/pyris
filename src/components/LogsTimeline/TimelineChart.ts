@@ -718,6 +718,7 @@ export class TimelineChart {
   }
 
   render(): void {
+    const renderStart = performance.now();
     const zoomRange = this.getZoomRange();
     // setData not called yet
     if (!zoomRange) return
@@ -728,16 +729,36 @@ export class TimelineChart {
     const axisHeight = this.axis.getHeight();
     const histogramHeight = height - axisHeight;
 
+    const t0 = performance.now();
     this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
     this.ctx.fillRect(0, 0, width, height);
+    const t1 = performance.now();
     this.renderHistogram(zoomRange, histogramHeight);
+    const t2 = performance.now();
     this.renderBeyondLogs(zoomRange, histogramHeight);
+    const t3 = performance.now();
     this.axis.y = histogramHeight;
     this.axis.render(this.ctx);
+    const t4 = performance.now();
     this.renderIndicators(zoomRange, histogramHeight);
+    const t5 = performance.now();
 
     // Update range info after rendering (for zoom/pan navigation)
     this.updateRangeInfo();
+    const t6 = performance.now();
+
+    const total = t6 - renderStart;
+    if (total > 5) { // Only log if render takes more than 5ms
+      const zoomDuration = zoomRange[1] - zoomRange[0];
+      console.log(`[TimelineChart] render: ${total.toFixed(1)}ms (zoom: ${(zoomDuration/1000/60/60).toFixed(1)}h)`, {
+        clear: (t1 - t0).toFixed(1),
+        histogram: (t2 - t1).toFixed(1),
+        beyondLogs: (t3 - t2).toFixed(1),
+        axis: (t4 - t3).toFixed(1),
+        indicators: (t5 - t4).toFixed(1),
+        rangeInfo: (t6 - t5).toFixed(1),
+      });
+    }
   }
 
   /**
@@ -758,6 +779,8 @@ export class TimelineChart {
   private renderHistogram(zoomRange: [number, number], availableHeight: number): void {
     if (!this.logCountIndex || !this.fullTimeRange) return;
 
+    const histStart = performance.now();
+
     // Divide the full log range evenly. This ensures bins have consistent boundaries regardless of
     // zoom level. I considered having bins tied to the major/minor grid lines, however we'd get
     // some bins (clamped start/end, or DST/month length differences) which are not the same size.
@@ -765,16 +788,16 @@ export class TimelineChart {
     const binCount = this.calculateOptimalBinCount(zoomRange, this.logicalWidth);
     const binWidth = (this.fullTimeRange[1] - this.fullTimeRange[0]) / binCount;
 
-    // Calculate which bins are visible in the current zoom range
-    const firstBinIndex = Math.floor((zoomRange[0] - this.fullTimeRange[0]) / binWidth);
-    const lastBinIndex = Math.ceil((zoomRange[1] - this.fullTimeRange[0]) / binWidth);
+    // Calculate which bins are visible in the current zoom range (clamped to valid range)
+    const firstBinIndex = Math.max(0, Math.floor((zoomRange[0] - this.fullTimeRange[0]) / binWidth));
+    const lastBinIndex = Math.min(binCount, Math.ceil((zoomRange[1] - this.fullTimeRange[0]) / binWidth));
 
     // Reset index and generate only the visible bins for unfiltered data
     const firstBinStart = this.fullTimeRange[0] + firstBinIndex * binWidth;
     this.logCountIndex.reset(firstBinStart);
     let maxCount = 0;
 
-    for (let i = firstBinIndex; i < lastBinIndex && i < binCount; i++) {
+    for (let i = firstBinIndex; i < lastBinIndex; i++) {
       const endTime = this.fullTimeRange[0] + (i + 1) * binWidth;
       const count = this.logCountIndex.count(endTime);
       if (count > maxCount) {
@@ -789,7 +812,7 @@ export class TimelineChart {
     let filteredBins: HistogramBin[] = [];
     if (this.filteredLogCountIndex) {
       this.filteredLogCountIndex.reset(firstBinStart);
-      for (let i = firstBinIndex; i < lastBinIndex && i < binCount; i++) {
+      for (let i = firstBinIndex; i < lastBinIndex; i++) {
         const endTime = this.fullTimeRange[0] + (i + 1) * binWidth;
         this.filteredLogCountIndex.count(endTime);
       }
@@ -800,41 +823,32 @@ export class TimelineChart {
     const histogramColor = this.colorScheme.foreground;
     const filteredColor = this.colorScheme.colors[12]; // Bright blue
 
-    // PASS 1: Draw unfiltered histogram
-    for (const bin of allBins) {
-      const x1 = this.axis.time2pixel(bin.startTime);
-      const x2 = this.axis.time2pixel(bin.endTime);
-      const barWidth = Math.max(1, x2 - x1);
-      const barHeight = this.calculateBarHeight(bin.count, maxCount, availableHeight);
-
-      // When filtered: 0.3 opacity, no hover highlight
-      // When unfiltered: current behavior (0.6 default, 1.0 on hover)
-      let opacity: number;
-      if (hasFilter) {
-        opacity = 0.3;
-      } else {
-        const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
-        opacity = isHovered ? 1 : 0.6;
-      }
-      this.ctx.fillStyle = `rgba(${histogramColor.r}, ${histogramColor.g}, ${histogramColor.b}, ${opacity})`;
-      this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
-    }
-
-    // PASS 2: Draw filtered histogram (if active)
-    if (hasFilter) {
-      for (const bin of filteredBins) {
+    // Helper to draw histogram bars
+    const drawBars = (bins: HistogramBin[], color: { r: number; g: number; b: number }, defaultOpacity: number, hoverOpacity: number, enableHover: boolean) => {
+      for (const bin of bins) {
         const x1 = this.axis.time2pixel(bin.startTime);
         const x2 = this.axis.time2pixel(bin.endTime);
         const barWidth = Math.max(1, x2 - x1);
-        // Use same maxCount from unfiltered data - ensures filtered bars ≤ unfiltered
         const barHeight = this.calculateBarHeight(bin.count, maxCount, availableHeight);
-
-        // Hover only highlights filtered layer
-        const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
-        const opacity = isHovered ? 1 : 0.8;
-        this.ctx.fillStyle = `rgba(${filteredColor.r}, ${filteredColor.g}, ${filteredColor.b}, ${opacity})`;
+        const isHovered = enableHover && this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
+        const opacity = isHovered ? hoverOpacity : defaultOpacity;
+        this.ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
         this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
       }
+    };
+
+    // Draw unfiltered histogram (dimmed when filter active, no hover highlight)
+    drawBars(allBins, histogramColor, hasFilter ? 0.3 : 0.6, 1, !hasFilter);
+
+    // Draw filtered histogram overlay (if active)
+    if (hasFilter) {
+      drawBars(filteredBins, filteredColor, 0.8, 1, true);
+    }
+
+    const histEnd = performance.now();
+    const histTime = histEnd - histStart;
+    if (histTime > 2) {
+      console.log(`[renderHistogram] ${histTime.toFixed(1)}ms - binCount: ${binCount}, visibleBins: ${lastBinIndex - firstBinIndex}, drawnBins: ${allBins.length}, filteredBins: ${filteredBins.length}`);
     }
   }
 
