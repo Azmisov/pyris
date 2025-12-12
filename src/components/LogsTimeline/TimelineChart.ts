@@ -11,7 +11,6 @@ import { LogCountIndex, HistogramBin } from './LogCountIndex';
 /** Tooltip data passed to the callback */
 export interface TooltipData {
   x: number;
-  y: number;
   timestamp: number;
   /** Indicators at the snapped position */
   indicators: VerticalIndicator[];
@@ -70,6 +69,7 @@ export class TimelineChart {
   private dragging: boolean = false;
   private pointerCapture: number | null = null;
   private mouseX: number | null = null;
+  private hoveredBin: HistogramBin | null = null;
 
   // Callback for log selection
   private onLogSelect?: (timestamp: number) => void;
@@ -271,37 +271,14 @@ export class TimelineChart {
     // Track mouse X position and update hover indicator
     this.mouseX = cur[0];
     if (!this.dragging) {
-      // Check for snap targets first
+      // Snap to nearest indicator if within threshold
       const snapResult = this.findSnapTarget(this.mouseX);
       const timestamp = snapResult?.timestamp ?? this.axis.pixel2time(this.mouseX);
-      const displayX = snapResult !== null ? this.axis.time2pixel(snapResult.timestamp) : cur[0];
 
-      // Find histogram bin for this timestamp
-      const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
-
-      // Compute beyond flags
-      const beyondLogs = this.fullTimeRange !== null &&
-        (timestamp < this.fullTimeRange[0] || timestamp > this.fullTimeRange[1]);
-      const beyondVisible = this.visibleRange !== null &&
-        (timestamp < this.visibleRange[0] || timestamp > this.visibleRange[1]);
-      const beyondDashboard = this.dashboardRange !== null &&
-        (timestamp < this.dashboardRange[0] || timestamp > this.dashboardRange[1]);
-
-      this.setHoveredTimestamp(timestamp);
-      // Update tooltip with position, timestamp, indicators, bin, and beyond flags
-      this.onTooltip?.({
-        x: displayX,
-        y: cur[1],
-        timestamp,
-        indicators: snapResult?.indicators ?? [],
-        bin,
-        beyondLogs,
-        beyondVisible,
-        beyondDashboard,
-      });
+      this.showTooltipAtTimestamp(timestamp);
     } else {
       // Hide tooltip while dragging
-      this.onTooltip?.(null);
+      this.showTooltipAtTimestamp(null);
     }
 
     // Wait until we move a bit before initiating drag
@@ -360,8 +337,7 @@ export class TimelineChart {
 
   private pointerLeave(e: PointerEvent): void {
     this.mouseX = null;
-    this.setHoveredTimestamp(null);
-    this.onTooltip?.(null);
+    this.showTooltipAtTimestamp(null);
   }
 
   /**
@@ -387,14 +363,19 @@ export class TimelineChart {
 
   /**
    * Show tooltip at a given timestamp (for shared tooltip / external hover)
+   * Also updates hover indicator and hovered bin for rendering
    */
   showTooltipAtTimestamp(timestamp: number | null): void {
     if (timestamp === null) {
+      this.hoveredBin = null;
+      this.setHoveredTimestamp(null);
       this.onTooltip?.(null);
       return;
     }
 
-    const x = this.axis.time2pixel(timestamp);
+    // Find histogram bin and update hover state BEFORE render
+    this.hoveredBin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
+    this.setHoveredTimestamp(timestamp);
 
     // Compute beyond flags
     const beyondLogs = this.fullTimeRange !== null &&
@@ -404,27 +385,26 @@ export class TimelineChart {
     const beyondDashboard = this.dashboardRange !== null &&
       (timestamp < this.dashboardRange[0] || timestamp > this.dashboardRange[1]);
 
-    // Find indicators at this timestamp
-    const indicators: typeof this.selectedIndicator[] = [];
+    this.onTooltip?.({
+      x: this.axis.time2pixel(timestamp),
+      timestamp,
+      indicators: this.findIndicatorsAtTimestamp(timestamp),
+      bin: this.hoveredBin,
+      beyondLogs,
+      beyondVisible,
+      beyondDashboard,
+    });
+  }
+
+  /** Find all indicators at a given timestamp */
+  private findIndicatorsAtTimestamp(timestamp: number): VerticalIndicator[] {
+    const indicators: VerticalIndicator[] = [];
     for (const ind of this.getNamedIndicators()) {
       if (ind.getTimestamp() === timestamp) {
         indicators.push(ind);
       }
     }
-
-    // Find histogram bin for this timestamp
-    const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
-
-    this.onTooltip?.({
-      x,
-      y: 0,
-      timestamp,
-      indicators: indicators.filter((i): i is NonNullable<typeof i> => i !== null),
-      bin,
-      beyondLogs,
-      beyondVisible,
-      beyondDashboard,
-    });
+    return indicators;
   }
 
   updateDims(width: number, height: number): void {
@@ -753,7 +733,6 @@ export class TimelineChart {
 
     // Draw histogram bars using foreground color
     const histogramColor = this.colorScheme.foreground ?? { r: 255, g: 255, b: 255 };
-    this.ctx.fillStyle = colorToCSS(histogramColor);
 
     for (const bin of bins) {
       const x1 = this.axis.time2pixel(bin.startTime);
@@ -771,6 +750,11 @@ export class TimelineChart {
         const logScale = Math.log(bin.count + 1) / Math.log(maxCount + 1);
         barHeight = availableHeight * (0.15 + 0.85 * logScale);
       }
+
+      // Use slight opacity for non-hovered bars, full opacity for hovered
+      const isHovered = this.hoveredBin && bin.startTime === this.hoveredBin.startTime;
+      const opacity = isHovered ? 1 : 0.6;
+      this.ctx.fillStyle = `rgba(${histogramColor.r}, ${histogramColor.g}, ${histogramColor.b}, ${opacity})`;
 
       this.ctx.fillRect(x1, availableHeight - barHeight, barWidth, barHeight);
     }
