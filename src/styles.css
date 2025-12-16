@@ -1,127 +1,8 @@
-/* ANSI Logs Panel Styles - Updated for terminal look v2.0 */
-/* Base panel styles */
-.ansi-logs-panel {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--ansi-bg);
-  color: var(--ansi-fg);
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-  font-size: 13px;
-  line-height: 1.4;
-  overflow: hidden;
-  position: relative;
-  isolation: isolate;
-}
-
-/* Header section */
-.ansi-logs-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  flex-shrink: 0;
-  min-height: 32px;
-  font-size: 11px;
-  border-bottom:1px solid var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-1);
-}
+/* ANSI Logs Panel Styles - Global styles for log content rendering */
 
 /* Shadowing looks better black for both light and dark themes; don't want a glow */
 .ansi-shadowed {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
-}
-
-/* Stats section */
-.ansi-logs-stats {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-.ansi-row-count {
-  font-weight: 500;
-}
-
-/* Controls section */
-.ansi-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Header + Timeline wrapper */
-.ansi-logs-top {
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 8px 6px var(--ansi-bg);
-}
-
-/* Main content area */
-.ansi-logs-content {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-
-.ansi-auto-sized-container {
-  width: 100%;
-  height: 100%;
-}
-
-/* Virtual list styles - Font settings applied here so rows inherit */
-.ansi-virtual-list {
-  width: 100%;
-  height: 100%;
-  outline: none;
-
-  font-family: var(--ansi-logs-row-font-family);
-
-  /* styles to try and improve pixel-perfect alignment of glyphs */
-  font-variant-ligatures: none;
-  font-kerning: none;
-  letter-spacing: 0;
-  text-rendering: geometricPrecision;
-  shape-rendering: crispEdges;
-  -webkit-font-smoothing: grayscale;
-  -moz-osx-font-smoothing: grayscale;
-  font-smooth: grayscale;
-  image-rendering: crisp-edges;
-  font-optical-sizing: none;
-}
-
-/* Override Virtuoso's viewport width to allow hover to extend across full scrollable width */
-/* Only apply when wrap mode is disabled, as max-content prevents text wrapping */
-.ansi-virtual-list:not(.wrap-mode-enabled) [data-viewport-type="element"] {
-  width: max-content !important;
-  min-width: 100%;
-}
-
-/* Firefox scrollbar styling */
-.ansi-virtual-list {
-  /* scrollbar-width: thin; */
-  scrollbar-color: var(--ansi-fg-muted-1) var(--ansi-bg);
-}
-
-/* Chrome/Safari/Edge scrollbar styling */
-.ansi-virtual-list::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.ansi-virtual-list::-webkit-scrollbar-track,
-.ansi-virtual-list::-webkit-scrollbar-corner {
-  background: var(--ansi-bg);
-}
-
-.ansi-virtual-list::-webkit-scrollbar-thumb {
-  background-color: var(--ansi-fg-muted-1);
-  border-radius: 4px;
-}
-
-.ansi-virtual-list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--ansi-fg);
 }
 
 /* Individual log row styles */
@@ -137,6 +18,7 @@
   font-size: var(--ansi-logs-row-font-size);
   line-height: var(--ansi-logs-row-height);
   min-height: var(--ansi-logs-row-height);
+  transition: background-color 0.15s ease;
 }
 
 /* Soft wrap mode - allows text to wrap */
@@ -323,45 +205,20 @@ a:hover {
 }
 
 /* State styles */
-.ansi-loading,
-.ansi-error,
-.ansi-empty {
+.ansi-loading {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.ansi-loading-message,
-.ansi-error-message,
-.ansi-empty-message {
+.ansi-loading-message {
   text-align: center;
   padding: 20px;
 }
 
-.ansi-error-message {
-  color: #f85149;
-}
-
-.ansi-error-message h3 {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-}
-
-.ansi-error-message p {
-  margin: 0 0 12px 0;
-  opacity: 0.8;
-}
-
-.ansi-error-message button {
-  padding: 6px 12px;
-  background-color: #f85149;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 .ansi-empty-message {
+  text-align: center;
+  padding: 20px;
   opacity: 0.6;
 }
 
@@ -377,22 +234,6 @@ a:hover {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .ansi-logs-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    padding: 8px;
-  }
-
-  .ansi-search-container {
-    max-width: none;
-  }
-
-  .ansi-logs-stats,
-  .ansi-controls {
-    justify-content: space-between;
-  }
-
   .ansi-logs-row {
     padding: 0 4px;
   }
@@ -405,16 +246,6 @@ a:hover {
 
 /* Print styles */
 @media print {
-  .ansi-logs-header,
-  .ansi-logs-footer {
-    display: none;
-  }
-
-  .ansi-logs-panel {
-    background: white;
-    color: black;
-  }
-
   .ansi-logs-row {
     border: none;
     padding: 2px 0;
@@ -425,19 +256,6 @@ a:hover {
   .ansi-logs-row.selected {
     background: none;
   }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .ansi-logs-panel {
-    border: 2px solid;
-  }
-
-}
-
-/* Animation for smooth interactions */
-.ansi-logs-row {
-  transition: background-color 0.15s ease;
 }
 
 /* JSON Row Styles */
@@ -514,18 +332,6 @@ a:hover {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
-}
-
-/* Empty state for logs */
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  color: var(--ansi-fg-muted-1);
-  text-align: center;
-  padding: 20px;
-  font-size: 14px;
 }
 
 /* JSON ellipsis for collapsed structures */
@@ -611,4 +417,3 @@ a:hover {
 .json-expanded-flash {
   animation: json-expand-flash .7s ease-out;
 }
-

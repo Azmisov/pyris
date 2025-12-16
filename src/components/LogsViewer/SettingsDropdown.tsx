@@ -74,18 +74,18 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
   }, [isOpen, onToggle]);
 
   return (
-    <div className={styles['ansi-settings-container']} ref={settingsRef}>
+    <div className={styles.container} ref={settingsRef}>
       <button
         onClick={onToggle}
-        className={`${toolbarStyles['ansi-toolbar-button']} ${isOpen ? toolbarStyles.active : ''}`}
+        className={`${toolbarStyles.button} ${isOpen ? toolbarStyles.active : ''}`}
         title="Settings"
         aria-label="Settings"
       >
         <SettingsIcon />
       </button>
       {isOpen && (
-        <div className={`${styles['ansi-settings-dropdown']} ansi-shadowed`}>
-          <div className={styles['ansi-settings-item']}>
+        <div className={`${styles.dropdown} ansi-shadowed`}>
+          <div className={styles.item}>
             <label htmlFor="theme-mode">Light/Dark Preference</label>
             <select
               key={`theme-mode-${themeMode}`}
@@ -99,7 +99,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               <option value="dark">Dark</option>
             </select>
           </div>
-          <div className={styles['ansi-settings-item']}>
+          <div className={styles.item}>
             <label htmlFor="theme">{effectiveThemeMode === 'dark' ? 'Dark' : 'Light'} Theme</label>
             <ThemeSelect
               id="theme"
@@ -108,26 +108,26 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               onChange={onThemeChange}
             />
           </div>
-          <div className={styles['ansi-settings-item']}>
+          <div className={styles.item}>
             <label htmlFor="row-height">Row Height</label>
-            <div className={styles['ansi-row-height-group']}>
+            <div className={styles.rowHeightGroup}>
               <button
                 type="button"
-                className={`${styles['ansi-row-height-btn']} ${rowHeight === 'auto' ? styles.active : ''}`}
+                className={`${styles.rowHeightBtn} ${rowHeight === 'auto' ? styles.active : ''}`}
                 onClick={onRowHeightAuto}
               >
                 Auto
               </button>
               <button
                 type="button"
-                className={`${styles['ansi-row-height-btn']} ${rowHeight === 'fixed' ? styles.active : ''}`}
+                className={`${styles.rowHeightBtn} ${rowHeight === 'fixed' ? styles.active : ''}`}
                 onClick={onRowHeightFixed}
               >
                 {fixedRowHeight}px
               </button>
               <button
                 type="button"
-                className={styles['ansi-row-height-btn']}
+                className={styles.rowHeightBtn}
                 onClick={onRowHeightDecrement}
                 disabled={rowHeight === 'auto'}
                 title="Decrease row height"
@@ -136,7 +136,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
               </button>
               <button
                 type="button"
-                className={styles['ansi-row-height-btn']}
+                className={styles.rowHeightBtn}
                 onClick={onRowHeightIncrement}
                 disabled={rowHeight === 'auto'}
                 title="Increase row height"

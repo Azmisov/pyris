@@ -1,0 +1,60 @@
+/* Virtual List Component */
+
+.list {
+  width: 100%;
+  height: 100%;
+  outline: none;
+
+  font-family: var(--ansi-logs-row-font-family);
+
+  /* styles to try and improve pixel-perfect alignment of glyphs */
+  font-variant-ligatures: none;
+  font-kerning: none;
+  letter-spacing: 0;
+  text-rendering: geometricPrecision;
+  shape-rendering: crispEdges;
+  -webkit-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: grayscale;
+  image-rendering: crisp-edges;
+  font-optical-sizing: none;
+}
+
+/* Override Virtuoso's viewport width to allow hover to extend across full scrollable width */
+/* Only apply when wrap mode is disabled, as max-content prevents text wrapping */
+.list:not(.wrapEnabled) [data-viewport-type="element"] {
+  width: max-content !important;
+  min-width: 100%;
+}
+
+/* Firefox scrollbar styling */
+.list {
+  /* scrollbar-width: thin; */
+  scrollbar-color: var(--ansi-fg-muted-1) var(--ansi-bg);
+}
+
+/* Chrome/Safari/Edge scrollbar styling */
+.list::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.list::-webkit-scrollbar-track,
+.list::-webkit-scrollbar-corner {
+  background: var(--ansi-bg);
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: var(--ansi-fg-muted-1);
+  border-radius: 4px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ansi-fg);
+}
+
+/* Container for auto-sizing */
+.container {
+  width: 100%;
+  height: 100%;
+}

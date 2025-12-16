@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './ErrorState.module.css';
 
 interface ErrorStateProps {
   error: string;
@@ -16,11 +17,13 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   height,
 }) => {
   return (
-    <div className={`ansi-logs-panel ansi-error ${className}`} style={{ width, height }}>
-      <div className="ansi-error-message">
-        <h3>Error loading logs</h3>
-        <p>{error}</p>
-        <button onClick={onDismiss}>Dismiss</button>
+    <div className={`${styles.panel} ${className}`} style={{ width, height }}>
+      <div className={styles.container}>
+        <div className={styles.message}>
+          <h3>Error loading logs</h3>
+          <p>{error}</p>
+          <button onClick={onDismiss}>Dismiss</button>
+        </div>
       </div>
     </div>
   );

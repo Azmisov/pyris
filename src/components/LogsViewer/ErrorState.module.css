@@ -1,0 +1,46 @@
+/* Error State Component */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ansi-bg);
+  color: var(--ansi-fg);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.message {
+  text-align: center;
+  padding: 20px;
+  color: #f85149;
+}
+
+.message h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.message p {
+  margin: 0 0 12px 0;
+  opacity: 0.8;
+}
+
+.message button {
+  padding: 6px 12px;
+  background-color: #f85149;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

@@ -1,5 +1,5 @@
 /* Color swatch strip */
-.ansi-color-swatch-strip {
+.strip {
   display: inline-flex;
   height: 28px;
   margin-right: 8px;
@@ -10,7 +10,7 @@
   box-sizing: border-box;
 }
 
-.ansi-color-swatch-bar {
+.bar {
   display: block;
   width: 10px;
   height: 100%;

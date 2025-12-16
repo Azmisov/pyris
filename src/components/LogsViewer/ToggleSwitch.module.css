@@ -1,5 +1,5 @@
 /* Toggle Switch Component */
-.ansi-toggle-switch {
+.container {
   display: inline-flex;
   border-radius: 4px;
   overflow: hidden;
@@ -7,7 +7,7 @@
   background-color: var(--ansi-bg);
 }
 
-.ansi-toggle-option {
+.option {
   padding: 3px 8px;
   background: transparent;
   border: none;
@@ -21,11 +21,11 @@
   white-space: nowrap;
 }
 
-.ansi-toggle-option:hover {
+.option:hover {
   background-color: var(--ansi-bg-accent-1);
 }
 
-.ansi-toggle-option.active {
+.option.active {
   background-color: var(--ansi-color-2);
   color: var(--ansi-bg);
   cursor: default;

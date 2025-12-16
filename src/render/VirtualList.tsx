@@ -5,6 +5,7 @@ import { AnsiLogRow, LogRow, LogsPanelOptions } from '../types';
 import { Row } from './Row';
 import { JsonRow } from './JsonRow';
 import { applyFontSizeVars } from '../utils/fontSizing';
+import styles from './VirtualList.module.css';
 
 interface VirtualListProps {
   rows: LogRow[];
@@ -274,9 +275,9 @@ export const VirtualList = memo<VirtualListProps>(({
 
   // Compute className based on wrap mode
   const virtualListClassName = useMemo(() => {
-    const classes = ['ansi-virtual-list'];
+    const classes = [styles.list];
     if (options.wrapMode === 'soft-wrap') {
-      classes.push('wrap-mode-enabled');
+      classes.push(styles.wrapEnabled);
     }
     return classes.join(' ');
   }, [options.wrapMode]);
@@ -285,7 +286,7 @@ export const VirtualList = memo<VirtualListProps>(({
   const followOutputValue = isRestoringRef.current ? false : (sortOrder === 'asc' ? 'smooth' : false);
 
   return (
-    <div ref={containerRef} className="ansi-logs-container" style={{ height, width }}>
+    <div ref={containerRef} className={styles.container} style={{ height, width }}>
       <Virtuoso
         ref={virtuosoRef}
         data={displayRows}

@@ -29,7 +29,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
   const [debugOpen, _setDebugOpen] = useState(DEBUG_KEEP_OPEN);
 
   return (
-    <div className={styles['ansi-theme-select']}>
+    <div className={styles.container}>
       <Select.Root
         value={value}
         onValueChange={onChange}
@@ -37,7 +37,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
         onOpenChange={DEBUG_KEEP_OPEN ? undefined : undefined}
       >
         <Select.Trigger
-          className={styles['ansi-theme-select-button']}
+          className={styles.button}
           id={id}
           aria-label="Select theme"
         >
@@ -45,18 +45,18 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
             {displayItem && (
               <>
                 <ColorSwatch scheme={getColorScheme(displayItem.value)} />
-                <span className={styles['ansi-theme-select-label']}>{displayItem.label}</span>
+                <span className={styles.label}>{displayItem.label}</span>
               </>
             )}
           </div>
           <Select.Icon asChild>
-            <span className={styles['ansi-theme-select-arrow']}>▼</span>
+            <span className={styles.arrow}>▼</span>
           </Select.Icon>
         </Select.Trigger>
 
         <Select.Portal>
           <Select.Content
-            className={`${styles['ansi-theme-select-menu']} ${styles.open} ansi-shadowed`}
+            className={`${styles.menu} ${styles.open} ansi-shadowed`}
             position="popper"
             sideOffset={2}
             align="start"
@@ -68,11 +68,11 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
                 <Select.Item
                   key={item.value}
                   value={item.value}
-                  className={styles['ansi-theme-select-item']}
+                  className={styles.item}
                 >
                   <ColorSwatch scheme={getColorScheme(item.value)} />
                   <Select.ItemText asChild>
-                    <span className={styles['ansi-theme-select-item-label']}>{item.label}</span>
+                    <span className={styles.itemLabel}>{item.label}</span>
                   </Select.ItemText>
                 </Select.Item>
               ))}

@@ -21,10 +21,10 @@ export const ToggleSwitch = memo<ToggleSwitchProps>(({ options, value, onChange,
   const isFirstSelected = value === option1.value;
 
   return (
-    <div className={`${styles['ansi-toggle-switch']} ${className}`}>
+    <div className={`${styles.container} ${className}`}>
       <button
         type="button"
-        className={`${styles['ansi-toggle-option']} ${isFirstSelected ? styles.active : ''}`}
+        className={`${styles.option} ${isFirstSelected ? styles.active : ''}`}
         onClick={() => onChange(option1.value)}
         aria-pressed={isFirstSelected}
       >
@@ -32,7 +32,7 @@ export const ToggleSwitch = memo<ToggleSwitchProps>(({ options, value, onChange,
       </button>
       <button
         type="button"
-        className={`${styles['ansi-toggle-option']} ${!isFirstSelected ? styles.active : ''}`}
+        className={`${styles.option} ${!isFirstSelected ? styles.active : ''}`}
         onClick={() => onChange(option2.value)}
         aria-pressed={!isFirstSelected}
       >

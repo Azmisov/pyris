@@ -1,6 +1,6 @@
 /* Link Confirmation Modal Component */
 
-.ansi-modal-overlay {
+.overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -25,7 +25,7 @@
   }
 }
 
-.ansi-modal {
+.modal {
   background-color: var(--ansi-bg);
   border-radius: 6px;
   min-width: 400px;
@@ -45,35 +45,35 @@
   }
 }
 
-.ansi-modal-header {
+.header {
   padding: 12px 16px;
   background-color: var(--ansi-bg-accent-2);
   border-bottom: 1px solid var(--ansi-fg-muted-1);
 }
 
-.ansi-modal-header h3 {
+.header h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 500;
   color: var(--ansi-fg);
 }
 
-.ansi-modal-body {
+.body {
   padding: 20px 16px;
   color: var(--ansi-fg);
 }
 
-.ansi-modal-body p {
+.body p {
   margin: 0 0 12px 0;
   font-size: 14px;
 }
 
-.ansi-modal-warning {
+.warning {
   color: #f0883e;
   font-weight: 500;
 }
 
-.ansi-modal-url {
+.url {
   padding: 8px 12px;
   background-color: var(--ansi-bg-accent-2);
   border-radius: 4px;
@@ -84,7 +84,7 @@
   opacity: 0.9;
 }
 
-.ansi-modal-footer {
+.footer {
   padding: 12px 16px;
   display: flex;
   justify-content: flex-end;
@@ -93,7 +93,7 @@
   background-color: var(--ansi-bg-accent-2);
 }
 
-.ansi-modal-button {
+.button {
   padding: 8px 16px;
   font-size: 13px;
   border: 1px solid var(--ansi-fg-muted-2);
@@ -110,29 +110,29 @@
   background-color: var(--ansi-bg-accent-3);
 }
 
-.ansi-modal-button:hover {
+.button:hover {
     border-color: var(--ansi-fg-muted-1);
 }
-.ansi-modal-button:active {
+.button:active {
   transform: scale(0.95);
 }
 
-[data-ansi-theme="dark"] .ansi-modal-button:hover {
+[data-ansi-theme="dark"] .button:hover {
   filter: brightness(1.1);
 }
-[data-ansi-theme="light"] .ansi-modal-button:hover {
+[data-ansi-theme="light"] .button:hover {
   filter: brightness(0.95);
 }
 
-.ansi-modal-button-copy, .ansi-modal-button-confirm {
+.copyButton, .confirmButton {
   font-weight: 500;
   border-color: var(--ansi-bg);
   color: var(--ansi-bg);
 }
 
-.ansi-modal-button-copy {
+.copyButton {
   background-color: var(--ansi-color-4);
 }
-.ansi-modal-button-confirm {
+.confirmButton {
   background-color: var(--ansi-color-2);
 }
