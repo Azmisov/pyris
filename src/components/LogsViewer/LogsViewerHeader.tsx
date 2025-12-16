@@ -4,6 +4,7 @@ import { SearchBar } from './SearchBar';
 import { ToggleSwitch } from './ToggleSwitch';
 import { Icon } from '@grafana/ui';
 import toolbarStyles from '../toolbar.module.css';
+import styles from './LogsViewer.module.css';
 
 interface LogsViewerHeaderProps {
   // Settings props
@@ -102,11 +103,11 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   hasSelection,
 }) => {
   return (
-    <div className="ansi-logs-header">
+    <div className={styles.header}>
       {/* Left toolbar wrapper */}
-      <div className={toolbarStyles['ansi-toolbar-wrapper']}>
+      <div className={toolbarStyles.wrapper}>
         {/* Toolbar icons */}
-        <div className={toolbarStyles['ansi-toolbar-left']}>
+        <div className={toolbarStyles.left}>
           <SettingsDropdown
             isOpen={settingsOpen}
             onToggle={onToggleSettings}
@@ -125,7 +126,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
           />
           <button
             onClick={onToggleSortOrder}
-            className={toolbarStyles['ansi-toolbar-button']}
+            className={toolbarStyles.button}
             title={sortOrder === 'asc' ? 'Sort: Oldest First (click for Newest First)' : 'Sort: Newest First (click for Oldest First)'}
             aria-label="Toggle Sort Order"
           >
@@ -133,7 +134,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
           </button>
           <button
             onClick={onToggleWrapMode}
-            className={`${toolbarStyles['ansi-toolbar-button']} ${wrapMode === 'soft-wrap' ? toolbarStyles.active : ''}`}
+            className={`${toolbarStyles.button} ${wrapMode === 'soft-wrap' ? toolbarStyles.active : ''}`}
             title={wrapMode === 'nowrap' ? 'Enable Word Wrap' : 'Disable Word Wrap'}
             aria-label="Toggle Word Wrap"
           >
@@ -141,7 +142,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
           </button>
           <button
             onClick={onToggleTimeline}
-            className={`${toolbarStyles['ansi-toolbar-button']} ${showTimeline ? toolbarStyles.active : ''}`}
+            className={`${toolbarStyles.button} ${showTimeline ? toolbarStyles.active : ''}`}
             title={showTimeline ? 'Hide Timeline' : 'Show Timeline'}
             aria-label="Toggle Timeline"
           >
@@ -166,8 +167,8 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
         />
       </div>
 
-      <div className="ansi-logs-stats">
-        <span className="ansi-row-count">
+      <div className={styles.stats}>
+        <span className={styles.rowCount}>
           {hasFilter ? `${filteredRowsLength} of ` : ''}{totalRowsLength} logs
         </span>
         <ToggleSwitch
@@ -180,16 +181,16 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
         />
       </div>
 
-      <div className="ansi-controls">
+      <div className={styles.controls}>
         {hasSelection && (
-          <button onClick={onCopySelected} className={toolbarStyles['ansi-copy-button']} title="Copy selected log">
+          <button onClick={onCopySelected} className={toolbarStyles.copyButton} title="Copy selected log">
             <Icon name="clipboard-alt" size='lg' />
           </button>
         )}
-        <button onClick={onCopyAll} className={toolbarStyles['ansi-copy-button']} title="Copy all logs">
+        <button onClick={onCopyAll} className={toolbarStyles.copyButton} title="Copy all logs">
           <Icon name="clipboard-alt" size='lg' /> All
         </button>
-        <button className={`${toolbarStyles['ansi-toolbar-button']} ansi-fg-1`} title="View data loading errors">
+        <button className={toolbarStyles.button} title="View data loading errors">
           <Icon name="exclamation-triangle" size='lg' />
         </button>
       </div>

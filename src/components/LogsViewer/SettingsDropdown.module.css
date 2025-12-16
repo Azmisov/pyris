@@ -1,9 +1,9 @@
 /* Settings dropdown */
-.ansi-settings-container {
+.container {
   position: relative;
 }
 
-.ansi-settings-dropdown {
+.dropdown {
   position: absolute;
   top: 100%;
   left: 0;
@@ -17,7 +17,7 @@
   overflow: visible;
 }
 
-.ansi-settings-item {
+.item {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -25,18 +25,18 @@
   align-items: flex-start;
 }
 
-.ansi-settings-item:last-child {
+.item:last-child {
   margin-bottom: 0;
 }
 
-.ansi-settings-item label {
+.item label {
   font-size: 11px;
   font-weight: 800;
   color: var(--ansi-fg);
   opacity: 0.7;
 }
 
-.ansi-settings-item select {
+.item select {
   background-color: transparent;
   color: var(--ansi-fg);
   border: 1px solid var(--ansi-fg-muted-2);
@@ -61,28 +61,28 @@
   background-color: var(--ansi-bg-accent-2);
 }
 
-.ansi-settings-item select option {
+.item select option {
   background-color: var(--ansi-bg);
   color: var(--ansi-fg);
 }
 
-.ansi-settings-item select:hover,
-.ansi-settings-item select:focus {
+.item select:hover,
+.item select:focus {
   border-color: var(--ansi-fg-muted-1);
   background-color: var(--ansi-bg-accent-3);
 }
 
-.ansi-settings-item select:focus {
+.item select:focus {
   outline: none;
 }
 
 /* Row height button group */
-.ansi-row-height-group {
+.rowHeightGroup {
   display: inline-flex;
   gap: 0;
 }
 
-.ansi-row-height-btn {
+.rowHeightBtn {
   color: var(--ansi-fg);
   border: 1px solid var(--ansi-fg-muted-2);
   background-color: var(--ansi-bg-accent-2);
@@ -94,38 +94,38 @@
   min-width: 40px;
 }
 
-.ansi-row-height-btn:first-child {
+.rowHeightBtn:first-child {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
 }
 
-.ansi-row-height-btn:last-child {
+.rowHeightBtn:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
 
-.ansi-row-height-btn:not(:first-child) {
+.rowHeightBtn:not(:first-child) {
   border-left: none;
 }
 
-.ansi-row-height-btn:disabled {
+.rowHeightBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.ansi-row-height-btn.active {
+.rowHeightBtn.active {
   font-weight: 500;
   background-color: var(--ansi-bg-accent-3);
 }
 
-.ansi-row-height-btn:hover:not(:disabled) {
+.rowHeightBtn:hover:not(:disabled) {
   border-color: var(--ansi-fg-muted-1);
   background-color: var(--ansi-bg-accent-3);
 }
 
 /* Make +/- buttons more prominent */
-.ansi-row-height-btn:nth-child(3),
-.ansi-row-height-btn:nth-child(4) {
+.rowHeightBtn:nth-child(3),
+.rowHeightBtn:nth-child(4) {
   font-weight: 700;
   font-size: 16px;
   line-height: 1;

@@ -31,7 +31,7 @@ export const ColorSwatch = memo<ColorSwatchProps>(({ scheme, className = '' }) =
 
   return (
     <span
-      className={`${styles['ansi-color-swatch-strip']} ${className}`}
+      className={`${styles.strip} ${className}`}
       style={{
         backgroundColor: `rgb(${background.r}, ${background.g}, ${background.b})`,
       }}
@@ -39,7 +39,7 @@ export const ColorSwatch = memo<ColorSwatchProps>(({ scheme, className = '' }) =
       {colors.map((color, index) => (
         <span
           key={index}
-          className={styles['ansi-color-swatch-bar']}
+          className={styles.bar}
           style={{
             backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`,
           }}

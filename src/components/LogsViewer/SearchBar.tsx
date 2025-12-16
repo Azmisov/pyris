@@ -37,7 +37,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   // Debug logging
   const errorClass = expressionError ? styles.error : '';
   const expandedClass = searchExpanded ? styles.expanded : '';
-  const combinedClasses = `${styles['ansi-search-group']} ${expandedClass} ${errorClass}`;
+  const combinedClasses = `${styles.group} ${expandedClass} ${errorClass}`;
 
   if (expressionError) {
     console.log('[SearchBar] Received expressionError:', expressionError);
@@ -49,7 +49,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     <div className={combinedClasses}>
       <button
         onClick={onToggleSearch}
-        className={`${toolbarStyles['ansi-toolbar-button']} ${styles['ansi-search-toggle-btn']} ${searchExpanded ? toolbarStyles.active : ''}`}
+        className={`${toolbarStyles.button} ${styles.toggleBtn} ${searchExpanded ? toolbarStyles.active : ''}`}
         title={searchExpanded ? 'Hide Search' : 'Show Search'}
         aria-label="Toggle Search"
       >
@@ -57,11 +57,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </button>
 
       {searchExpanded && (
-        <div className={styles['ansi-search-container']}>
-          <div className={styles['ansi-search-input-wrapper']}>
+        <div className={styles.container}>
+          <div className={styles.inputWrapper}>
             {isExpressionMode && (
               <span
-                className={styles['ansi-expression-prefix']}
+                className={styles.expressionPrefix}
                 title="Variable 'r' represents the parsed JSON data (record) for each log row"
               >
                 r =&gt;
@@ -72,15 +72,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               placeholder={isExpressionMode ? "JavaScript expression…" : "Search phrase…"}
               value={searchTerm}
               onChange={onSearchChange}
-              className={styles['ansi-search-input']}
+              className={styles.input}
               autoFocus
             />
-            <div className={styles['ansi-search-buttons']}>
+            <div className={styles.buttons}>
               {!isExpressionMode && (
                 <>
                   <button
                     onClick={onCaseSensitiveToggle}
-                    className={`${styles['ansi-search-toggle']} ${caseSensitive ? styles.active : ''}`}
+                    className={`${styles.toggle} ${caseSensitive ? styles.active : ''}`}
                     title="Match Case"
                     aria-label="Match Case"
                   >
@@ -91,7 +91,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                   </button>
                   <button
                     onClick={onRegexToggle}
-                    className={`${styles['ansi-search-toggle']} ${useRegex ? styles.active : ''}`}
+                    className={`${styles.toggle} ${useRegex ? styles.active : ''}`}
                     title="Use Regular Expression"
                     aria-label="Use Regular Expression"
                   >
@@ -102,7 +102,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               {searchTerm && (
                 <button
                   onClick={onClearSearch}
-                  className={styles['ansi-search-toggle']}
+                  className={styles.toggle}
                   title="Clear Search"
                   aria-label="Clear Search"
                 >
@@ -112,7 +112,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </div>
           </div>
           {expressionError && (
-            <div className={styles['ansi-expression-error']}>
+            <div className={styles.expressionError}>
               {expressionError}
             </div>
           )}

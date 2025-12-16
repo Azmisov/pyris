@@ -1,6 +1,6 @@
 /* Search Bar Component */
 
-.ansi-search-group {
+.group {
   display: flex;
   align-items: center;
   flex: 1;
@@ -8,12 +8,12 @@
 }
 
 /* When search is collapsed */
-.ansi-search-group:not(.expanded) {
+.group:not(.expanded) {
   flex: 0;
 }
 
 /* When search is expanded, make toggle button attach to search container */
-.ansi-search-group.expanded {
+.group.expanded {
   gap: 0;
   border: 1px solid var(--ansi-fg-muted-2);
   border-radius: 3px;
@@ -25,32 +25,33 @@
   width: 400px;
 }
 
-.ansi-search-group.expanded:focus-within {
+.group.expanded:focus-within {
   border-color: var(--ansi-fg-muted-1);
 }
 
-.ansi-search-group.expanded .ansi-search-toggle-btn {
+.group.expanded .toggleBtn {
   border-radius: 0;
   margin-right: 0;
 }
 
 /* Search section */
-.ansi-search-container {
+.container {
   display: flex;
   align-items: center;
   gap: 4px;
   flex: 1 1 auto;
   width: 100%;
+  position: relative;
 }
 
-.ansi-search-input-wrapper {
+.inputWrapper {
   position: relative;
   flex: 1;
   display: flex;
   align-items: center;
 }
 
-.ansi-search-input {
+.input {
   padding: 6px 82px 6px 10px;
   border: none;
   border-radius: 0;
@@ -67,17 +68,17 @@
   background-color: var(--ansi-bg-accent-2);
 }
 
-.ansi-search-input:focus {
+.input:focus {
   background-color: var(--ansi-bg-accent-3);
 }
 
-.ansi-search-input::placeholder {
+.input::placeholder {
   color: var(--ansi-fg);
   opacity: 0.6;
 }
 
 /* Search buttons container inside input */
-.ansi-search-buttons {
+.buttons {
   position: absolute;
   right: 1px;
   top: 1px;
@@ -89,7 +90,7 @@
 }
 
 /* Search toggle buttons (case-sensitive, regex, clear) */
-.ansi-search-toggle {
+.toggle {
   padding: 0;
   margin: 0;
   display: flex;
@@ -106,27 +107,27 @@
   height: 22px;
 }
 
-.ansi-search-toggle:hover {
+.toggle:hover {
   opacity: 1;
   /* normally would use accent 2, but won't be visible since it matches search input background */
   background-color: var(--ansi-bg-accent-3);
   border-color: var(--ansi-fg-muted-1);
 }
 
-.ansi-search-toggle.active {
+.toggle.active {
   opacity: 1;
   background-color: var(--ansi-bg-accent-3);
   border-color: var(--ansi-fg-muted-1);
 }
 
-.ansi-search-toggle svg {
+.toggle svg {
   display: block;
   width: 14px;
   height: 14px;
 }
 
 /* Expression mode prefix */
-.ansi-expression-prefix {
+.expressionPrefix {
   display: inline-flex;
   align-items: center;
   padding: 0 4px 0 4px;
@@ -144,18 +145,18 @@
 }
 
 /* Update prefix background when input is focused */
-.ansi-search-input-wrapper:focus-within .ansi-expression-prefix {
+.inputWrapper:focus-within .expressionPrefix {
   background-color: var(--ansi-bg-accent-3);
 }
 
 /* Error state for expression mode */
-.ansi-search-group.error {
+.group.error {
   border-color: var(--ansi-color-1) !important;
   box-shadow: 0 0 4px var(--ansi-color-1);
 }
 
 /* Expression error message */
-.ansi-expression-error {
+.expressionError {
   position: absolute;
   top: 100%;
   left: 0;
@@ -171,13 +172,8 @@
   border-top: none;
 }
 
-/* Update container positioning to accommodate error message */
-.ansi-search-container {
-  position: relative;
-}
-
 /* Adjust input padding when expression prefix is shown */
-.ansi-expression-prefix + .ansi-search-input {
+.expressionPrefix + .input {
   padding-left: 0;
   padding-right: 30px; /* Only need room for clear button in expression mode */
 }

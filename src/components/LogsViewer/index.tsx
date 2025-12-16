@@ -16,6 +16,7 @@ import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
 import { parseExpression } from '../../utils/jsonExpression';
+import styles from './LogsViewer.module.css';
 
 /**
  * Simple log data interface for the viewer
@@ -794,13 +795,13 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Main render
   return (
     <div
-      className={`ansi-logs-panel ${className}`}
+      className={`${styles.panel} ${className}`}
       style={{ width, height }}
       onClick={handlePanelClick}
       onMouseEnter={handlePanelMouseEnter}
       onMouseLeave={handlePanelMouseLeave}
     >
-      <div className="ansi-logs-top">
+      <div className={styles.top}>
       <LogsViewerHeader
         settingsOpen={settingsOpen}
         onToggleSettings={toggleSettings}
@@ -864,9 +865,9 @@ export const LogsViewer = memo<LogsViewerProps>(({
       </div>
 
       {/* Main log display */}
-      <div className="ansi-logs-content">
+      <div className={styles.content}>
         {filteredRows.length === 0 ? (
-          <div className="empty-state">
+          <div className={styles.emptyState}>
             <p>No {hasFilter ? 'filtered ' : ''}{viewMode === 'json' ? 'JSON' : 'ANSI'} logs</p>
           </div>
         ) : (

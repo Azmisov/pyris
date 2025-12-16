@@ -1,13 +1,13 @@
 /* Logs Timeline Component */
 
-.logs-timeline {
+.timeline {
   border-bottom: 1px solid var(--ansi-fg-muted-1);
   overflow: visible;
   cursor: crosshair;
 }
 
 /* Timeline icon buttons */
-.timeline-icon-button {
+.iconButton {
   padding: 0;
   margin: 0;
   display: flex;
@@ -24,12 +24,12 @@
   height: 28px;
 }
 
-.timeline-icon-button:hover {
+.iconButton:hover {
   opacity: 1;
   background-color: var(--ansi-bg-accent-3);
   border-color: var(--ansi-fg-muted-1);
 }
 
-.timeline-icon-button:active {
+.iconButton:active {
   transform: scale(0.95);
 }

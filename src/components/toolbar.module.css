@@ -1,6 +1,6 @@
 /* Shared Toolbar Styles */
 
-.ansi-toolbar-wrapper {
+.wrapper {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -8,14 +8,14 @@
   margin-right: 8px;
 }
 
-.ansi-toolbar-left {
+.left {
   display: flex;
   align-items: center;
   gap: 2px;
   flex-shrink: 0;
 }
 
-.ansi-toolbar-button {
+.button {
   padding: 0;
   margin: 0;
   display: flex;
@@ -33,19 +33,19 @@
   height: 28px;
 }
 
-.ansi-toolbar-button:hover, .ansi-toolbar-button.active {
+.button:hover, .button.active {
   opacity: 1;
   background-color: var(--ansi-bg-accent-3);
   border-color: var(--ansi-fg-muted-1);
 }
 
-.ansi-toolbar-button svg {
+.button svg {
   display: block;
   width: 20px;
   height: 20px;
 }
 
-.ansi-copy-button {
+.copyButton {
   padding: 0px 6px;
   font-size: 13px;
   border: 1px solid var(--ansi-fg-muted-2);
@@ -59,11 +59,11 @@
   box-sizing: border-box;
 }
 
-.ansi-copy-button:hover {
+.copyButton:hover {
   border-color: var(--ansi-fg-muted-1);
   background-color: var(--ansi-bg-accent-3);
 }
 
-.ansi-copy-button svg {
+.copyButton svg {
   vertical-align: text-bottom;
 }

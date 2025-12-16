@@ -252,7 +252,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   }, []);
 
   return (
-    <div className={styles['logs-timeline']} style={{ position: 'relative', height }}>
+    <div className={styles.timeline} style={{ position: 'relative', height }}>
       <div
         ref={containerRef}
         style={{
@@ -274,7 +274,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
       >
         <button
           onClick={handleRecenter}
-          className={styles['timeline-icon-button']}
+          className={styles.iconButton}
           title="Center view to log's time range"
         >
           <Icon name="home-alt" />
@@ -282,7 +282,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
         {onTimeRangeChange && (
           <button
             onClick={handleSync}
-            className={styles['timeline-icon-button']}
+            className={styles.iconButton}
             title="Update dashboard time range to match current view"
           >
             <Icon name="clock-nine" />
