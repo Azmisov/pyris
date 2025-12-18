@@ -16,6 +16,7 @@ import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
 import { parseExpression } from '../../utils/jsonExpression';
+import { findMatchingRow, findNearestByTimestamp } from '../../utils/matching';
 import styles from './LogsViewer.module.css';
 
 /**
@@ -297,67 +298,64 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Theme management
   const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
 
-  // Select log rows based on view mode
-  const logRows: LogRow[] = useMemo(() => {
+  // Helper to sort rows by timestamp, then seriesIndex for stable ordering
+  const sortRows = <T extends { timestamp: number; seriesIndex?: number }>(rows: T[]): T[] => {
+    return [...rows].sort((a, b) => {
+      const timeDiff = a.timestamp - b.timestamp;
+      if (timeDiff === 0) {
+        return (a.seriesIndex ?? 0) - (b.seriesIndex ?? 0);
+      }
+      return timeDiff;
+    });
+  };
+
+  // Pre-compute sorted ANSI rows (recompute only when parsedData changes)
+  const ansiRows = useMemo(() => {
     try {
-      setError(null);
-
-      // Process rows based on type
-      const rows: LogRow[] = viewMode === 'json'
-        ? parsedData.jsonLogs.map((log, index) => ({
-            timestamp: log.timestamp,
-            seriesIndex: log.seriesIndex ?? index,
-            data: log.data,
-            labels: log.labels,
-            id: log.id,
-            level: log.level,
-          }))
-        : parsedData.ansiLogs.map((log, index) => ({
-            timestamp: log.timestamp,
-            seriesIndex: log.seriesIndex ?? index,
-            message: log.message,
-            strippedText: log.strippedText || stripAnsiCodes(log.message),
-            labels: log.labels,
-            id: log.id,
-            level: log.level,
-          }));
-
-      // Always sort by timestamp ascending, then by seriesIndex for stable ordering
-      // VirtualList will handle reversing the display for desc mode
-      rows.sort((a, b) => {
-        const timeDiff = a.timestamp - b.timestamp;
-
-        // If timestamps are equal, use seriesIndex to maintain original order
-        if (timeDiff === 0) {
-          const indexA = a.seriesIndex ?? 0;
-          const indexB = b.seriesIndex ?? 0;
-          return indexA - indexB;
-        }
-
-        return timeDiff;
-      });
-
-      return rows;
+      const rows = parsedData.ansiLogs.map((log, index) => ({
+        timestamp: log.timestamp,
+        seriesIndex: log.seriesIndex ?? index,
+        message: log.message,
+        strippedText: log.strippedText || stripAnsiCodes(log.message),
+        labels: log.labels,
+        id: log.id,
+        level: log.level,
+      }));
+      return sortRows(rows);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error parsing data';
-      setError(errorMessage);
-      console.warn('Logs processing error:', err);
+      console.warn('ANSI logs processing error:', err);
       return [];
     }
-  }, [parsedData.ansiLogs, parsedData.jsonLogs, viewMode]);
+  }, [parsedData.ansiLogs]);
 
-  // Memoize ANSI-only rows for search hook to prevent infinite re-renders
-  const ansiOnlyRows = useMemo(() => {
-    return logRows.filter((row): row is LogRow & { message: string } => 'message' in row);
-  }, [logRows]);
+  // Pre-compute sorted JSON rows (recompute only when parsedData changes)
+  const jsonRows = useMemo(() => {
+    try {
+      const rows = parsedData.jsonLogs.map((log, index) => ({
+        timestamp: log.timestamp,
+        seriesIndex: log.seriesIndex ?? index,
+        data: log.data,
+        labels: log.labels,
+        id: log.id,
+        level: log.level,
+      }));
+      return sortRows(rows);
+    } catch (err) {
+      console.warn('JSON logs processing error:', err);
+      return [];
+    }
+  }, [parsedData.jsonLogs]);
 
-  // Apply search/filtering (only for ANSI logs)
+  // Active log rows based on view mode (instant switch, no recomputation)
+  const logRows = viewMode === 'json' ? jsonRows : ansiRows;
+
+  // Apply search/filtering for ANSI logs (updates when ansiRows or search params change)
   const {
     searchTerm,
     setSearchTerm,
-    filteredRows: searchFilteredRows,
+    filteredRows: filteredAnsiRows,
     hasFilter: ansiHasFilter
-  } = useVirtualListSearch(ansiOnlyRows as any, { caseSensitive, useRegex });
+  } = useVirtualListSearch(ansiRows as any, { caseSensitive, useRegex });
 
   // Debounce JSON search term for expression evaluation (300ms delay)
   useEffect(() => {
@@ -373,7 +371,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Parse expression immediately for error display (no debounce)
   const immediateExpression = useMemo(() => {
-    if (viewMode !== 'json' || !jsonSearchTerm.trim()) {
+    if (!jsonSearchTerm.trim()) {
       return null;
     }
     const result = parseExpression(jsonSearchTerm);
@@ -381,48 +379,41 @@ export const LogsViewer = memo<LogsViewerProps>(({
       console.log('[Expression] Syntax error detected:', result.error);
     }
     return result;
-  }, [viewMode, jsonSearchTerm]);
+  }, [jsonSearchTerm]);
 
   // Parse expression with debounce for filtering
   const parsedExpression = useMemo(() => {
-    if (viewMode !== 'json' || !debouncedJsonSearchTerm.trim()) {
+    if (!debouncedJsonSearchTerm.trim()) {
       return null;
     }
     return parseExpression(debouncedJsonSearchTerm);
-  }, [viewMode, debouncedJsonSearchTerm]);
+  }, [debouncedJsonSearchTerm]);
 
-  // Apply expression filtering for JSON logs
-  // Filtering is only active when searchExpanded is true (toggle behavior)
-  const { filteredRows, hasFilter, runtimeError } = useMemo(() => {
-    // When search is collapsed, disable filtering but preserve the search term
-    if (!searchExpanded) {
-      return { filteredRows: logRows, hasFilter: false, runtimeError: null };
+  // Apply expression filtering for JSON logs (independent of viewMode)
+  const { filteredJsonRows, jsonHasFilter, jsonRuntimeError } = useMemo(() => {
+    // When search is collapsed, disable filtering
+    if (!searchExpanded || !debouncedJsonSearchTerm.trim()) {
+      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: null };
     }
 
-    if (viewMode === 'json') {
-      // Apply expression filtering for JSON mode
-      if (!debouncedJsonSearchTerm.trim()) {
-        return { filteredRows: logRows, hasFilter: false, runtimeError: null };
-      }
-
-      if (!parsedExpression || parsedExpression.error || !parsedExpression.filter) {
-        return { filteredRows: logRows, hasFilter: false, runtimeError: null };
-      }
-
-      // Run actual filtering and catch runtime errors
-      try {
-        const filtered = logRows.filter(parsedExpression.filter);
-        return { filteredRows: filtered, hasFilter: true, runtimeError: null };
-      } catch (error) {
-        // Runtime error during filtering - stop and report error
-        const errorMsg = error instanceof Error ? error.message : 'Runtime error during filtering';
-        return { filteredRows: logRows, hasFilter: false, runtimeError: errorMsg };
-      }
-    } else {
-      // Use ANSI search results
-      return { filteredRows: searchFilteredRows, hasFilter: ansiHasFilter, runtimeError: null };
+    if (!parsedExpression || parsedExpression.error || !parsedExpression.filter) {
+      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: null };
     }
-  }, [viewMode, logRows, debouncedJsonSearchTerm, parsedExpression, searchFilteredRows, ansiHasFilter, searchExpanded]);
+
+    // Run actual filtering and catch runtime errors
+    try {
+      const filtered = jsonRows.filter(parsedExpression.filter);
+      return { filteredJsonRows: filtered, jsonHasFilter: true, jsonRuntimeError: null };
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Runtime error during filtering';
+      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: errorMsg };
+    }
+  }, [jsonRows, debouncedJsonSearchTerm, parsedExpression, searchExpanded]);
+
+  // Select active filtered rows based on view mode (instant switch)
+  const filteredRows = viewMode === 'json' ? filteredJsonRows : filteredAnsiRows;
+  const hasFilter = viewMode === 'json' ? jsonHasFilter : ansiHasFilter;
+  const runtimeError = viewMode === 'json' ? jsonRuntimeError : null;
 
   // Update expression error to include runtime errors
   useEffect(() => {
@@ -696,10 +687,110 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setShowTimeline(prev => !prev);
   }, [setShowTimeline]);
 
-  // Handle view mode change
+  // Handle view mode change with navigation sync
   const handleViewModeChange = useCallback((mode: 'ansi' | 'json') => {
+    // If already in the target mode, do nothing
+    if (mode === viewMode) return;
+
+    // Get source and target filtered rows (both pre-computed)
+    const sourceRows = viewMode === 'json' ? filteredJsonRows : filteredAnsiRows;
+    const targetRows = mode === 'json' ? filteredJsonRows : filteredAnsiRows;
+
+    const ansiRange = filteredAnsiRows.length > 0
+      ? { min: filteredAnsiRows[0].timestamp, max: filteredAnsiRows[filteredAnsiRows.length - 1].timestamp }
+      : null;
+    const jsonRange = filteredJsonRows.length > 0
+      ? { min: filteredJsonRows[0].timestamp, max: filteredJsonRows[filteredJsonRows.length - 1].timestamp }
+      : null;
+
+    console.log(`[ViewModeSwitch] ${viewMode} → ${mode}`, {
+      sourceRows: sourceRows.length,
+      targetRows: targetRows.length,
+      selectedRowIndex,
+      visibleRange,
+      ansiRange,
+      jsonRange,
+    });
+
+    if (targetRows.length === 0) {
+      console.log('[ViewModeSwitch] No target rows, clearing selection');
+      setViewMode(mode);
+      setSelectedRowIndex(undefined);
+      setSelectedTimestamp(null);
+      return;
+    }
+
+    // Match selected row (if exists)
+    let matchedSelectedIndex: number | undefined;
+    if (selectedRowIndex !== undefined && sourceRows[selectedRowIndex]) {
+      const selectedRow = sourceRows[selectedRowIndex];
+      matchedSelectedIndex = findMatchingRow(selectedRow, targetRows);
+      console.log('[ViewModeSwitch] Matched selected row:', {
+        sourceIndex: selectedRowIndex,
+        targetIndex: matchedSelectedIndex,
+      });
+    }
+
+    // Check if selected row was visible in source view
+    const selectedRowTimestamp = selectedRowIndex !== undefined && sourceRows[selectedRowIndex]
+      ? sourceRows[selectedRowIndex].timestamp
+      : null;
+    const selectedWasVisible = selectedRowTimestamp !== null &&
+      visibleRange.first !== null &&
+      visibleRange.last !== null &&
+      selectedRowTimestamp >= visibleRange.first &&
+      selectedRowTimestamp <= visibleRange.last;
+
+    console.log('[ViewModeSwitch] selectedWasVisible:', selectedWasVisible, {
+      selectedRowTimestamp,
+      visibleRange,
+    });
+
+    // Match first visible row (for viewport sync) - only if selected wasn't visible
+    let matchedVisibleIndex: number | undefined;
+    if (!selectedWasVisible && visibleRange.first !== null && sourceRows.length > 0) {
+      const visibleIndex = findNearestByTimestamp(sourceRows, visibleRange.first);
+      const firstVisibleRow = sourceRows[visibleIndex];
+      if (firstVisibleRow) {
+        matchedVisibleIndex = findMatchingRow(firstVisibleRow, targetRows);
+        console.log('[ViewModeSwitch] Matched visible row:', {
+          sourceIndex: visibleIndex,
+          targetIndex: matchedVisibleIndex,
+        });
+      }
+    }
+
+    // Switch mode
     setViewMode(mode);
-  }, [setViewMode]);
+
+    // Update selection
+    if (matchedSelectedIndex !== undefined) {
+      setSelectedRowIndex(matchedSelectedIndex);
+      setSelectedTimestamp(targetRows[matchedSelectedIndex].timestamp);
+    } else {
+      setSelectedRowIndex(undefined);
+      setSelectedTimestamp(null);
+    }
+
+    // Scroll: if selected was visible, scroll to matched selected; otherwise scroll to matched visible
+    if (selectedWasVisible && matchedSelectedIndex !== undefined) {
+      console.log('[ViewModeSwitch] Scrolling to matched selected (center):', matchedSelectedIndex);
+      setScrollToIndex({
+        index: matchedSelectedIndex,
+        timestamp: targetRows[matchedSelectedIndex].timestamp,
+        align: 'center',
+        behavior: 'auto',
+      });
+    } else if (matchedVisibleIndex !== undefined) {
+      console.log('[ViewModeSwitch] Scrolling to matched visible (start):', matchedVisibleIndex);
+      setScrollToIndex({
+        index: matchedVisibleIndex,
+        timestamp: targetRows[matchedVisibleIndex].timestamp,
+        align: 'start',
+        behavior: 'auto',
+      });
+    }
+  }, [viewMode, selectedRowIndex, visibleRange, filteredAnsiRows, filteredJsonRows, setViewMode]);
 
   // Toggle settings dropdown
   const toggleSettings = useCallback(() => {
@@ -762,8 +853,16 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Update selected row index when rows change (e.g., filtering)
   // Since data is always in ascending order, we just need to find by timestamp
   // Note: Only runs when filteredRows reference changes, not when user selects a row
+  // Skip when viewMode changes - handleViewModeChange handles selection for view switches
   const filteredRowsRef = useRef(filteredRows);
+  const prevViewModeRef = useRef(viewMode);
   useEffect(() => {
+    // Skip if viewMode just changed - handleViewModeChange already set the correct selection
+    if (prevViewModeRef.current !== viewMode) {
+      prevViewModeRef.current = viewMode;
+      filteredRowsRef.current = filteredRows;
+      return;
+    }
     if (selectedTimestamp !== null && filteredRows.length > 0 && filteredRowsRef.current !== filteredRows) {
       const newSelectedIndex = filteredRows.findIndex(row => row.timestamp === selectedTimestamp);
       if (newSelectedIndex !== -1) {
@@ -771,7 +870,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
       }
     }
     filteredRowsRef.current = filteredRows;
-  }, [filteredRows, selectedTimestamp]);
+  }, [filteredRows, selectedTimestamp, viewMode]);
 
   // Render error state
   if (error) {
@@ -872,7 +971,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           </div>
         ) : (
           <AutoSizedVirtualList
-            key={filteredRows.length}
+            key={viewMode}
             rows={filteredRows}
             options={effectiveOptions}
             onRowClick={handleRowClick}
