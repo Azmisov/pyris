@@ -131,6 +131,8 @@ export const VirtualList = memo<VirtualListProps>(({
 
   // Handle visible range changes - track display indices for scroll restoration
   const handleRangeChanged = useCallback((range: { startIndex: number; endIndex: number }) => {
+    console.log('[VirtualList] rangeChanged:', range, 'displayRows.length:', displayRows.length);
+
     // Track display indices for internal scroll restoration
     // Only skip during active restoration to avoid capturing intermediate values
     if (!isRestoringRef.current) {
@@ -158,6 +160,15 @@ export const VirtualList = memo<VirtualListProps>(({
     const fixedRowHeightChanged = prevFixedRowHeightRef.current !== options.fixedRowHeight;
 
     const needsRestoration = sortOrderChanged || wrapModeChanged || rowHeightChanged || fixedRowHeightChanged;
+
+    console.log('[VirtualList] useLayoutEffect check:', {
+      sortOrderChanged,
+      wrapModeChanged,
+      rowHeightChanged,
+      fixedRowHeightChanged,
+      needsRestoration,
+      displayRowsLength: displayRows.length,
+    });
 
     if (!needsRestoration || !virtuosoRef.current) {
       // Update refs even when no restoration needed
@@ -259,19 +270,48 @@ export const VirtualList = memo<VirtualListProps>(({
   useEffect(() => {
     if (scrollToIndex && virtuosoRef.current) {
       const displayIndex = logicalToDisplay(scrollToIndex.index);
+      const align = scrollToIndex.align || 'center';
+      const behavior = scrollToIndex.behavior || 'smooth';
+
+      console.log('[VirtualList] scrollToIndex effect:', {
+        logicalIndex: scrollToIndex.index,
+        displayIndex,
+        align,
+        behavior,
+      });
+
       virtuosoRef.current.scrollToIndex({
         index: displayIndex,
-        align: scrollToIndex.align || 'center',
-        behavior: scrollToIndex.behavior || 'smooth',
+        align,
+        behavior,
       });
     }
-  }, [scrollToIndex, logicalToDisplay]);
+  }, [scrollToIndex, logicalToDisplay, displayRows.length, sortOrder]);
 
-  // Configure initial scroll position based on sort order
-  // Both modes now start at the "newest" logs position in their respective arrays
-  const initialIndex = sortOrder === 'asc'
-    ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom (newest at end)
-    : 0;  // Top (newest at start after reverse)
+  // Header height for top padding to go past the top shadow of the panel
+  const HEADER_HEIGHT = 6;
+
+  // Configure scroll position - use scrollToIndex if provided, otherwise default based on sort order
+  const initialTopMostItem = useMemo(() => {
+    if (scrollToIndex) {
+      const displayIndex = logicalToDisplay(scrollToIndex.index);
+      const align = scrollToIndex.align || 'center';
+      console.log('[VirtualList] initialTopMostItem from scrollToIndex:', displayIndex, 'align:', align);
+      return {
+        index: displayIndex,
+        align,
+        behavior: scrollToIndex.behavior || 'auto',
+        // Add offset for 'start' alignment to push row below header/shadow
+        offset: align === 'start' ? -HEADER_HEIGHT : undefined,
+      };
+    }
+    // Default: start at "newest" logs position
+    const index = sortOrder === 'asc'
+      ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom (newest at end)
+      : 0;  // Top (newest at start after reverse)
+    console.log('[VirtualList] initialTopMostItem default:', index, 'sortOrder:', sortOrder);
+    return index;
+  }, [scrollToIndex, sortOrder, displayRows.length, logicalToDisplay]);
 
   // Compute className based on wrap mode
   const virtualListClassName = useMemo(() => {
@@ -282,8 +322,9 @@ export const VirtualList = memo<VirtualListProps>(({
     return classes.join(' ');
   }, [options.wrapMode]);
 
-  // Disable followOutput during restoration to prevent interference
-  const followOutputValue = isRestoringRef.current ? false : (sortOrder === 'asc' ? 'smooth' : false);
+  // Disable followOutput - it causes issues with view mode switching and scroll restoration
+  // Users can scroll manually; auto-follow is rarely needed for dashboard log panels
+  const followOutputValue = false;
 
   return (
     <div ref={containerRef} className={styles.container} style={{ height, width }}>
@@ -293,12 +334,12 @@ export const VirtualList = memo<VirtualListProps>(({
         totalCount={displayRows.length}
         itemContent={renderItem}
         style={{ height, width }}
-        initialTopMostItemIndex={initialIndex}
+        initialTopMostItemIndex={initialTopMostItem}
         followOutput={followOutputValue}
         rangeChanged={handleRangeChanged}
         className={virtualListClassName}
         components={{
-          Header: () => <div style={{ height: 6 }} />,
+          Header: () => <div style={{ height: HEADER_HEIGHT }} />,
         }}
       />
       {rows.length > options.maxRenderableRows && (

@@ -1,21 +1,8 @@
-- json logs:
-  - navigation:
-    - when switching between ANSI and JSON logs, we sync the viewport display and selection; these
-      only need to be synced lazily when switching
-      - viewport display: get first visible row; find match; scroll into view instantaneously with
-        alignment top
-      - selection: get selected row; find match; set as selected
-    - matching algorithm: Global magic constant gives timestamp buffer about the source's timestamp.
-      Use binary search to find timestamps within that buffer range. Among those rows, find the
-      longest common substring length among rows. Use an existing npm lib for longest substring
-      algorithm. The one with longest common substring is the match.
-
-- timeline view:
-  - end bound for log counts (in tooltips) and snapping seem to be off; need to investigate
+- navigation syncing: test with filtering
 - bugs:
   - select snapping to nearest log should respect filtering
-  - weird character by []Text link; still there, just not visible anymore
-  - vitrius logs the colon for line number might need escaping in osc8 link; its not working
+  - increase overscan so less rendering jank
+  - timeline view: end bound for log counts (in tooltips) and snapping seem to be off; need to investigate
 - features:
   - adjust positioning when filtering is toggled somehow; e.g. center the selected line I guess?
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
@@ -31,10 +18,9 @@
 - styling tweaks:
   - if time is beyond zoom range either hide tooltip or switch to a tooltip with left/right arrow
   - tweak modal colors (double check, might be complete)
-  - select line covers up previous line slightly, like underscores from prev line
+  - select line covers up previous line slightly, like underscores from prev line; maybe measure bottom underscore height?
 - cleanup:
   - remove debug logging
-  - styles are scoped; simplify naming; move inline styles to css modules as necessary
   - use different prefix for global styles
   - are there unused CSS classes
   - test maxLineLength, maxRenderableRows; seems like max line length is truncating when there is
@@ -54,30 +40,3 @@
   - aligning histogram bins to grid lines instead of being a fixed division of full range
   - breakout log count by log level
   - showing json + ansi combined histogram in the timeline
-
-possible icon replacements:
-https://developers.grafana.com/ui/latest/index.html?path=/story/iconography-icon--icons-overview
-- filter
-- graph-bar
-- minus
-- plus
-- search
-- sliders-v-alt,
-- sort-amount-down/up
-- wrench
-- wrap-text
-- cog
-- clock-nine
-- flip
-- home
-- home-alt
-- graph-bar
-- sort-amount-up/down
-
-- recenter timeline view:
-  - brackets-curly
-  - anchor
-  - home/home-alt
-
-- warning about errors for some series:
-  - exclamation-triangle

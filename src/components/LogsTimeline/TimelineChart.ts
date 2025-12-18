@@ -718,7 +718,6 @@ export class TimelineChart {
   }
 
   render(): void {
-    const renderStart = performance.now();
     const zoomRange = this.getZoomRange();
     // setData not called yet
     if (!zoomRange) return
@@ -729,36 +728,16 @@ export class TimelineChart {
     const axisHeight = this.axis.getHeight();
     const histogramHeight = height - axisHeight;
 
-    const t0 = performance.now();
     this.ctx.fillStyle = colorToCSS(this.colorScheme.background ?? { r: 31, g: 31, b: 35 });
     this.ctx.fillRect(0, 0, width, height);
-    const t1 = performance.now();
     this.renderHistogram(zoomRange, histogramHeight);
-    const t2 = performance.now();
     this.renderBeyondLogs(zoomRange, histogramHeight);
-    const t3 = performance.now();
     this.axis.y = histogramHeight;
     this.axis.render(this.ctx);
-    const t4 = performance.now();
     this.renderIndicators(zoomRange, histogramHeight);
-    const t5 = performance.now();
 
     // Update range info after rendering (for zoom/pan navigation)
     this.updateRangeInfo();
-    const t6 = performance.now();
-
-    const total = t6 - renderStart;
-    if (total > 5) { // Only log if render takes more than 5ms
-      const zoomDuration = zoomRange[1] - zoomRange[0];
-      console.log(`[TimelineChart] render: ${total.toFixed(1)}ms (zoom: ${(zoomDuration/1000/60/60).toFixed(1)}h)`, {
-        clear: (t1 - t0).toFixed(1),
-        histogram: (t2 - t1).toFixed(1),
-        beyondLogs: (t3 - t2).toFixed(1),
-        axis: (t4 - t3).toFixed(1),
-        indicators: (t5 - t4).toFixed(1),
-        rangeInfo: (t6 - t5).toFixed(1),
-      });
-    }
   }
 
   /**

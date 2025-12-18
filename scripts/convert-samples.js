@@ -17,22 +17,10 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'provisioning', 'testdata');
 // Sample file configurations
 const SAMPLE_FILES = [
   {
-    input: 'A.txt',
-    output: 'sample-A.json',
-    labels: { source: 'sample-A', app: 'st_anomaly_detect' },
-    extractTimestamp: extractTimestampFromLogLine,
-  },
-  {
     input: 'B.txt',
     output: 'sample-B.json',
-    labels: { source: 'sample-B', app: 'st_anomaly_detect', type: 'hybrid' },
+    labels: { source: 'sample-B', app: 'app_worker', type: 'hybrid' },
     extractTimestampHybrid: true,
-  },
-  {
-    input: 'C.txt',
-    output: 'sample-C.json',
-    labels: { source: 'sample-C', type: 'ansi-test' },
-    generateTimestamp: true,
   },
 ];
 
@@ -50,7 +38,8 @@ function extractTimestampFromLogLine(line) {
     const [hour, minute, secondWithMs] = timePart.split(':');
     const [second, centiseconds] = secondWithMs.split('.');
 
-    const date = new Date(
+    // Use Date.UTC to match JSON log timestamps (which are parsed as UTC)
+    const timestamp = Date.UTC(
       year,
       month - 1,
       day,
@@ -60,9 +49,7 @@ function extractTimestampFromLogLine(line) {
       parseInt(centiseconds) * 10 // Convert centiseconds to milliseconds
     );
 
-    console.log(timestampStr, date.getTime());
-
-    return date.getTime();
+    return timestamp;
   }
   return null;
 }
