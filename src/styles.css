@@ -330,6 +330,7 @@ a:hover {
 /* JSON content */
 .json-content {
   display: inline-block;
+  vertical-align: top; /* Prevents extra bottom padding from baseline alignment */
   font-family: var(--ansi-logs-row-font-family);
   white-space: pre;
 }
