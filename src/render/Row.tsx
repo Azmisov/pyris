@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { AnsiLogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
-import { ansiToHtml, hasAnsiCodes, truncateLine, stripAnsiCodes } from '../converters/ansi';
+import { convertAnsiToHtml, hasAnsiCodes, stripAnsiCodes } from '../converters/ansi';
 import { linkifyPlainUrls } from '../converters/urlDetector';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
 
@@ -56,6 +56,11 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
       <span
         dangerouslySetInnerHTML={{ __html: processedRow.html }}
       />
+      {processedRow.truncatedChars !== undefined && processedRow.truncatedChars > 0 && (
+        <span className="ansi-truncation-indicator" title={`${processedRow.truncatedChars.toLocaleString()} characters truncated. Copy to view full line.`}>
+          +{processedRow.truncatedChars.toLocaleString()}
+        </span>
+      )}
     </div>
   );
 });
@@ -122,31 +127,42 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
   // Always strip ANSI codes for searching
   const strippedText = stripAnsiCodes(message);
 
+  // Determine max length for truncation (applies in both wrap modes)
+  const maxLength = options.maxLineLength > 0 ? options.maxLineLength : undefined;
+
   let html: string;
+  let truncatedChars = 0;
 
   if (!hasAnsi) {
-    // Fast path: plain text
-    html = escapeHtml(message);
+    // Fast path: plain text - apply truncation directly
+    if (maxLength && message.length > maxLength) {
+      html = escapeHtml(message.substring(0, maxLength)) + '…';
+      truncatedChars = message.length - maxLength;
+    } else {
+      html = escapeHtml(message);
+    }
   } else {
-    // Convert ANSI to HTML (includes OSC-8 hyperlink processing)
-    html = ansiToHtml(message);
+    // Convert ANSI to HTML with truncation (includes OSC-8 hyperlink processing)
+    // The conversion stops early when maxLength is reached and properly closes tags
+    const result = convertAnsiToHtml(message, maxLength);
+    html = result.html;
+    truncatedChars = result.truncatedChars;
   }
 
   // Apply plain URL detection (auto-linking, dangerous schemes are blocked internally)
-  const withPlainLinks = linkifyPlainUrls(html, []);
-  if (withPlainLinks !== html) {
-    html = withPlainLinks;
-  }
-
-  // Apply line truncation if needed
-  if (options.wrapMode === 'nowrap' && options.maxLineLength > 0) {
-    html = truncateLine(html, options.maxLineLength);
+  // Only apply to non-truncated content to avoid linkifying partial URLs
+  if (truncatedChars === 0) {
+    const withPlainLinks = linkifyPlainUrls(html, []);
+    if (withPlainLinks !== html) {
+      html = withPlainLinks;
+    }
   }
 
   const processed: ProcessedLogRow = {
     ...row,
     html,
     strippedText,
+    truncatedChars,
   };
 
   // Cache the result

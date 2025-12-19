@@ -67,6 +67,7 @@ export type LogRow = AnsiLogRow | JsonLogRow;
 export interface ProcessedLogRow extends AnsiLogRow {
   html: string;
   strippedText: string; // Text with ANSI codes removed, used for searching
+  truncatedChars?: number; // Number of characters truncated due to maxLineLength
 }
 
 // ANSI color palette types

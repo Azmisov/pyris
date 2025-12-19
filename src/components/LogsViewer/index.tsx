@@ -1004,6 +1004,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
             scrollToIndex={scrollToIndex}
             expandedPaths={jsonExpandedPaths}
             onToggleExpand={handleToggleExpand}
+            totalRowCount={logRows.length}
           />
         )}
       </div>

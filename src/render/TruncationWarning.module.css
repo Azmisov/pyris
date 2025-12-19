@@ -1,0 +1,20 @@
+/* Truncation Warning Styles */
+
+.warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  color: var(--ansi-color-1);
+  font-size: var(--ansi-logs-row-font-size);
+  line-height: var(--ansi-logs-row-height);
+  min-height: var(--ansi-logs-row-height);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}

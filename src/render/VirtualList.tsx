@@ -4,6 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { AnsiLogRow, LogRow, LogsPanelOptions } from '../types';
 import { Row } from './Row';
 import { JsonRow } from './JsonRow';
+import { TruncationWarning } from './TruncationWarning';
 import { applyFontSizeVars } from '../utils/fontSizing';
 import styles from './VirtualList.module.css';
 
@@ -21,6 +22,8 @@ interface VirtualListProps {
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
   onToggleExpand?: (path: string | string[]) => void;
+  /** Total row count before truncation (used for row count warning) */
+  totalRowCount?: number;
 }
 
 export const VirtualList = memo<VirtualListProps>(({
@@ -36,7 +39,8 @@ export const VirtualList = memo<VirtualListProps>(({
   sortOrder = 'asc',
   scrollToIndex,
   expandedPaths,
-  onToggleExpand
+  onToggleExpand,
+  totalRowCount,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
@@ -275,11 +279,13 @@ export const VirtualList = memo<VirtualListProps>(({
   // Handle external scrollToIndex requests - convert logical index to display index
   // Only runs if scrollToIndex hasn't been consumed yet (prevents re-scroll on sort order changes)
   useEffect(() => {
-    if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current) {
+    if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current && displayRows.length > 0) {
       // Mark as consumed so this won't fire again on sort order change
       scrollConsumedRef.current = true;
 
-      const displayIndex = logicalToDisplay(scrollToIndex.index);
+      // Clamp the index to valid range before converting
+      const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
+      const displayIndex = logicalToDisplay(clampedLogicalIndex);
       const align = scrollToIndex.align || 'center';
       const behavior = scrollToIndex.behavior || 'smooth';
       // Add offset for 'start' alignment to push row below header/shadow
@@ -287,6 +293,7 @@ export const VirtualList = memo<VirtualListProps>(({
 
       console.log('[VirtualList] scrollToIndex effect:', {
         logicalIndex: scrollToIndex.index,
+        clampedLogicalIndex,
         displayIndex,
         align,
         behavior,
@@ -305,13 +312,15 @@ export const VirtualList = memo<VirtualListProps>(({
   // Configure initial scroll position - use scrollToIndex only on first render of this instance
   // (for view mode switch remount), otherwise default based on sort order
   const initialTopMostItem = useMemo(() => {
-    // Only use scrollToIndex if not already consumed this mount
+    // Only use scrollToIndex if not already consumed this mount and we have rows
     // This prevents stale scrollToIndex from affecting sort order changes
-    if (scrollToIndex && !scrollConsumedRef.current) {
+    if (scrollToIndex && !scrollConsumedRef.current && displayRows.length > 0) {
       scrollConsumedRef.current = true;
-      const displayIndex = logicalToDisplay(scrollToIndex.index);
+      // Clamp the index to valid range before converting
+      const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
+      const displayIndex = logicalToDisplay(clampedLogicalIndex);
       const align = scrollToIndex.align || 'center';
-      console.log('[VirtualList] initialTopMostItem from scrollToIndex:', displayIndex, 'align:', align);
+      console.log('[VirtualList] initialTopMostItem from scrollToIndex:', displayIndex, 'align:', align, 'clamped from:', scrollToIndex.index);
       return {
         index: displayIndex,
         align,
@@ -348,6 +357,28 @@ export const VirtualList = memo<VirtualListProps>(({
   // Note: We avoid increaseViewportBy as it affects rangeChanged reporting, breaking timeline indicators
   const overscanConfig = useMemo(() => ({ main: 200, reverse: 200 }), []);
 
+  // Determine if we need to show row count warning
+  const effectiveTotalRowCount = totalRowCount ?? rows.length;
+  const hasRowCountTruncation = effectiveTotalRowCount > options.maxRenderableRows;
+
+  // Header component with row count warning only
+  // Line truncation indicators are shown inline at the end of each truncated row
+  const HeaderComponent = useMemo(() => {
+    if (!hasRowCountTruncation) {
+      return () => <div style={{ height: HEADER_HEIGHT }} />;
+    }
+
+    return () => (
+      <div style={{ paddingTop: HEADER_HEIGHT }}>
+        <TruncationWarning
+          type="row-count"
+          displayedCount={maxRows}
+          totalCount={effectiveTotalRowCount}
+        />
+      </div>
+    );
+  }, [hasRowCountTruncation, maxRows, effectiveTotalRowCount]);
+
   return (
     <div ref={containerRef} className={styles.container} style={{ height, width }}>
       <Virtuoso
@@ -363,14 +394,9 @@ export const VirtualList = memo<VirtualListProps>(({
         fixedItemHeight={useFixedHeight ? itemHeight : undefined}
         overscan={overscanConfig}
         components={{
-          Header: () => <div style={{ height: HEADER_HEIGHT }} />,
+          Header: HeaderComponent,
         }}
       />
-      {rows.length > options.maxRenderableRows && (
-        <div className="ansi-truncation-notice">
-          Showing {options.maxRenderableRows} of {rows.length} rows
-        </div>
-      )}
     </div>
   );
 });
@@ -391,6 +417,8 @@ interface AutoSizedVirtualListProps {
   scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
   onToggleExpand?: (path: string | string[]) => void;
+  /** Total row count before truncation (used for row count warning) */
+  totalRowCount?: number;
 }
 
 export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
@@ -405,7 +433,8 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
   sortOrder = 'asc',
   scrollToIndex,
   expandedPaths,
-  onToggleExpand
+  onToggleExpand,
+  totalRowCount,
 }) => {
   return (
     <div className="ansi-auto-sized-container" style={{ height: '100%', minHeight }}>
@@ -425,6 +454,7 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
             scrollToIndex={scrollToIndex}
             expandedPaths={expandedPaths}
             onToggleExpand={onToggleExpand}
+            totalRowCount={totalRowCount}
           />
         )}
       </AutoSizer>

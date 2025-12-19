@@ -42,18 +42,18 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
     .addBooleanSwitch({
       path: 'showLabels',
       name: 'Show Labels',
-      description: 'Display log labels as badges',
+      description: 'Display log labels as badges with each line. Labels are always accessible from a modal, even when this option is disabled.',
       defaultValue: defaultOptions.showLabels,
     })
     .addNumberInput({
       path: 'maxLineLength',
-      name: 'Max Line Length',
-      description: 'Maximum characters per line before truncation',
+      name: 'ANSI Max Line Length',
+      description: 'Maximum visible characters per line when in ANSI mode before truncation (usaability and performance limit)',
       defaultValue: defaultOptions.maxLineLength,
       settings: {
-        min: 100,
+        min: 50,
         max: 10000,
-        step: 100,
+        step: 50,
       },
     })
     .addNumberInput({
@@ -62,9 +62,9 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
       description: 'Maximum number of rows to render (performance limit)',
       defaultValue: defaultOptions.maxRenderableRows,
       settings: {
-        min: 1000,
-        max: 100000,
-        step: 1000,
+        min: 100,
+        max: 500000,
+        step: 100,
       },
     });
 });
@@ -76,7 +76,7 @@ plugin.setNoPadding()
 export function validateOptions(options: LogsPanelOptions): LogsPanelOptions {
   return {
     ...options,
-    maxLineLength: Math.max(100, Math.min(10000, options.maxLineLength)),
-    maxRenderableRows: Math.max(1000, Math.min(100000, options.maxRenderableRows)),
+    maxLineLength: Math.max(50, Math.min(10000, options.maxLineLength)),
+    maxRenderableRows: Math.max(100, Math.min(500000, options.maxRenderableRows)),
   };
 }
