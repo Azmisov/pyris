@@ -1,8 +1,6 @@
 - navigation syncing: test with filtering
 - bugs:
   - select snapping to nearest log should respect filtering
-  - increase overscan so less rendering jank
-  - timeline view: end bound for log counts (in tooltips) and snapping seem to be off; need to investigate
 - features:
   - adjust positioning when filtering is toggled somehow; e.g. center the selected line I guess?
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
@@ -27,6 +25,7 @@
     several OSC8 urls
   - finalize name and logo
 - future version or needs more thought:
+  - slow JSON rendering when scrolling
   - save search expression in local storage
   - have count of all records be the limit for histogram scaling, rather than view dependent?
   - special JSON styling:
@@ -34,6 +33,8 @@
   - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
     copy if only contains punctuation characters
   - detect timestamps within ANSI styled elements; do the tooltip conversion thing for ANSI too
+  - autodetect timezone offset for ANSI/JSON logs, by comparing seen timestamp to the log record
+    timestamp from the dataframe
   - shift/ctrl select to extend line selection
   - reset localStorage settings; or maybe just remove the defaults?
   - autoconvert first datetime format to the user's timezone? will be finicky
