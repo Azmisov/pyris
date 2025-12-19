@@ -60,6 +60,10 @@ interface LogsViewerHeaderProps {
   onCopyAll: () => void;
   onCopySelected: () => void;
   hasSelection: boolean;
+
+  // Labels props
+  selectedLabels?: Record<string, string>;
+  onShowLabels?: () => void;
 }
 
 export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
@@ -101,7 +105,10 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   onCopyAll,
   onCopySelected,
   hasSelection,
+  selectedLabels,
+  onShowLabels,
 }) => {
+  const hasLabels = selectedLabels && Object.keys(selectedLabels).length > 0;
   return (
     <div className={styles.header}>
       {/* Left toolbar wrapper */}
@@ -183,9 +190,16 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
 
       <div className={styles.controls}>
         {hasSelection && (
-          <button onClick={onCopySelected} className={toolbarStyles.copyButton} title="Copy selected log">
-            <Icon name="clipboard-alt" size='lg' />
-          </button>
+          <>
+            {hasLabels && onShowLabels && (
+              <button onClick={onShowLabels} className={toolbarStyles.copyButton} title="View labels">
+                <Icon name="tag-alt" size='lg' />
+              </button>
+            )}
+            <button onClick={onCopySelected} className={toolbarStyles.copyButton} title="Copy selected log">
+              <Icon name="clipboard-alt" size='lg' />
+            </button>
+          </>
         )}
         <button onClick={onCopyAll} className={toolbarStyles.copyButton} title="Copy all logs">
           <Icon name="clipboard-alt" size='lg' /> All

@@ -13,6 +13,7 @@ import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { useLinkModal } from './hooks/useLinkModal';
 import { LogsViewerHeader } from './LogsViewerHeader';
 import { LinkConfirmationModal } from './LinkConfirmationModal';
+import { LabelsModal } from './LabelsModal';
 import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
 import { parseExpression } from '../../utils/jsonExpression';
@@ -104,6 +105,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [jsonExpandedPaths, setJsonExpandedPaths] = useState<Set<string>>(new Set());
   const [expressionError, setExpressionError] = useState<string | null>(null);
+  const [labelsModalOpen, setLabelsModalOpen] = useState(false);
   const [jsonSearchTerm, setJsonSearchTerm] = useState('');
   const [debouncedJsonSearchTerm, setDebouncedJsonSearchTerm] = useState('');
 
@@ -455,6 +457,23 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Clipboard operations
   const { copyAllLogs, copySelectedLog } = useClipboard(filteredRows as any, selectedRowIndex);
+
+  // Get selected row labels
+  const selectedRowLabels = useMemo(() => {
+    if (selectedRowIndex === undefined || !filteredRows[selectedRowIndex]) {
+      return undefined;
+    }
+    return filteredRows[selectedRowIndex].labels;
+  }, [selectedRowIndex, filteredRows]);
+
+  // Labels modal handlers
+  const handleShowLabels = useCallback(() => {
+    setLabelsModalOpen(true);
+  }, []);
+
+  const handleCloseLabelsModal = useCallback(() => {
+    setLabelsModalOpen(false);
+  }, []);
 
   // Keyboard navigation
   useKeyboardNavigation(
@@ -940,6 +959,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onCopyAll={copyAllLogs}
         onCopySelected={copySelectedLog}
         hasSelection={selectedRowIndex !== undefined}
+        selectedLabels={selectedRowLabels}
+        onShowLabels={handleShowLabels}
       />
 
       {/* Timeline */}
@@ -995,6 +1016,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
         isDangerousUrl={isDangerousUrl}
         onClose={closeModal}
         onCopy={copyUrl}
+      />
+
+      <LabelsModal
+        isOpen={labelsModalOpen}
+        labels={selectedRowLabels || {}}
+        onClose={handleCloseLabelsModal}
       />
     </div>
   );
