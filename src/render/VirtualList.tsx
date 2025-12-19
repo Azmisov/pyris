@@ -40,6 +40,9 @@ export const VirtualList = memo<VirtualListProps>(({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
+  // Track whether scrollToIndex has been consumed for this component instance
+  // Resets on remount (view mode switch), persists across re-renders (sort order change)
+  const scrollConsumedRef = useRef(false);
 
   // ============================================================================
   // SCROLL PRESERVATION
@@ -259,6 +262,9 @@ export const VirtualList = memo<VirtualListProps>(({
     });
   }, [sortOrder, options.wrapMode, options.rowHeight, options.fixedRowHeight, displayRows.length]);
 
+  // Header height for top padding to go past the top shadow of the panel
+  const HEADER_HEIGHT = 6;
+
   // Apply font sizing CSS variables when row height or font family changes
   useEffect(() => {
     if (containerRef.current) {
@@ -267,33 +273,42 @@ export const VirtualList = memo<VirtualListProps>(({
   }, [itemHeight, options.fontFamily]);
 
   // Handle external scrollToIndex requests - convert logical index to display index
+  // Only runs if scrollToIndex hasn't been consumed yet (prevents re-scroll on sort order changes)
   useEffect(() => {
-    if (scrollToIndex && virtuosoRef.current) {
+    if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current) {
+      // Mark as consumed so this won't fire again on sort order change
+      scrollConsumedRef.current = true;
+
       const displayIndex = logicalToDisplay(scrollToIndex.index);
       const align = scrollToIndex.align || 'center';
       const behavior = scrollToIndex.behavior || 'smooth';
+      // Add offset for 'start' alignment to push row below header/shadow
+      const offset = align === 'start' ? -HEADER_HEIGHT : undefined;
 
       console.log('[VirtualList] scrollToIndex effect:', {
         logicalIndex: scrollToIndex.index,
         displayIndex,
         align,
         behavior,
+        offset,
       });
 
       virtuosoRef.current.scrollToIndex({
         index: displayIndex,
         align,
         behavior,
+        offset,
       });
     }
   }, [scrollToIndex, logicalToDisplay, displayRows.length, sortOrder]);
 
-  // Header height for top padding to go past the top shadow of the panel
-  const HEADER_HEIGHT = 6;
-
-  // Configure scroll position - use scrollToIndex if provided, otherwise default based on sort order
+  // Configure initial scroll position - use scrollToIndex only on first render of this instance
+  // (for view mode switch remount), otherwise default based on sort order
   const initialTopMostItem = useMemo(() => {
-    if (scrollToIndex) {
+    // Only use scrollToIndex if not already consumed this mount
+    // This prevents stale scrollToIndex from affecting sort order changes
+    if (scrollToIndex && !scrollConsumedRef.current) {
+      scrollConsumedRef.current = true;
       const displayIndex = logicalToDisplay(scrollToIndex.index);
       const align = scrollToIndex.align || 'center';
       console.log('[VirtualList] initialTopMostItem from scrollToIndex:', displayIndex, 'align:', align);
@@ -301,7 +316,6 @@ export const VirtualList = memo<VirtualListProps>(({
         index: displayIndex,
         align,
         behavior: scrollToIndex.behavior || 'auto',
-        // Add offset for 'start' alignment to push row below header/shadow
         offset: align === 'start' ? -HEADER_HEIGHT : undefined,
       };
     }
@@ -326,6 +340,14 @@ export const VirtualList = memo<VirtualListProps>(({
   // Users can scroll manually; auto-follow is rarely needed for dashboard log panels
   const followOutputValue = false;
 
+  // When word wrap is disabled, all rows have fixed height - use this for Virtuoso optimization
+  // This skips per-item measurement and significantly improves scroll performance
+  const useFixedHeight = options.wrapMode === 'nowrap';
+
+  // Overscan: Chunks rendering to reduce re-render frequency (renders in batches of ~200px)
+  // Note: We avoid increaseViewportBy as it affects rangeChanged reporting, breaking timeline indicators
+  const overscanConfig = useMemo(() => ({ main: 200, reverse: 200 }), []);
+
   return (
     <div ref={containerRef} className={styles.container} style={{ height, width }}>
       <Virtuoso
@@ -338,6 +360,8 @@ export const VirtualList = memo<VirtualListProps>(({
         followOutput={followOutputValue}
         rangeChanged={handleRangeChanged}
         className={virtualListClassName}
+        fixedItemHeight={useFixedHeight ? itemHeight : undefined}
+        overscan={overscanConfig}
         components={{
           Header: () => <div style={{ height: HEADER_HEIGHT }} />,
         }}
