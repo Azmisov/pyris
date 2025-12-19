@@ -8,46 +8,106 @@ interface AnsiToken {
   params?: string[];
 }
 
+/** Result of ANSI to HTML conversion with truncation info */
+export interface AnsiConversionResult {
+  html: string;
+  /** Number of characters truncated (0 if not truncated) */
+  truncatedChars: number;
+}
+
 // Convert ANSI escape sequences to HTML using CSS variables
-export function convertAnsiToHtml(text: string): string {
+export function convertAnsiToHtml(text: string, maxLength?: number): AnsiConversionResult {
   if (!text) {
-    return '';
+    return { html: '', truncatedChars: 0 };
   }
 
   try {
     const tokens = parse(text) as AnsiToken[];
-    return tokensToHtml(tokens);
+    return tokensToHtml(tokens, maxLength);
   } catch (error) {
     console.warn('Failed to parse ANSI text:', error);
     // Fallback: return text with basic escaping
-    return escapeHtml(text);
+    const escaped = escapeHtml(text);
+    if (maxLength && maxLength > 0 && text.length > maxLength) {
+      return {
+        html: escaped.substring(0, maxLength) + '…',
+        truncatedChars: text.length - maxLength
+      };
+    }
+    return { html: escaped, truncatedChars: 0 };
   }
 }
 
-// Alias for backward compatibility
-export const ansiToHtml = convertAnsiToHtml;
+// Alias for backward compatibility (returns just HTML string)
+export function ansiToHtml(text: string, maxLength?: number): string {
+  return convertAnsiToHtml(text, maxLength).html;
+}
 
 // Convert tokens to HTML with CSS classes, inline styles, and OSC-8 hyperlinks
-function tokensToHtml(tokens: AnsiToken[]): string {
+// Supports early termination when maxLength is reached
+function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionResult {
   let html = '';
   let currentStyles: string[] = [];
   let currentInlineStyles: Record<string, string> = {};
+  let charCount = 0; // Track visible character count
+  let totalTextLength = 0; // Track total text length for truncation calculation
+  let truncated = false;
 
   // OSC-8 hyperlink state
   let linkUrl: string | null = null;
   let linkParams: Record<string, string> = {};
   let linkContentHtml = '';
 
+  // Helper to close current styling span
+  const closeCurrentSpan = (): string => {
+    if (currentStyles.length > 0 || Object.keys(currentInlineStyles).length > 0) {
+      return '</span>';
+    }
+    return '';
+  };
+
+  // First pass: calculate total text length for truncation info
+  if (maxLength && maxLength > 0) {
+    for (const token of tokens) {
+      if (token.type === 'TEXT') {
+        totalTextLength += token.raw.length;
+      }
+    }
+  }
+
   for (const token of tokens) {
+    // Check if we've hit the limit
+    if (maxLength && maxLength > 0 && charCount >= maxLength) {
+      truncated = true;
+      break;
+    }
+
     switch (token.type) {
       case 'TEXT':
-        const escapedText = escapeHtml(token.raw);
+        let textToAdd = token.raw;
+
+        // Check if this text would exceed the limit
+        if (maxLength && maxLength > 0 && charCount + textToAdd.length > maxLength) {
+          // Truncate the text to fit
+          const remaining = maxLength - charCount;
+          textToAdd = textToAdd.substring(0, remaining);
+          truncated = true;
+        }
+
+        const escapedText = escapeHtml(textToAdd);
+        charCount += textToAdd.length;
+
         if (linkUrl) {
           // Inside a link - collect content
           linkContentHtml += escapedText;
         } else {
           // Normal text
           html += escapedText;
+        }
+
+        // Stop processing if we've truncated
+        if (truncated) {
+          break;
         }
         break;
 
@@ -119,20 +179,31 @@ function tokensToHtml(tokens: AnsiToken[]): string {
       default:
         break;
     }
+
+    // Break out of loop if truncated
+    if (truncated) {
+      break;
+    }
   }
 
-  // Close any remaining open spans
-  if (currentStyles.length > 0 || Object.keys(currentInlineStyles).length > 0) {
-    html += '</span>';
-  }
-
-  // Handle unclosed link (shouldn't happen with valid input)
+  // Close any remaining open link (with partial content if truncated)
   if (linkUrl && linkContentHtml) {
     const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams);
     html += linkHtml;
   }
 
-  return html;
+  // Close any remaining open spans
+  html += closeCurrentSpan();
+
+  // Add ellipsis if truncated
+  if (truncated) {
+    html += '…';
+  }
+
+  return {
+    html,
+    truncatedChars: truncated ? totalTextLength - charCount : 0
+  };
 }
 
 // Parse OSC-8 parameters (key=value pairs separated by :)
@@ -582,17 +653,3 @@ export function hasAnsiCodes(input: string): boolean {
   }
 }
 
-// Truncate long lines if needed
-export function truncateLine(html: string, maxLength: number): string {
-  if (maxLength <= 0) return html;
-
-  // Simple truncation - for more sophisticated truncation that preserves
-  // ANSI styling, we'd need to parse the HTML structure
-  const plainText = stripAnsiCodes(html);
-  if (plainText.length <= maxLength) {
-    return html;
-  }
-
-  // Truncate and add ellipsis
-  return html.substring(0, maxLength) + '...';
-}

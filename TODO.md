@@ -1,4 +1,6 @@
-- navigation syncing: test with filtering
+- test:
+  - navigation syncing: test with filtering
+  - truncated line/rows works with selection sync, filtering, etc sensibly
 - bugs:
   - select snapping to nearest log should respect filtering
 - features:
@@ -10,14 +12,11 @@
     - preserve visible window and zoom
     - if visible start/end, assume selection is relative to start/end
   - warning message if series errors
-  - warning if line is truncated
-  - warning if line count is truncated
 - styling tweaks:
-
   - if time is beyond zoom range either hide tooltip or switch to a tooltip with left/right arrow
-  - tweak modal colors (double check, might be complete)
   - select line covers up previous line slightly, like underscores from prev line; maybe measure bottom underscore height?
 - cleanup:
+  - optimize build size
   - remove debug logging
   - use different prefix for global styles
   - are there unused CSS classes

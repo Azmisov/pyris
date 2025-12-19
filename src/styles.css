@@ -28,6 +28,13 @@
   overflow-wrap: break-word;
 }
 
+/* Labels on own line when wrap enabled or row selected */
+.ansi-logs-row.wrap-mode-soft .ansi-labels-container,
+.ansi-logs-row.selected .ansi-labels-container {
+  display: block;
+  margin-bottom: 2px;
+}
+
 .ansi-logs-row:hover {
   background-color: var(--ansi-bg-accent-1);
 }
@@ -47,20 +54,18 @@
 /* Label badges */
 .ansi-labels-container {
   display: inline;
-  margin-right: 8px;
+  margin-right: 4px;
 }
 
 .ansi-label-badge {
-  display: inline-block;
-  padding: 1px 4px;
-  font-size: 10px;
+  display: inline;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
   background-color: var(--ansi-fg-muted-2);
   border-radius: 2px;
   color: var(--ansi-fg);
   white-space: nowrap;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin-right: 4px;
 }
 
@@ -190,18 +195,19 @@ a:hover {
   flex-shrink: 0;
 }
 
-/* Truncation notice */
-.ansi-truncation-notice {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #f0883e;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  z-index: 10;
+/* Inline truncation indicator - shown at end of truncated lines */
+.ansi-truncation-indicator {
+  display: inline;
+  margin-left: 8px;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
+  color: var(--ansi-color-1);
+  background-color: var(--ansi-bg-accent-1);
+  border-radius: 2px;
+  cursor: help;
+  user-select: none;
+  white-space: nowrap;
 }
 
 /* State styles */
@@ -289,6 +295,13 @@ a:hover {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+/* Labels on own line when wrap enabled or row selected */
+.json-row.wrap-mode-soft .ansi-labels-container,
+.json-row.selected .ansi-labels-container {
+  display: block;
+  margin-bottom: 2px;
 }
 
 /* JSON content */

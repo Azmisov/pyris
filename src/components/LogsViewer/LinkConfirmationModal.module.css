@@ -69,7 +69,7 @@
 }
 
 .warning {
-  color: #f0883e;
+  color: var(--ansi-color-3);
   font-weight: 500;
 }
 
