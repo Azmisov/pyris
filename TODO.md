@@ -10,20 +10,12 @@
     - if selected line, find a match (exact match?)
     - preserve visible window and zoom
     - if visible start/end, assume selection is relative to start/end
-  - warning message if series errors
-- styling tweaks:
-  - JSON first char seems to be cutoff
-  - JSON line height is larger
 - cleanup:
-  - optimize build size
   - remove debug logging
   - use different prefix for global styles
   - are there unused CSS classes
-  - test maxLineLength, maxRenderableRows; seems like max line length is truncating when there is
-    several OSC8 urls
   - finalize name and logo
 - future version or needs more thought:
-  - slow JSON rendering when scrolling
   - save search expression in local storage
   - have count of all records be the limit for histogram scaling, rather than view dependent?
   - special JSON styling:
@@ -39,3 +31,8 @@
   - aligning histogram bins to grid lines instead of being a fixed division of full range
   - breakout log count by log level
   - showing json + ansi combined histogram in the timeline
+  - optimize build size:
+    - I investigated, but not much to do: big dependencies radix ui, virtuoso, and gogh themes
+      can't really be removed without removing some functionality or styling
+  - JSON clickable container, e.g. { bracket, has some bottom clipping for certain font sizes.
+    Initial investigation don't think there's anything to do without ruining box drawing fidelity
