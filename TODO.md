@@ -1,8 +1,7 @@
 - test:
   - navigation syncing: test with filtering
   - truncated line/rows works with selection sync, filtering, etc sensibly
-- bugs:
-  - select snapping to nearest log should respect filtering
+  - select snapping to nearest log should respect filtering?
 - features:
   - adjust positioning when filtering is toggled somehow; e.g. center the selected line I guess?
   - computing new zoom when setData is called should try and preserve current zoom; e.g. for auto-
@@ -13,8 +12,8 @@
     - if visible start/end, assume selection is relative to start/end
   - warning message if series errors
 - styling tweaks:
-  - if time is beyond zoom range either hide tooltip or switch to a tooltip with left/right arrow
-  - select line covers up previous line slightly, like underscores from prev line; maybe measure bottom underscore height?
+  - JSON first char seems to be cutoff
+  - JSON line height is larger
 - cleanup:
   - optimize build size
   - remove debug logging
