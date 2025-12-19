@@ -5,7 +5,7 @@
 // Excludes dangerous schemes like javascript:, data:, vbscript:
 const URL_REGEX = /\b((?:[a-z][a-z0-9+.-]{2,}):\/\/[^\s<>"'{}|\\^`\[\]]+|(?:mailto|tel|sms|callto):[^\s<>"'{}|\\^`\[\]]+)/gi;
 
-export interface DetectedLink {
+interface DetectedLink {
   url: string;
   text: string;
   start: number;
@@ -16,7 +16,7 @@ export interface DetectedLink {
  * Detect plain URLs in text (not wrapped in OSC-8)
  * Returns an array of detected URLs with their positions
  */
-export function detectPlainUrls(text: string): DetectedLink[] {
+function detectPlainUrls(text: string): DetectedLink[] {
   const links: DetectedLink[] = [];
   const regex = new RegExp(URL_REGEX);
   let match;
@@ -130,19 +130,4 @@ function escapeHtml(text: string): string {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
-}
-
-/**
- * Check if text contains any URLs
- */
-export function hasUrls(text: string): boolean {
-  return URL_REGEX.test(text);
-}
-
-/**
- * Extract all URLs from text (for analytics/processing)
- */
-export function extractUrls(text: string): string[] {
-  const links = detectPlainUrls(text);
-  return links.map(link => link.url);
 }

@@ -149,20 +149,3 @@ export function cleanupCaches(): void {
     globalCache.clear();
   }
 }
-
-// Memory usage tracking
-export function getMemoryUsage(): {
-  cacheSize: number;
-  estimatedMemoryMB: number;
-} {
-  const cache = getGlobalCache();
-  const size = cache.size();
-
-  // Rough estimate: each cached item is ~1-5KB
-  const estimatedMemoryMB = (size * 3) / 1024; // 3KB average per item
-
-  return {
-    cacheSize: size,
-    estimatedMemoryMB,
-  };
-}

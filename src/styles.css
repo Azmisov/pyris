@@ -177,7 +177,6 @@
    for all 256 colors as .ansi-underline-color-{0-255} */
 
 /* Hyperlinks */
-.ansi-link,
 .ansi-detected-link,
 a {
   color: inherit;
@@ -189,20 +188,11 @@ a {
   transition: text-decoration-style 0.15s ease, filter 0.15s ease;
 }
 
-.ansi-link:hover,
 .ansi-detected-link:hover,
 a:hover {
   text-decoration-style: solid;
   text-decoration-thickness: 1px;
   filter: brightness(1.3);
-}
-
-/* Timestamp styles */
-.ansi-timestamp {
-  font-size: 11px;
-  opacity: 0.7;
-  margin-right: 8px;
-  flex-shrink: 0;
 }
 
 /* Inline truncation indicator - shown at end of truncated lines */
@@ -218,34 +208,6 @@ a:hover {
   cursor: help;
   user-select: none;
   white-space: nowrap;
-}
-
-/* State styles */
-.ansi-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ansi-loading-message {
-  text-align: center;
-  padding: 20px;
-}
-
-.ansi-empty-message {
-  text-align: center;
-  padding: 20px;
-  opacity: 0.6;
-}
-
-.ansi-empty-message h3 {
-  margin: 0 0 8px 0;
-  font-size: 16px;
-}
-
-.ansi-empty-message p {
-  margin: 0;
-  opacity: 0.8;
 }
 
 /* Responsive adjustments */

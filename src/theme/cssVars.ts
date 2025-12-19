@@ -14,7 +14,7 @@ export function applyTheme(name: string): void {
 }
 
 // Generate base palette CSS variables and classes, which don't depend on a selected theme
-export function generatePaletteCSS(): string {
+function generatePaletteCSS(): string {
   // Fixed palette coors, omitting theme customizable ones
   let css = ":root {\n";
   for (let i = 16; i < XTERM_256_PALETTE.length; i++) {
@@ -33,7 +33,7 @@ export function generatePaletteCSS(): string {
 }
 
 // Generate CSS variables for theme
-export function generateThemeCSS(scheme: ColorScheme): string {
+function generateThemeCSS(scheme: ColorScheme): string {
   // TODO: generate bg accent on the fly to keep bundle smaller? need to add oklab conversions, so
   // might not save any space
   let vars = [
@@ -54,7 +54,7 @@ export function generateThemeCSS(scheme: ColorScheme): string {
 }
 
 // Add a singleton CSS styles element to the page, replacing if found already
-export function addStyles(id : string, css : string): void {
+function addStyles(id : string, css : string): void {
   // Remove if already present
   const existingStyle = document.getElementById(id);
   if (existingStyle) {
