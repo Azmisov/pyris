@@ -1,4 +1,3 @@
-import React from 'react';
 import { PanelProps } from '@grafana/data';
 
 // Panel options for configuration
@@ -78,28 +77,6 @@ export type AnsiColor = {
 };
 
 export type ColorPalette = AnsiColor[];
-
-// AST node types for rendered content
-export type ContentNode =
-  | { type: 'text'; content: string }
-  | { type: 'span'; content: string; styles: Record<string, string> }
-  | { type: 'link'; content: string; url: string; attrs: Record<string, string> };
-
-// Memoization key for row processing
-export interface MemoKey {
-  message: string;
-  options: Pick<LogsPanelOptions, 'wrapMode' | 'maxLineLength'>;
-}
-
-// Virtual list item props
-export interface VirtualListItemProps {
-  index: number;
-  style: React.CSSProperties;
-  data: {
-    rows: ProcessedLogRow[];
-    options: LogsPanelOptions;
-  };
-}
 
 // Panel props interface using proper Grafana types
 export interface LogsPanelProps extends PanelProps<LogsPanelOptions> {}

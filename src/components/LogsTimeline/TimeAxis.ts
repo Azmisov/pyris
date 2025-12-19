@@ -18,27 +18,6 @@ function getAlignedUnitValue(cursor: Moment, unit: string): number {
   return unit === 'd' ? value - 1 : value;
 }
 
-/** Pad number with N digits */
-export function pad(num: number, digits: number): string {
-	return String(num).padStart(digits, '0');
-}
-
-/** Given millisecond time since 1970 epoch, output string parts */
-function format_time(t: number) : { date: string, time: string, ms: string } {
-	const d = new Date(t);
-	return {
-		date: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`,
-		time: `${pad(d.getHours(),2)}:${pad(d.getMinutes(),2)}:${pad(d.getSeconds(),2)}`,
-		ms: pad(d.getMilliseconds(), 3),
-	};
-}
-
-/** Same as format_time, but not as parts */
-export function format_time_full(t: number) : string {
-	const parts = format_time(t);
-	return `${parts.date} ${parts.time}.${parts.ms}`;
-}
-
 interface GridSettings {
   /** Margin between labels in pixels (added to calculated label width) */
   labelMargin: number;

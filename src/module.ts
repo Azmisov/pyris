@@ -71,12 +71,3 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
 
 // Make panel edge-to-edge, looks better IMO when we have our custom color schemes
 plugin.setNoPadding()
-
-// Validate panel options
-export function validateOptions(options: LogsPanelOptions): LogsPanelOptions {
-  return {
-    ...options,
-    maxLineLength: Math.max(50, Math.min(10000, options.maxLineLength)),
-    maxRenderableRows: Math.max(100, Math.min(500000, options.maxRenderableRows)),
-  };
-}

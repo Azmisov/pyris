@@ -38,11 +38,6 @@ export function convertAnsiToHtml(text: string, maxLength?: number): AnsiConvers
   }
 }
 
-// Alias for backward compatibility (returns just HTML string)
-export function ansiToHtml(text: string, maxLength?: number): string {
-  return convertAnsiToHtml(text, maxLength).html;
-}
-
 // Convert tokens to HTML with CSS classes, inline styles, and OSC-8 hyperlinks
 // Supports early termination when maxLength is reached
 function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionResult {

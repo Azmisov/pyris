@@ -3,14 +3,14 @@ import { LogRow, AnsiLogRow } from '../types';
 /**
  * Tokenize text into word tokens (contiguous word characters)
  */
-export function tokenize(text: string): string[] {
+function tokenize(text: string): string[] {
   return text.match(/\w+/g) || [];
 }
 
 /**
  * Build frequency map from tokens
  */
-export function buildFrequencyMap(tokens: string[]): Map<string, number> {
+function buildFrequencyMap(tokens: string[]): Map<string, number> {
   const freq = new Map<string, number>();
   for (const token of tokens) {
     freq.set(token, (freq.get(token) || 0) + 1);
@@ -33,7 +33,7 @@ function decreasingWeightSum(n: number): number {
  * Each token match contributes tokenLength * (1 + 1/2 + 1/4 + ...) based on match count.
  * This reduces the impact of high-frequency tokens that appear many times.
  */
-export function tokenMatchScore(
+function tokenMatchScore(
   sourceFreq: Map<string, number>,
   targetFreq: Map<string, number>
 ): number {
@@ -56,7 +56,7 @@ function isAnsiLogRow(row: LogRow): row is AnsiLogRow {
 /**
  * Get text content from a row for comparison
  */
-export function getRowText(row: LogRow): string {
+function getRowText(row: LogRow): string {
   if (isAnsiLogRow(row)) {
     return row.strippedText ?? row.message;
   }
@@ -103,7 +103,7 @@ export function findNearestByTimestamp(
  * Binary search to find left/right bounds of rows within timestamp buffer.
  * Returns indices [left, right] inclusive where timestamps are within center ± buffer.
  */
-export function findTimestampBounds(
+function findTimestampBounds(
   rows: Array<{ timestamp: number }>,
   center: number,
   buffer: number
@@ -147,7 +147,7 @@ export function findTimestampBounds(
 }
 
 /** Timestamp buffer for candidate matching (milliseconds) */
-export const TIMESTAMP_BUFFER_MS = 1000;
+const TIMESTAMP_BUFFER_MS = 1000;
 
 /**
  * Find the best matching row in targetRows for a given sourceRow.
