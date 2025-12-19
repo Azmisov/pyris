@@ -9,11 +9,11 @@
     - if selected line, find a match (exact match?)
     - preserve visible window and zoom
     - if visible start/end, assume selection is relative to start/end
-  - show log labels
   - warning message if series errors
   - warning if line is truncated
   - warning if line count is truncated
 - styling tweaks:
+
   - if time is beyond zoom range either hide tooltip or switch to a tooltip with left/right arrow
   - tweak modal colors (double check, might be complete)
   - select line covers up previous line slightly, like underscores from prev line; maybe measure bottom underscore height?

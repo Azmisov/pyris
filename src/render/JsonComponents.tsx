@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import { useCopyToast, formatValueForCopy } from '../components/CopyableValue';
 
 /**
  * JSON rendering components for the logs viewer.
@@ -186,7 +186,7 @@ JsonContainer.displayName = 'JsonContainer';
  * Primitive value component (string, number, boolean, null)
  */
 export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?: boolean; levelHint?: boolean }>(({ value, hasComma, copyEnabled = false, levelHint = false }) => {
-  const [toastPosition, setToastPosition] = useState<{ x: number; y: number } | null>(null);
+  const { copyWithToast, Toast } = useCopyToast();
 
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (!copyEnabled) {
@@ -194,28 +194,9 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
     }
 
     e.stopPropagation();
-
-    // Format value for copying
-    let copyText: string;
-    if (value === null) {
-      copyText = 'null';
-    } else if (typeof value === 'string') {
-      copyText = value; // No quotes for strings
-    } else if (typeof value === 'boolean' || typeof value === 'number') {
-      copyText = String(value);
-    } else {
-      copyText = JSON.stringify(value);
-    }
-
-    // Copy to clipboard
-    navigator.clipboard.writeText(copyText).then(() => {
-      // Store click position for toast
-      setToastPosition({ x: e.clientX, y: e.clientY });
-      setTimeout(() => setToastPosition(null), 1500);
-    }).catch(err => {
-      console.error('Failed to copy:', err);
-    });
-  }, [value, copyEnabled]);
+    const copyText = formatValueForCopy(value);
+    copyWithToast(copyText, e);
+  }, [value, copyEnabled, copyWithToast]);
 
   const content = (() => {
     if (value === null) {
@@ -273,22 +254,7 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
         {content}
         {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
       </span>
-      {toastPosition && createPortal(
-        <span
-          className="json-copy-toast"
-          style={{
-            position: 'fixed',
-            left: `${toastPosition.x}px`,
-            top: `${toastPosition.y}px`,
-            transform: 'translate(-50%, calc(-100% - 4px))',
-            pointerEvents: 'none',
-            zIndex: 9999,
-          }}
-        >
-          Copied!
-        </span>,
-        document.body
-      )}
+      {Toast}
     </>
   );
 });
