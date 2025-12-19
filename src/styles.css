@@ -18,6 +18,16 @@
   font-size: var(--ansi-logs-row-font-size);
   line-height: var(--ansi-logs-row-height);
   min-height: var(--ansi-logs-row-height);
+}
+
+/* Pseudo-element for hover/selected backgrounds.
+   Using z-index: -1 allows underlines from adjacent rows to render on top. */
+.ansi-logs-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   transition: background-color 0.15s ease;
 }
 
@@ -35,11 +45,11 @@
   margin-bottom: 2px;
 }
 
-.ansi-logs-row:hover {
+.ansi-logs-row:hover::before {
   background-color: var(--ansi-bg-accent-1);
 }
 
-.ansi-logs-row.selected {
+.ansi-logs-row.selected::before {
   background-color: var(--ansi-bg-accent-3);
 }
 
@@ -258,8 +268,8 @@ a:hover {
     break-inside: avoid;
   }
 
-  .ansi-logs-row:hover,
-  .ansi-logs-row.selected {
+  .ansi-logs-row:hover::before,
+  .ansi-logs-row.selected::before {
     background: none;
   }
 }
@@ -281,12 +291,25 @@ a:hover {
   --json-indent: 16px; /* 2 spaces * 8px per space in monospace */
 }
 
-.json-row:hover {
+/* Pseudo-element for hover/selected backgrounds (same approach as ansi-logs-row) */
+.json-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-color 0.15s ease;
+}
+
+.json-row:hover::before {
+  background-color: var(--ansi-bg-accent-1);
+}
+
+.json-row.selected::before {
   background-color: var(--ansi-bg-accent-1);
 }
 
 .json-row.selected {
-  background-color: var(--ansi-bg-accent-1);
   border-left: 8px solid var(--ansi-bg-accent-3);
 }
 

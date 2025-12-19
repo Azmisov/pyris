@@ -33,6 +33,8 @@ interface TimelineTooltipProps {
 }
 
 const EDGE_PADDING = -2; // Tooltip extends past edge to hide border
+const LEFT_TRIANGLE_OFFSET = 9; // Offset when triangle points left
+const RIGHT_TRIANGLE_OFFSET = 10; // Offset when triangle points right
 
 /**
  * Format a timestamp with timezone information
@@ -58,6 +60,8 @@ function formatTimeWithTz(
   return { time, tzLabel };
 }
 
+type TriangleDirection = 'top' | 'left' | 'right';
+
 export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containerWidth, timeZone }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [tooltipWidth, setTooltipWidth] = useState(0);
@@ -69,14 +73,33 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
     }
   }, [data]);
 
+  // Determine if timestamp is off-screen and which direction
+  const isOffLeft = data.x < 0;
+  const isOffRight = data.x > containerWidth;
+  const triangleDirection: TriangleDirection = isOffLeft ? 'left' : isOffRight ? 'right' : 'top';
+
   // Calculate clamped position and triangle offset
   const halfWidth = tooltipWidth / 2;
   const minX = halfWidth + EDGE_PADDING;
   const maxX = containerWidth - halfWidth - EDGE_PADDING;
-  const clampedX = tooltipWidth > 0
-    ? Math.max(minX, Math.min(maxX, data.x))
-    : data.x; // Use unclamped position until width is measured
-  const triangleOffset = data.x - clampedX; // How far the triangle needs to shift from center
+
+  let clampedX: number;
+  let triangleOffset = 0;
+
+  if (isOffLeft) {
+    // Position tooltip at left edge, with room for side triangle
+    clampedX = minX + LEFT_TRIANGLE_OFFSET;
+  } else if (isOffRight) {
+    // Position tooltip at right edge, with room for side triangle
+    clampedX = maxX - RIGHT_TRIANGLE_OFFSET;
+  } else {
+    // Normal behavior - clamp within bounds and calculate triangle offset
+    clampedX = tooltipWidth > 0
+      ? Math.max(minX, Math.min(maxX, data.x))
+      : data.x; // Use unclamped position until width is measured
+    triangleOffset = data.x - clampedX; // How far the triangle needs to shift from center
+  }
+
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   // Format primary timezone
@@ -105,7 +128,7 @@ export const TimelineTooltip: React.FC<TimelineTooltipProps> = ({ data, containe
         '--triangle-offset': `${triangleOffset}px`,
       } as React.CSSProperties}
     >
-      <div ref={contentRef} className={styles.content}>
+      <div ref={contentRef} className={`${styles.content} ${styles[triangleDirection]}`}>
         <div className={styles.primary}>
           {primary.time}
           <span className={styles.tz}> {primary.tzLabel}</span>
