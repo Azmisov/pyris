@@ -74,6 +74,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
   return (
     <LogsViewer
         parsedData={parseResult.parsed}
+        failedSeries={parseResult.failed}
         options={options}
         width={width}
         height={height}

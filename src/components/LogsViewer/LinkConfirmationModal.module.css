@@ -1,76 +1,10 @@
-/* Link Confirmation Modal Component */
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* Meant as shadow backdrop, which looks best as black for both light/dark themes */
-  background-color: rgba(0, 0, 0, .5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.15s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.modal {
-  background-color: var(--ansi-bg);
-  border-radius: 6px;
-  min-width: 400px;
-  max-width: 600px;
-  animation: slideIn 0.2s ease;
-  overflow: hidden;
-}
-
-@keyframes slideIn {
-  from {
-    transform: scale(0.95) translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-.header {
-  padding: 12px 16px;
-  background-color: var(--ansi-bg-accent-2);
-  border-bottom: 1px solid var(--ansi-fg-muted-1);
-}
-
-.header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--ansi-fg);
-}
-
-.body {
-  padding: 20px 16px;
-  color: var(--ansi-fg);
-}
-
-.body p {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-}
+/* Link Confirmation Modal - Content-specific Styles */
 
 .warning {
   color: var(--ansi-color-3);
   font-weight: 500;
+  margin: 0 0 12px 0;
+  font-size: 14px;
 }
 
 .url {
@@ -82,57 +16,4 @@
   word-break: break-all;
   color: var(--ansi-fg);
   opacity: 0.9;
-}
-
-.footer {
-  padding: 12px 16px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  border-top: 1px solid var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-2);
-}
-
-.button {
-  padding: 8px 16px;
-  font-size: 13px;
-  border: 1px solid var(--ansi-fg-muted-2);
-  border-radius: 4px;
-  color: var(--ansi-fg);
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  min-width: 80px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--ansi-bg-accent-3);
-}
-
-.button:hover {
-    border-color: var(--ansi-fg-muted-1);
-}
-.button:active {
-  transform: scale(0.95);
-}
-
-[data-ansi-theme="dark"] .button:hover {
-  filter: brightness(1.1);
-}
-[data-ansi-theme="light"] .button:hover {
-  filter: brightness(0.95);
-}
-
-.copyButton, .confirmButton {
-  font-weight: 500;
-  border-color: var(--ansi-bg);
-  color: var(--ansi-bg);
-}
-
-.copyButton {
-  background-color: var(--ansi-color-4);
-}
-.confirmButton {
-  background-color: var(--ansi-color-2);
 }
