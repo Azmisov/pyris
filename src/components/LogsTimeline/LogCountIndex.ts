@@ -111,8 +111,8 @@ export class LogCountIndex {
       this.bins.push({
         // Clamp start to first timestamp
         startTime: Math.max(this.binStartTime, firstTimestamp),
-        // Clamp end to last timestamp (exclusive, so use last + small epsilon)
-        endTime: Math.min(nextTimestamp, lastTimestamp),
+        // Clamp end to last timestamp + 1 (exclusive, so +1 ensures last log is included)
+        endTime: Math.min(nextTimestamp, lastTimestamp + 1),
         count,
       });
     }

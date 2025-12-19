@@ -484,7 +484,8 @@ export class TimelineChart {
       }
     }
 
-    const fullTimeRange: [number, number] = [minTime, maxTime];
+    // End bound is exclusive, so add 1ms to include the last timestamp
+    const fullTimeRange: [number, number] = [minTime, maxTime + 1];
     this.fullTimeRange = fullTimeRange;
     this.logCountIndex = new LogCountIndex(timestamps);
 
