@@ -1,0 +1,44 @@
+/* Errors Modal Component */
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.errorList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.errorItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ansi-fg-muted-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.errorItem:last-child {
+  border-bottom: none;
+}
+
+.errorItem:hover {
+  background-color: var(--ansi-bg-accent-1);
+}
+
+.seriesName {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ansi-fg);
+  font-family: var(--ansi-logs-row-font-family);
+}
+
+.errorMessage {
+  font-size: 12px;
+  color: var(--ansi-color-1);
+  font-family: var(--ansi-logs-row-font-family);
+}

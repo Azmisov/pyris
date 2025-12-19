@@ -14,6 +14,7 @@ import { useLinkModal } from './hooks/useLinkModal';
 import { LogsViewerHeader } from './LogsViewerHeader';
 import { LinkConfirmationModal } from './LinkConfirmationModal';
 import { LabelsModal } from './LabelsModal';
+import { ErrorsModal, SeriesError } from './ErrorsModal';
 import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
 import { parseExpression } from '../../utils/jsonExpression';
@@ -37,6 +38,8 @@ export interface LogData {
  */
 export interface LogsViewerProps {
   parsedData: ParsedLogsResult;
+  /** Failed series from parsing (keyed by series name) */
+  failedSeries?: Record<string, ParsedLogsResult>;
   options?: Partial<LogsPanelOptions>;
   width?: number;
   height?: number;
@@ -74,6 +77,7 @@ const defaultViewerOptions: LogsPanelOptions = {
  */
 export const LogsViewer = memo<LogsViewerProps>(({
   parsedData,
+  failedSeries = {},
   options: userOptions = {},
   width,
   height = 600,
@@ -106,6 +110,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const [jsonExpandedPaths, setJsonExpandedPaths] = useState<Set<string>>(new Set());
   const [expressionError, setExpressionError] = useState<string | null>(null);
   const [labelsModalOpen, setLabelsModalOpen] = useState(false);
+  const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [jsonSearchTerm, setJsonSearchTerm] = useState('');
   const [debouncedJsonSearchTerm, setDebouncedJsonSearchTerm] = useState('');
 
@@ -473,6 +478,25 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   const handleCloseLabelsModal = useCallback(() => {
     setLabelsModalOpen(false);
+  }, []);
+
+  // Errors modal handlers
+  const seriesErrors = useMemo((): SeriesError[] => {
+    const errors = Object.entries(failedSeries).map(([seriesName, result]) => ({
+      seriesName,
+      error: result.error || 'Unknown error',
+    }));
+    return errors;
+  }, [failedSeries]);
+
+  const hasErrors = seriesErrors.length > 0;
+
+  const handleShowErrors = useCallback(() => {
+    setErrorsModalOpen(true);
+  }, []);
+
+  const handleCloseErrorsModal = useCallback(() => {
+    setErrorsModalOpen(false);
   }, []);
 
   // Keyboard navigation
@@ -961,6 +985,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
         hasSelection={selectedRowIndex !== undefined}
         selectedLabels={selectedRowLabels}
         onShowLabels={handleShowLabels}
+        hasErrors={hasErrors}
+        onShowErrors={handleShowErrors}
       />
 
       {/* Timeline */}
@@ -1023,6 +1049,12 @@ export const LogsViewer = memo<LogsViewerProps>(({
         isOpen={labelsModalOpen}
         labels={selectedRowLabels || {}}
         onClose={handleCloseLabelsModal}
+      />
+
+      <ErrorsModal
+        isOpen={errorsModalOpen}
+        errors={seriesErrors}
+        onClose={handleCloseErrorsModal}
       />
     </div>
   );

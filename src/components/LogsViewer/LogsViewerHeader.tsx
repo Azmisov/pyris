@@ -64,6 +64,10 @@ interface LogsViewerHeaderProps {
   // Labels props
   selectedLabels?: Record<string, string>;
   onShowLabels?: () => void;
+
+  // Errors props
+  hasErrors?: boolean;
+  onShowErrors?: () => void;
 }
 
 export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
@@ -107,6 +111,8 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   hasSelection,
   selectedLabels,
   onShowLabels,
+  hasErrors,
+  onShowErrors,
 }) => {
   const hasLabels = selectedLabels && Object.keys(selectedLabels).length > 0;
   return (
@@ -204,9 +210,11 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
         <button onClick={onCopyAll} className={toolbarStyles.copyButton} title="Copy all logs">
           <Icon name="clipboard-alt" size='lg' /> All
         </button>
-        <button className={toolbarStyles.button} title="View data loading errors">
-          <Icon name="exclamation-triangle" size='lg' />
-        </button>
+        {hasErrors && onShowErrors && (
+          <button onClick={onShowErrors} className={toolbarStyles.button} title="View data loading errors">
+            <Icon name="exclamation-triangle" size='lg' />
+          </button>
+        )}
       </div>
     </div>
   );
