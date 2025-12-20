@@ -1,7 +1,7 @@
 /* Logs Timeline Component */
 
 .timeline {
-  border-bottom: 1px solid var(--ansi-fg-muted-1);
+  border-bottom: 1px solid var(--logs-fg-muted-1);
   overflow: visible;
   cursor: crosshair;
 }
@@ -13,10 +13,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--ansi-fg-muted-2);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 3px;
-  background-color: var(--ansi-bg-accent-2);
-  color: var(--ansi-fg);
+  background-color: var(--logs-bg-accent-2);
+  color: var(--logs-fg);
   cursor: pointer;
   opacity: 0.9;
   transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
@@ -26,8 +26,8 @@
 
 .iconButton:hover {
   opacity: 1;
-  background-color: var(--ansi-bg-accent-3);
-  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
 }
 
 .iconButton:active {

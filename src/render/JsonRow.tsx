@@ -124,9 +124,9 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
   }
 
   return (
-    <span className="ansi-labels-container">
+    <span className="logs-labels-container">
       {labelEntries.map(([key, value]) => (
-        <span key={key} className="ansi-label-badge" title={`${key}=${value}`}>
+        <span key={key} className="logs-label-badge" title={`${key}=${value}`}>
           {key}={value}
         </span>
       ))}

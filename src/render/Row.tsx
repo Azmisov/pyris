@@ -33,7 +33,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
   }, [onRowHover]);
 
   const className = useMemo(() => {
-    const classes = ['ansi-logs-row'];
+    const classes = ['logs-row'];
     if (isSelected) classes.push('selected');
     if (row.level) classes.push(`level-${row.level.toLowerCase()}`);
     if (options.wrapMode === 'soft-wrap') classes.push('wrap-mode-soft');
@@ -57,7 +57,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
         dangerouslySetInnerHTML={{ __html: processedRow.html }}
       />
       {processedRow.truncatedChars !== undefined && processedRow.truncatedChars > 0 && (
-        <span className="ansi-truncation-indicator" title={`${processedRow.truncatedChars.toLocaleString()} characters truncated. Copy to view full line.`}>
+        <span className="logs-truncation-indicator" title={`${processedRow.truncatedChars.toLocaleString()} characters truncated. Copy to view full line.`}>
           +{processedRow.truncatedChars.toLocaleString()}
         </span>
       )}
@@ -97,9 +97,9 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
   }
 
   return (
-    <span className="ansi-labels-container">
+    <span className="logs-labels-container">
       {labelEntries.map(([key, value]) => (
-        <span key={key} className="ansi-label-badge" title={`${key}=${value}`}>
+        <span key={key} className="logs-label-badge" title={`${key}=${value}`}>
           {key}={value}
         </span>
       ))}

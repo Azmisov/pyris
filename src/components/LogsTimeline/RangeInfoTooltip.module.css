@@ -17,8 +17,8 @@
 
 .content {
   position: relative;
-  background-color: var(--ansi-bg-accent-1);
-  border: 1px solid var(--ansi-fg-muted-2);
+  background-color: var(--logs-bg-accent-1);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 4px;
   padding: 4px 6px;
   font-family: inherit;
@@ -26,15 +26,15 @@
   white-space: nowrap;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); */
   border-radius: 4px;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .tooltip:hover .content {
-  background-color: var(--ansi-bg-accent-3);
-  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
 }
 
 /* Triangle */
@@ -49,26 +49,26 @@
 .content::before {
   border-top: var(--triangle-outer-size) solid transparent;
   border-bottom: var(--triangle-outer-size) solid transparent;
-  border-right: var(--triangle-outer-size) solid var(--ansi-fg-muted-2);
-  border-left: var(--triangle-outer-size) solid var(--ansi-fg-muted-2);
+  border-right: var(--triangle-outer-size) solid var(--logs-fg-muted-2);
+  border-left: var(--triangle-outer-size) solid var(--logs-fg-muted-2);
   transition: border-color 0.2s ease;
 }
 
 .tooltip:hover .content::before {
-  border-right-color: var(--ansi-fg-muted-1);
-  border-left-color: var(--ansi-fg-muted-1);
+  border-right-color: var(--logs-fg-muted-1);
+  border-left-color: var(--logs-fg-muted-1);
 }
 .content::after {
   border-top: var(--triangle-inner-size) solid transparent;
   border-bottom: var(--triangle-inner-size) solid transparent;
-  border-right: var(--triangle-inner-size) solid var(--ansi-bg-accent-1);
-  border-left: var(--triangle-inner-size) solid var(--ansi-bg-accent-1);
+  border-right: var(--triangle-inner-size) solid var(--logs-bg-accent-1);
+  border-left: var(--triangle-inner-size) solid var(--logs-bg-accent-1);
   transition: border-color 0.2s ease;
 }
 
 .tooltip:hover .content::after {
-  border-right-color: var(--ansi-bg-accent-3);
-  border-left-color: var(--ansi-bg-accent-3);
+  border-right-color: var(--logs-bg-accent-3);
+  border-left-color: var(--logs-bg-accent-3);
 }
 .left .content::before, .left .content::after {
   border-left-width: 0px;

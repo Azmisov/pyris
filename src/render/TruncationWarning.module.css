@@ -6,9 +6,9 @@
   gap: 6px;
   padding: 2px 8px;
   color: var(--ansi-color-1);
-  font-size: var(--ansi-logs-row-font-size);
-  line-height: var(--ansi-logs-row-height);
-  min-height: var(--ansi-logs-row-height);
+  font-size: var(--logs-row-font-size);
+  line-height: var(--logs-row-height);
+  min-height: var(--logs-row-height);
   white-space: nowrap;
   user-select: none;
 }

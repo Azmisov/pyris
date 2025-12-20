@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "ANSI Logs",
-  "id": "nyrix-ansilogs-panel",
+  "name": "Pyris",
+  "id": "nyrix-pyris-panel",
   "info": {
-    "keywords": ["panel"],
-    "description": "",
+    "keywords": ["panel", "logs", "json", "ansi"],
+    "description": "Pyris: JSON and ANSI styled logs viewer",
     "author": {
-      "name": "Nyrix"
+      "name": "Isaac Nygaard"
     },
     "logos": {
       "small": "img/logo.svg",

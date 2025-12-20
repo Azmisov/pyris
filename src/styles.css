@@ -1,12 +1,12 @@
-/* ANSI Logs Panel Styles - Global styles for log content rendering */
+/* Pyris Panel Styles - Global styles for log content rendering */
 
 /* Shadowing looks better black for both light and dark themes; don't want a glow */
-.ansi-shadowed {
+.logs-shadowed {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
 }
 
 /* Individual log row styles */
-.ansi-logs-row {
+.logs-row {
   display: block;
   white-space: pre;
   padding: 0 4px;
@@ -15,14 +15,14 @@
   position: relative;
   border: none;
   /* inherited from container */
-  font-size: var(--ansi-logs-row-font-size);
-  line-height: var(--ansi-logs-row-height);
-  min-height: var(--ansi-logs-row-height);
+  font-size: var(--logs-row-font-size);
+  line-height: var(--logs-row-height);
+  min-height: var(--logs-row-height);
 }
 
 /* Pseudo-element for hover/selected backgrounds.
    Using z-index: -1 allows underlines from adjacent rows to render on top. */
-.ansi-logs-row::before {
+.logs-row::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -32,28 +32,28 @@
 }
 
 /* Soft wrap mode - allows text to wrap */
-.ansi-logs-row.wrap-mode-soft {
+.logs-row.wrap-mode-soft {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 /* Labels on own line when wrap enabled or row selected */
-.ansi-logs-row.wrap-mode-soft .ansi-labels-container,
-.ansi-logs-row.selected .ansi-labels-container {
+.logs-row.wrap-mode-soft .logs-labels-container,
+.logs-row.selected .logs-labels-container {
   display: block;
   margin-bottom: 2px;
 }
 
-.ansi-logs-row:hover::before {
-  background-color: var(--ansi-bg-accent-1);
+.logs-row:hover::before {
+  background-color: var(--logs-bg-accent-1);
 }
 
-.ansi-logs-row.selected::before {
-  background-color: var(--ansi-bg-accent-3);
+.logs-row.selected::before {
+  background-color: var(--logs-bg-accent-3);
 }
 
-.ansi-logs-row.empty {
+.logs-row.empty {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,19 +62,19 @@
 }
 
 /* Label badges */
-.ansi-labels-container {
+.logs-labels-container {
   display: inline;
   margin-right: 4px;
 }
 
-.ansi-label-badge {
+.logs-label-badge {
   display: inline;
   padding: 0 4px;
   font-size: 0.85em;
   line-height: inherit;
-  background-color: var(--ansi-fg-muted-2);
+  background-color: var(--logs-fg-muted-2);
   border-radius: 2px;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   white-space: nowrap;
   margin-right: 4px;
 }
@@ -177,7 +177,7 @@
    for all 256 colors as .ansi-underline-color-{0-255} */
 
 /* Hyperlinks */
-.ansi-detected-link,
+.logs-detected-link,
 a {
   color: inherit;
   text-decoration: underline;
@@ -188,7 +188,7 @@ a {
   transition: text-decoration-style 0.15s ease, filter 0.15s ease;
 }
 
-.ansi-detected-link:hover,
+.logs-detected-link:hover,
 a:hover {
   text-decoration-style: solid;
   text-decoration-thickness: 1px;
@@ -196,14 +196,14 @@ a:hover {
 }
 
 /* Inline truncation indicator - shown at end of truncated lines */
-.ansi-truncation-indicator {
+.logs-truncation-indicator {
   display: inline;
   margin-left: 8px;
   padding: 0 4px;
   font-size: 0.85em;
   line-height: inherit;
   color: var(--ansi-color-1);
-  background-color: var(--ansi-bg-accent-1);
+  background-color: var(--logs-bg-accent-1);
   border-radius: 2px;
   cursor: help;
   user-select: none;
@@ -212,11 +212,11 @@ a:hover {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .ansi-logs-row {
+  .logs-row {
     padding: 0 4px;
   }
 
-  .ansi-labels-container {
+  .logs-labels-container {
     margin-right: 0;
     margin-bottom: 4px;
   }
@@ -224,14 +224,14 @@ a:hover {
 
 /* Print styles */
 @media print {
-  .ansi-logs-row {
+  .logs-row {
     border: none;
     padding: 2px 0;
     break-inside: avoid;
   }
 
-  .ansi-logs-row:hover::before,
-  .ansi-logs-row.selected::before {
+  .logs-row:hover::before,
+  .logs-row.selected::before {
     background: none;
   }
 }
@@ -245,15 +245,15 @@ a:hover {
   position: relative;
   border: none;
   /* inherited from container */
-  font-size: var(--ansi-logs-row-font-size);
-  line-height: var(--ansi-logs-row-height);
-  min-height: var(--ansi-logs-row-height);
+  font-size: var(--logs-row-font-size);
+  line-height: var(--logs-row-height);
+  min-height: var(--logs-row-height);
 
   /* JSON indentation */
   --json-indent: 16px; /* 2 spaces * 8px per space in monospace */
 }
 
-/* Pseudo-element for hover/selected backgrounds (same approach as ansi-logs-row) */
+/* Pseudo-element for hover/selected backgrounds (same approach as logs-row) */
 .json-row::before {
   content: '';
   position: absolute;
@@ -264,15 +264,15 @@ a:hover {
 }
 
 .json-row:hover::before {
-  background-color: var(--ansi-bg-accent-1);
+  background-color: var(--logs-bg-accent-1);
 }
 
 .json-row.selected::before {
-  background-color: var(--ansi-bg-accent-1);
+  background-color: var(--logs-bg-accent-1);
 }
 
 .json-row.selected {
-  border-left: 8px solid var(--ansi-bg-accent-3);
+  border-left: 8px solid var(--logs-bg-accent-3);
 }
 
 /* Soft wrap mode for JSON rows */
@@ -283,8 +283,8 @@ a:hover {
 }
 
 /* Labels on own line when wrap enabled or row selected */
-.json-row.wrap-mode-soft .ansi-labels-container,
-.json-row.selected .ansi-labels-container {
+.json-row.wrap-mode-soft .logs-labels-container,
+.json-row.selected .logs-labels-container {
   display: block;
   margin-bottom: 2px;
 }
@@ -293,7 +293,7 @@ a:hover {
 .json-content {
   display: inline-block;
   vertical-align: top; /* Prevents extra bottom padding from baseline alignment */
-  font-family: var(--ansi-logs-row-font-family);
+  font-family: var(--logs-row-font-family);
   white-space: pre;
 }
 
@@ -344,7 +344,7 @@ a:hover {
 }
 
 .json-ellipsis:hover, .json-collapse:hover {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
   text-decoration: none;
 }
 
@@ -359,14 +359,14 @@ a:hover {
 }
 
 .json-primitive-copyable:hover {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
 }
 
 /* JSON copy toast notification */
 .json-copy-toast {
   padding: 0.08em 0.5em;
   background-color: var(--ansi-color-2);
-  color: var(--ansi-bg);
+  color: var(--logs-bg);
   border-radius: 3px;
   font-size: 0.85em;
   font-weight: 500;
@@ -403,10 +403,10 @@ a:hover {
 /* Flash bright blue animation for newly expanded JSON structures */
 @keyframes json-expand-flash {
   0% {
-    background-color: var(--ansi-bg-accent-3);
+    background-color: var(--logs-bg-accent-3);
   }
   50% {
-    background-color: var(--ansi-bg-accent-3);
+    background-color: var(--logs-bg-accent-3);
   }
   100% {
     background-color: transparent;

@@ -3,8 +3,8 @@
 .panel {
   display: flex;
   flex-direction: column;
-  background-color: var(--ansi-bg);
-  color: var(--ansi-fg);
+  background-color: var(--logs-bg);
+  color: var(--logs-fg);
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   font-size: 13px;
   line-height: 1.4;
@@ -17,7 +17,7 @@
 .top {
   position: relative;
   z-index: 1;
-  box-shadow: 0 8px 6px var(--ansi-bg);
+  box-shadow: 0 8px 6px var(--logs-bg);
 }
 
 /* Header section */
@@ -29,8 +29,8 @@
   flex-shrink: 0;
   min-height: 32px;
   font-size: 11px;
-  border-bottom: 1px solid var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-1);
+  border-bottom: 1px solid var(--logs-fg-muted-1);
+  background-color: var(--logs-bg-accent-1);
 }
 
 /* Stats section */
@@ -66,7 +66,7 @@
   align-items: center;
   justify-content: center;
   height: 200px;
-  color: var(--ansi-fg-muted-1);
+  color: var(--logs-fg-muted-1);
   text-align: center;
   padding: 20px;
   font-size: 14px;

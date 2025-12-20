@@ -12,9 +12,7 @@
     - if visible start/end, assume selection is relative to start/end
 - cleanup:
   - remove debug logging
-  - use different prefix for global styles
-  - are there unused CSS classes
-  - finalize name and logo
+  - finalize logo
 - future version or needs more thought:
   - save search expression in local storage
   - have count of all records be the limit for histogram scaling, rather than view dependent?

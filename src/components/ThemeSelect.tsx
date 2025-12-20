@@ -56,7 +56,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
 
         <Select.Portal>
           <Select.Content
-            className={`${styles.menu} ${styles.open} ansi-shadowed`}
+            className={`${styles.menu} ${styles.open} logs-shadowed`}
             position="popper"
             sideOffset={2}
             align="start"

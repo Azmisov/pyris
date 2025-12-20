@@ -4,8 +4,8 @@
 
 .content {
   position: relative;
-  background-color: var(--ansi-bg-accent-1);
-  border: 1px solid var(--ansi-fg-muted-2);
+  background-color: var(--logs-bg-accent-1);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 0 0 4px 4px;
   padding: 6px 10px;
   font-family: inherit;
@@ -25,7 +25,7 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 8px solid var(--ansi-fg-muted-2);
+  border-bottom: 8px solid var(--logs-fg-muted-2);
 }
 
 /* Inner triangle to create border effect */
@@ -39,7 +39,7 @@
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid var(--ansi-bg-accent-1);
+  border-bottom: 6px solid var(--logs-bg-accent-1);
 }
 
 /* Left-pointing triangle (timestamp is off-screen to the left) */
@@ -56,7 +56,7 @@
   height: 0;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-right: 8px solid var(--ansi-fg-muted-2);
+  border-right: 8px solid var(--logs-fg-muted-2);
 }
 
 .content.left::after {
@@ -68,7 +68,7 @@
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-right: 6px solid var(--ansi-bg-accent-1);
+  border-right: 6px solid var(--logs-bg-accent-1);
 }
 
 /* Right-pointing triangle (timestamp is off-screen to the right) */
@@ -85,7 +85,7 @@
   height: 0;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
-  border-left: 8px solid var(--ansi-fg-muted-2);
+  border-left: 8px solid var(--logs-fg-muted-2);
 }
 
 .content.right::after {
@@ -97,21 +97,21 @@
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-left: 6px solid var(--ansi-bg-accent-1);
+  border-left: 6px solid var(--logs-bg-accent-1);
 }
 
 .primary {
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   font-weight: 500;
 }
 
 .tz {
-  color: var(--ansi-fg-muted-1);
+  color: var(--logs-fg-muted-1);
   font-weight: normal;
 }
 
 .secondary {
-  color: var(--ansi-fg-muted-1);
+  color: var(--logs-fg-muted-1);
   font-size: 11px;
   margin-top: 2px;
 }
@@ -119,13 +119,13 @@
 .details {
   margin-top: 4px;
   padding-top: 4px;
-  border-top: 1px solid var(--ansi-fg-muted-2);
+  border-top: 1px solid var(--logs-fg-muted-2);
 }
 
 .indicator {
   font-size: 11px;
   font-weight: 500;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
 }
 
 .count {
@@ -140,5 +140,5 @@
 .beyond {
   font-size: 11px;
   font-style: italic;
-  color: var(--ansi-fg-muted-1);
+  color: var(--logs-fg-muted-1);
 }

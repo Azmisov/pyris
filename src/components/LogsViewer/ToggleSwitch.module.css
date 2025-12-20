@@ -3,15 +3,15 @@
   display: inline-flex;
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid var(--ansi-fg-muted-2);
-  background-color: var(--ansi-bg);
+  border: 1px solid var(--logs-fg-muted-2);
+  background-color: var(--logs-bg);
 }
 
 .option {
   padding: 3px 8px;
   background: transparent;
   border: none;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
@@ -22,11 +22,11 @@
 }
 
 .option:hover {
-  background-color: var(--ansi-bg-accent-1);
+  background-color: var(--logs-bg-accent-1);
 }
 
 .option.active {
   background-color: var(--ansi-color-2);
-  color: var(--ansi-bg);
+  color: var(--logs-bg);
   cursor: default;
 }

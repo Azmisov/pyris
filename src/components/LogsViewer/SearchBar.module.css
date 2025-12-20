@@ -15,7 +15,7 @@
 /* When search is expanded, make toggle button attach to search container */
 .group.expanded {
   gap: 0;
-  border: 1px solid var(--ansi-fg-muted-2);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 3px;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
@@ -26,7 +26,7 @@
 }
 
 .group.expanded:focus-within {
-  border-color: var(--ansi-fg-muted-1);
+  border-color: var(--logs-fg-muted-1);
 }
 
 .group.expanded .toggleBtn {
@@ -55,7 +55,7 @@
   padding: 6px 82px 6px 10px;
   border: none;
   border-radius: 0;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   font-size: 12px;
   font-family: inherit;
   outline: none;
@@ -65,15 +65,15 @@
   height: 28px;
   line-height: 14px;
   box-sizing: border-box;
-  background-color: var(--ansi-bg-accent-2);
+  background-color: var(--logs-bg-accent-2);
 }
 
 .input:focus {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .input::placeholder {
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   opacity: 0.6;
 }
 
@@ -96,7 +96,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--ansi-fg-muted-2);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 3px;
   background-color: transparent;
   cursor: pointer;
@@ -110,14 +110,14 @@
 .toggle:hover {
   opacity: 1;
   /* normally would use accent 2, but won't be visible since it matches search input background */
-  background-color: var(--ansi-bg-accent-3);
-  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
 }
 
 .toggle.active {
   opacity: 1;
-  background-color: var(--ansi-bg-accent-3);
-  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
 }
 
 .toggle svg {
@@ -131,22 +131,22 @@
   display: inline-flex;
   align-items: center;
   padding: 0 4px 0 4px;
-  color: var(--ansi-fg-muted-1);
-  font-family: var(--ansi-logs-row-font-family);
+  color: var(--logs-fg-muted-1);
+  font-family: var(--logs-row-font-family);
   font-weight: 500;
   cursor: help;
   user-select: none;
   font-size: 12px;
   white-space: nowrap;
   flex-shrink: 0;
-  background-color: var(--ansi-bg-accent-2);
+  background-color: var(--logs-bg-accent-2);
   height: 28px;
   transition: background-color 0.2s ease;
 }
 
 /* Update prefix background when input is focused */
 .inputWrapper:focus-within .expressionPrefix {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
 }
 
 /* Error state for expression mode */
@@ -161,14 +161,14 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--ansi-bg-accent-1);
-  color: var(--ansi-fg-1);
+  background: var(--logs-bg-accent-1);
+  color: var(--logs-fg-1);
   padding: 4px 8px;
   font-size: 11px;
   border-radius: 0 0 3px 3px;
   z-index: 10;
   margin-top: 2px;
-  border: 1px solid var(--ansi-fg-1);
+  border: 1px solid var(--logs-fg-1);
   border-top: none;
 }
 

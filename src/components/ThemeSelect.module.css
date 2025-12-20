@@ -9,8 +9,8 @@
   display: flex;
   align-items: center;
   background-color: transparent;
-  color: var(--ansi-fg);
-  border: 1px solid var(--ansi-fg-muted-2);
+  color: var(--logs-fg);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 3px;
   padding: 4px 6px;
   font-size: 12px;
@@ -18,14 +18,14 @@
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
   text-align: left;
-  background-color: var(--ansi-bg-accent-2);
+  background-color: var(--logs-bg-accent-2);
 }
 
 .button:hover,
 .button.open,
 .button[data-state="open"] {
-  border-color: var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .label {
@@ -44,9 +44,9 @@
 .menu {
   width: max-content;
   max-width: 400px;
-  color: var(--ansi-fg);
-  background-color: var(--ansi-bg-accent-2);
-  border: 1px solid var(--ansi-fg-muted-2);
+  color: var(--logs-fg);
+  background-color: var(--logs-bg-accent-2);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 4px;
   padding: 0;
   list-style: none;
@@ -72,7 +72,7 @@
 
 .item.highlighted,
 .item[data-highlighted] {
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .item.selected,
