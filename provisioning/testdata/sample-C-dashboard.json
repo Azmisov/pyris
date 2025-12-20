@@ -1,0 +1,790 @@
+[
+  {
+    "columns": [
+      {
+        "text": "Time",
+        "type": "time"
+      },
+      {
+        "text": "Message",
+        "type": "string"
+      },
+      {
+        "text": "Labels",
+        "type": "string"
+      }
+    ],
+    "rows": [
+      [
+        1765477321452,
+        "Basic Colors - Foreground (30-37):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477322952,
+        "\u001b[30mBlack\u001b[0m \u001b[31mRed\u001b[0m \u001b[32mGreen\u001b[0m \u001b[33mYellow\u001b[0m \u001b[34mBlue\u001b[0m \u001b[35mMagenta\u001b[0m \u001b[36mCyan\u001b[0m \u001b[37mWhite\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477325793,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477329925,
+        "Bright Colors - Foreground (90-97):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477332466,
+        "\u001b[90mBright Black\u001b[0m \u001b[91mBright Red\u001b[0m \u001b[92mBright Green\u001b[0m \u001b[93mBright Yellow\u001b[0m \u001b[94mBright Blue\u001b[0m \u001b[95mBright Magenta\u001b[0m \u001b[96mBright Cyan\u001b[0m \u001b[97mBright White\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477335059,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477337712,
+        "Basic Colors - Background (40-47):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477342638,
+        "\u001b[40mBlack BG\u001b[0m \u001b[41mRed BG\u001b[0m \u001b[42mGreen BG\u001b[0m \u001b[43mYellow BG\u001b[0m \u001b[44mBlue BG\u001b[0m \u001b[45mMagenta BG\u001b[0m \u001b[46mCyan BG\u001b[0m \u001b[47mWhite BG\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477343277,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477345388,
+        "Bright Colors - Background (100-107):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477345706,
+        "\u001b[100mBright Black BG\u001b[0m \u001b[101mBright Red BG\u001b[0m \u001b[102mBright Green BG\u001b[0m \u001b[103mBright Yellow BG\u001b[0m \u001b[104mBright Blue BG\u001b[0m \u001b[105mBright Magenta BG\u001b[0m \u001b[106mBright Cyan BG\u001b[0m \u001b[107mBright White BG\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477346717,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477346746,
+        "256 Color Mode - Foreground (38;5;n):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477348861,
+        "\u001b[38;5;0mColor 0\u001b[0m \u001b[38;5;16mColor 16\u001b[0m \u001b[38;5;95mColor 95\u001b[0m \u001b[38;5;124mColor 124\u001b[0m \u001b[38;5;196mColor 196\u001b[0m \u001b[38;5;226mColor 226\u001b[0m \u001b[38;5;255mColor 255\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477353382,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477358099,
+        "256 Color Mode - Background (48;5;n):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477362839,
+        "\u001b[48;5;17mColor 17 BG\u001b[0m \u001b[48;5;53mColor 53 BG\u001b[0m \u001b[48;5;125mColor 125 BG\u001b[0m \u001b[48;5;197mColor 197 BG\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477362864,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477365072,
+        "Truecolor - Foreground (38;2;r;g;b):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477369335,
+        "\u001b[38;2;255;0;0mRed RGB\u001b[0m \u001b[38;2;0;255;0mGreen RGB\u001b[0m \u001b[38;2;0;0;255mBlue RGB\u001b[0m \u001b[38;2;255;128;0mOrange RGB\u001b[0m \u001b[38;2;128;0;128mPurple RGB\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477373074,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477375684,
+        "Truecolor - Background (48;2;r;g;b):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477378856,
+        "\u001b[48;2;255;192;203mPink BG\u001b[0m \u001b[48;2;255;255;0mYellow BG\u001b[0m \u001b[48;2;0;255;255mCyan BG\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477382797,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477384702,
+        "Text Styles - Bold (1):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477387831,
+        "\u001b[1mBold text\u001b[0m \u001b[1;31mBold red\u001b[0m \u001b[1;32mBold green\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477390794,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477393125,
+        "Text Styles - Faint/Dim (2):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477396872,
+        "\u001b[2mFaint text\u001b[0m \u001b[2;33mFaint yellow\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477398993,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477403187,
+        "Text Styles - Italic (3):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477404224,
+        "\u001b[3mItalic text\u001b[0m \u001b[3;34mItalic blue\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477406158,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477408622,
+        "Text Styles - Underline (4):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477409001,
+        "\u001b[4mUnderlined text\u001b[0m \u001b[4;35mUnderlined magenta\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477410304,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477414146,
+        "Text Styles - Double Underline (21):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477418400,
+        "\u001b[21mDouble underlined text\u001b[0m \u001b[21;36mDouble underlined cyan\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477420877,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477425435,
+        "Text Styles - Slow Blink (5):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477429120,
+        "\u001b[5mSlow blinking text\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477429763,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477432308,
+        "Text Styles - Rapid Blink (6):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477435298,
+        "\u001b[6mRapid blinking text\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477437171,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477438206,
+        "Text Styles - Conceal (8):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477440551,
+        "Visible \u001b[8mHidden text\u001b[0m Visible again",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477443217,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477446219,
+        "Text Styles - Strike (9):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477446558,
+        "\u001b[9mStrikethrough text\u001b[0m \u001b[9;31mStrikethrough red\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477448034,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477452346,
+        "Text Styles - Framed (51):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477452570,
+        "\u001b[51mFramed text\u001b[0m \u001b[51;32mFramed green\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477457259,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477460928,
+        "Text Styles - Encircled (52):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477463814,
+        "\u001b[52mEncircled text\u001b[0m \u001b[52;33mEncircled yellow\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477466469,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477471269,
+        "Text Styles - Overline (53):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477471749,
+        "\u001b[53mOverlined text\u001b[0m \u001b[53;34mOverlined blue\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477472137,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477476331,
+        "Text Styles - Superscript (73):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477480859,
+        "Normal\u001b[73mSuperscript\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477482703,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477484554,
+        "Text Styles - Subscript (74):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477486197,
+        "Normal\u001b[74mSubscript\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477487275,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477491753,
+        "Underline Color (58;5;n):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477496234,
+        "\u001b[4;58;5;196mRed underline\u001b[0m \u001b[4;58;5;46mGreen underline\u001b[0m \u001b[4;58;5;21mBlue underline\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477498227,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477502757,
+        "Underline Color RGB (58;2;r;g;b):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477504683,
+        "\u001b[4;58;2;255;0;255mMagenta underline\u001b[0m \u001b[4;58;2;255;165;0mOrange underline\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477504763,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477508593,
+        "Combined Styles:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477513173,
+        "\u001b[1;3;4;31mBold Italic Underlined Red\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477515089,
+        "\u001b[1;32;48;5;235mBold Green on Gray\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477516072,
+        "\u001b[3;38;5;141;48;5;236mItalic Purple on Dark Gray\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477520021,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477522737,
+        "Multi-code sequence test (the bug fix case):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477527561,
+        "\u001b[3;38;5;95mItalic with 256-color 95\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477529487,
+        "\u001b[1;4;38;5;124mBold Underlined with 256-color 124\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477529675,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477534338,
+        "Reset codes:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477536645,
+        "\u001b[1mBold\u001b[22m Not bold",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477541028,
+        "\u001b[3mItalic\u001b[23m Not italic",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477545294,
+        "\u001b[4mUnderline\u001b[24m Not underlined",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477549465,
+        "\u001b[9mStrike\u001b[29m Not striked",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477554273,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477557355,
+        "Color reset:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477559287,
+        "\u001b[31mRed\u001b[39m Default foreground",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477559624,
+        "\u001b[41mRed BG\u001b[49m Default background",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477561876,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477566559,
+        "Complex nesting:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477569220,
+        "\u001b[1m\u001b[31mBold Red \u001b[4mUnderlined\u001b[24m Not underlined\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477570398,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477574777,
+        "Edge cases:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477579241,
+        "\u001b[0m Reset only",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477581843,
+        "\u001b[m Empty SGR (should reset)",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477584687,
+        "Normal \u001b[31m\u001b[32m\u001b[33mRapid color changes\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477589530,
+        "\u001b[1;2;3;4;5;9;21;51;53;73mAll styles at once\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477592907,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477595500,
+        "Default colors with 256-color overrides:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477595745,
+        "\u001b[31mBasic Red\u001b[0m vs \u001b[38;5;196m256-Red\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477599151,
+        "\u001b[34mBasic Blue\u001b[0m vs \u001b[38;5;21m256-Blue\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477599824,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477600971,
+        "Performance test - long sequence:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477603115,
+        "\u001b[38;5;196m█\u001b[38;5;202m█\u001b[38;5;208m█\u001b[38;5;214m█\u001b[38;5;220m█\u001b[38;5;226m█\u001b[38;5;190m█\u001b[38;5;154m█\u001b[38;5;118m█\u001b[38;5;82m█\u001b[38;5;46m█\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477607882,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477608740,
+        "Multiple resets:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477609706,
+        "\u001b[31mRed\u001b[0m \u001b[32mGreen\u001b[0m \u001b[33mYellow\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477611915,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477616404,
+        "Foreground + Background combinations:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477619696,
+        "\u001b[31;42mRed on Green\u001b[0m \u001b[33;44mYellow on Blue\u001b[0m \u001b[37;41mWhite on Red\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477619891,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477620372,
+        "256-color foreground + background:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477621747,
+        "\u001b[38;5;226;48;5;18mYellow on Navy\u001b[0m \u001b[38;5;46;48;5;196mGreen on Red\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477624603,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477625350,
+        "OSC-8 Hyperlinks:",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477627906,
+        "\u001b]8;;https://example.com\u0007Example Website\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477631044,
+        "\u001b]8;;https://github.com\u0007GitHub\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477631129,
+        "\u001b]8;;mailto:test@example.com\u0007Email Link\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477635948,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477639272,
+        "File Links (file://):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477640424,
+        "\u001b]8;;file:///home/user/example.txt\u0007Local File Link\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477644867,
+        "\u001b]8;;file:///var/log/system.log\u0007System Log File\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477647229,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477648267,
+        "VSCode Links (vscode://):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477651958,
+        "\u001b]8;;vscode://file/home/user/project/main.ts:42:10\u0007VSCode Link with Line\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477653907,
+        "\u001b]8;;vscode://file/home/user/project/README.md\u0007VSCode File Link\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477658744,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477659390,
+        "Plain URL Detection (no OSC-8):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477661026,
+        "https://docs.grafana.com/",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477663969,
+        "file:///home/user/documents/report.pdf",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477667089,
+        "vscode://file/workspace/src/index.ts:10:5",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477669510,
+        "http://localhost:3000/dashboard",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477674431,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477676046,
+        "Dangerous Schemes (NOT auto-linked for security - displayed as plain text):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477679347,
+        "javascript:alert(document.domain)",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477679907,
+        "javascript:void(0)",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477683175,
+        "data:text/html,alert-test",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477684803,
+        "vbscript:msgbox-test",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477687824,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477691036,
+        "Dangerous URLs with :// (auto-linked but will show warning modal):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477694240,
+        "javascript://example.com/path",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477695500,
+        "data://text/html,test",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477698118,
+        "vbscript://test",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477698557,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477701048,
+        "Safe Non-URL Schemes (auto-linked):",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477705835,
+        "mailto:user@example.com",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477709557,
+        "tel:+1234567890",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477710298,
+        "sms:+1234567890",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477710682,
+        "callto:+1234567890",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477714769,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477719327,
+        "End of test file",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ],
+      [
+        1765477721600,
+        "",
+        "{\"source\":\"sample-C\",\"type\":\"ansi-test\"}"
+      ]
+    ]
+  }
+]

@@ -1,0 +1,441 @@
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Logger configured
+{"log_time":"2025-11-18T23:46:48.927082+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Logger configured"}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Connecting to Redis [1;38;5;67mhost[0m[38;5;97m=[0m[3;38;5;95macme-dev-redis[0m [1;38;5;67mport[0m[38;5;97m=[0m[3;38;5;95m6379[0m [1;38;5;67mdb[0m[38;5;97m=[0m[3;38;5;95m1[0m
+{"log_time":"2025-11-18T23:46:48.927447+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Connecting to Redis","host":"acme-dev-redis","port":6379,"db":1}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;214mWRN[0m] app_worker_local - Redis processing lock disabled, which means no protection against multiple running processes [1;38;5;67mkey[0m[38;5;97m=[0m[3;38;5;95mapp_worker_local:lock[0m
+{"log_time":"2025-11-18T23:46:48.928015+00:00","log_level":"WARNING","log_name":["app_worker_local"],"message":"Redis processing lock disabled, which means no protection against multiple running processes","key":"app_worker_local:lock"}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Binding to ZMQ [1;38;5;67maddress[0m[38;5;97m=[0m[3;38;5;95mtcp://localhost:0[0m [1;38;5;67msocket_type[0m[38;5;97m=[0m[3;38;5;95mPAIR[0m
+{"log_time":"2025-11-18T23:46:48.928370+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Binding to ZMQ","address":"tcp://localhost:0","socket_type":0}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;38mDBG[0m] app_worker_local - ZMQ address resolved [1;38;5;67maddress[0m[38;5;97m=[0m[3;38;5;95mtcp://127.0.0.1:45473[0m
+{"log_time":"2025-11-18T23:46:48.929208+00:00","log_level":"DEBUG","log_name":["app_worker_local"],"message":"ZMQ address resolved","address":"tcp://127.0.0.1:45473"}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Registered AWS session parameters [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95macme[0m [1;38;5;67mcredentials[0m[38;5;97m=[0m[3;38;5;95mprofile:dev[0m
+{"log_time":"2025-11-18T23:46:48.929475+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Registered AWS session parameters","name":"acme","credentials":"profile:dev"}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Registered AWS session parameters [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mclickhouse[0m [1;38;5;67mcredentials[0m[38;5;97m=[0m[3;38;5;95mprofile:dev[0m
+{"log_time":"2025-11-18T23:46:48.929720+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Registered AWS session parameters","name":"clickhouse","credentials":"profile:dev"}
+[38;5;144m2025-11-18 23:46:48.92[0m [[38;5;76mINF[0m] app_worker_local - Process manager starting [1;38;5;67mpid[0m[38;5;97m=[0m[3;38;5;95m470441[0m
+{"log_time":"2025-11-18T23:46:48.929852+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Process manager starting","pid":470441}
+[38;5;144m2025-11-18 23:46:48.93[0m [[38;5;76mINF[0m] app_worker_local - Application started
+{"log_time":"2025-11-18T23:46:48.930492+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Application started"}
+[38;5;144m2025-11-18 23:46:48.93[0m [[38;5;76mINF[0m] app_worker_local - Config loaded [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95mlocal[0m
+{"log_time":"2025-11-18T23:46:48.930546+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Config loaded","path":"local"}
+[38;5;144m2025-11-18 23:46:48.93[0m [[38;5;76mINF[0m] app_worker_local -
+ [38;5;166mConfig[0m: [38;5;78mAppConfig[0m
+ [38;5;167m│ [0m[38;5;167moverrides[0m:
+ [38;5;167m│ [0m[38;5;167mlog[0m: [38;5;78mStructuredLoggingConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-990[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_deferred[0m: [3;38;5;95mCRITICAL[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mname[0m: [38;5;78mProcessName[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mroot[0m: [3;38;5;95mapp_worker_local[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mhuman[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mmachine[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mlevel[0m: [3;38;5;95m5[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mlevel_libs[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mapp_worker[0m: [3;38;5;95m5[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mcore_utils[0m: [3;38;5;95m5[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mlevel_abbrev[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mstyles[0m: [38;5;78mPresetStylesConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mroot[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;170m│ [0m[38;5;170msp_data[0m: [3;38;5;95m12[0m
+ [38;5;167m│ [0m[38;5;167mlock[0m: [38;5;78mProcessingLockConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_deferred[0m: [3;38;5;95mCRITICAL[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mredis[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mname[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mdisabled[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mexpire[0m: [3;38;5;95m60.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mtimeout[0m: [3;38;5;95m10.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mheartbeat[0m: [3;38;5;95m30.0[0m
+ [38;5;167m│ [0m[38;5;167maws[0m: [38;5;78mAWSParamsConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mregion_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168maccess_key_id[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168msecret_access_key[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168msession_token[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mprofile_name[0m: [3;38;5;80mdev[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mrole_arn[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpool[0m: [3;38;5;95m10[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mname[0m: [3;38;5;80macme[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpreload[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;167mredis[0m: [38;5;78mRedisConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_deferred[0m: [3;38;5;95mWEAK[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mhost[0m: [3;38;5;80macme-dev-redis[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mport[0m: [3;38;5;95m6379[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mdb[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mprotocol[0m: [3;38;5;95m2[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mretry[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mretry_on_error[0m: [3;38;5;95m<class 'redis.exceptions.BusyLoadingError'>,<class 'redis.exceptions.ConnectionError'>,<class 'redis.exceptions.TimeoutError'>[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mbackoff_base[0m: [3;38;5;95m1.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mbackoff_cap[0m: [3;38;5;95m60.0[0m
+ [38;5;167m│ [0m[38;5;167mclickhouse[0m: [38;5;78mClickHouseConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_deferred[0m: [3;38;5;95mWEAK[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mhost[0m: [3;38;5;80macme-dev-clickhouse.internal[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mport[0m: [3;38;5;95m9000[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mdatabase[0m: [3;38;5;80mdefault[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168muser[0m: [3;38;5;80mdefault[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpassword[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpool_min[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpool_max[0m: [3;38;5;95m3[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168msecret[0m: [3;38;5;80macme/dev/app/acme-app-worker/clickhouse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168maws[0m: [38;5;78mAWSParamsConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mregion_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169maccess_key_id[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msecret_access_key[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msession_token[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mprofile_name[0m: [3;38;5;80mdev[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mrole_arn[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mpool[0m: [3;38;5;95m10[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mname[0m: [3;38;5;80mclickhouse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mpreload[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;167mkafka[0m: [38;5;78mKafkaConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mservice_deferred[0m: [3;38;5;95mCRITICAL[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mbrokers[0m: [3;38;5;95mkafka-cluster-0.internal:9092,kafka-cluster-1.internal:9092,kafka-cluster-2.internal:9092,kafka-cluster-3.internal:9092,kafka-cluster-4.internal:9092[0m
+ [38;5;167m│ [0m[38;5;167mdata[0m: [38;5;78mPipelineConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mpartition[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mmap[0m: [3;38;5;80mS251R2[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mregion_type[0m: [3;38;5;80mstate[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mregion[0m: [3;38;5;80mca[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mbackfill[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mbin_size[0m: [3;38;5;95m300[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168msources[0m: [3;38;5;95mkafka,archive[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168marchive[0m: [38;5;78mArchiveConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mbucket[0m: [3;38;5;80macme-dev-app-data-archives[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkey[0m: [3;38;5;95m<core_utils.contrib.template.TemplateString object at 0x7e436b2bb010>[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mcompression[0m: [3;38;5;80mauto[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169maws[0m: [3;38;5;80maws_acme[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mcache[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mlocal[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mlist_batch_size[0m: [3;38;5;95m100[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mmargin[0m: [3;38;5;95m0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mguarantee_crosspartition[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mpoll_interval[0m: [3;38;5;95m5[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mchunk_size[0m: [3;38;5;95m32768[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mtimestamp_buffer[0m: [3;38;5;95m0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169merr_incomplete[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169merr_delete[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169merr_failure[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mreduce_memory[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mkafka[0m: [38;5;78mKafkaConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mtopic[0m: [3;38;5;80macme.dataflow.metrics_archive[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkey_filter[0m: [3;38;5;95m{}[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mmin_fetch_timeout[0m: [3;38;5;95m500[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mmax_fetch_batch[0m: [3;38;5;95m1000[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mrefetch_threshold[0m: [3;38;5;95m200[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mtimestamp_buffer[0m: [3;38;5;95m0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mloader[0m: [3;38;5;80mapp_worker.process:kafka_record_loader[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkafka[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168moutput[0m: [38;5;78mOutputConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mtopic[0m: [3;38;5;80macme.dataflow.output_archive[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mbucket[0m: [3;38;5;80macme-dev-app-data-archives[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkey[0m: [3;38;5;95m<core_utils.contrib.template.TemplateString object at 0x7e436a9c3b00>[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mcompression[0m: [3;38;5;80mzstd[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mstreams[0m: [3;38;5;95mcache[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169maws[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkafka[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mservice_deferred[0m: [3;38;5;95mWEAK[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mparallel[0m: [38;5;78mParallelConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mcount[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mslot[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mcommit[0m: [38;5;78mCommitConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mkey[0m: [3;38;5;80mapp_worker_local:state.ca:committed[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mdryrun[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169moverride[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168msocket[0m: [38;5;78mZMQConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mservice_name[0m: [3;38;5;95mNone[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mservice_priority[0m: [3;38;5;95m-1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mservice_deferred[0m: [3;38;5;95mCRITICAL[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169maddress[0m: [3;38;5;80mtcp://localhost:0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msocket_type[0m: [3;38;5;95mPAIR[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msend_buffer[0m: [3;38;5;95m31457280[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msend_hwm[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mreceive_buffer[0m: [3;38;5;95m31457280[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mreceive_hwm[0m: [3;38;5;95m1[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mbind[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mrandomize[0m: [3;38;5;95mFalse[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mstart[0m: [3;38;5;80mcommitted[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mstart_fallback[0m: [3;38;5;80mfirst[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mstart_buffer[0m: [3;38;5;95m600000[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mend[0m: [3;38;5;80mcommitted[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mend_fallback[0m: [3;38;5;80mlast[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mend_buffer[0m: [3;38;5;95m0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mlive[0m: [3;38;5;95mTrue[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mretry[0m: [38;5;78mExponentialRetryConfig[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mlimit[0m: [3;38;5;95m3[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mtimeout[0m: [3;38;5;95m1000.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mexp_base[0m: [3;38;5;95m2.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mexp_trunc[0m: [3;38;5;95m0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mcache_dir[0m: [3;38;5;95mdata[0m
+ [38;5;167m│ [0m[38;5;167mmodel_loader[0m: [38;5;78mModelLoader[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mtable[0m: [3;38;5;80msensor_data_5min_output_thresholds[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mbuffer[0m: [3;38;5;95m0:10:00[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mrefill[0m: [3;38;5;95m0:05:00[0m
+ [38;5;167m│ [0m[38;5;167mprocessor[0m: [38;5;78mProcessor[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mgranularity[0m: [3;38;5;95m0:15:00[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mdeviation_scales[0m:
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169maog[0m: [3;38;5;95m-1.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169msf[0m: [3;38;5;95m1.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;169m│ [0m[38;5;169mdly[0m: [3;38;5;95m120.0[0m
+ [38;5;167m│ [0m[38;5;168m│ [0m[38;5;168mseverity_conditions[0m: [3;38;5;95mseverity=180 deviation=0.2 reliable=240.0 bordering=False,severity=120 deviation=0.1 reliable=240.0 bordering=False,severity=120 deviation=0.05 reliable=480.0 bordering=False,severity=60 deviation=0.0001 reliable=0.0 bordering=False[0m
+{"log_time":"2025-11-18T23:46:48.931616+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":{"overrides":[],"log":{"service_name":null,"service_priority":-990,"service_deferred":0,"name":{"root":["app_worker_local"]},"human":true,"machine":true,"level":5,"level_libs":{"app_worker":5,"core_utils":5},"level_abbrev":null,"styles":{"root":{"sp_data":12}}},"lock":{"service_name":null,"service_priority":-1,"service_deferred":0,"redis":null,"name":null,"disabled":true,"expire":60.0,"timeout":10.0,"heartbeat":30.0},"aws":{"region_name":null,"access_key_id":null,"secret_access_key":null,"session_token":null,"profile_name":"dev","role_arn":null,"pool":10,"name":"acme","preload":false,"service_priority":-1},"redis":{"service_name":null,"service_priority":-1,"service_deferred":2,"host":"acme-dev-redis","port":6379,"db":1,"protocol":2,"retry":-1,"retry_on_error":["<class 'redis.exceptions.BusyLoadingError'>","<class 'redis.exceptions.ConnectionError'>","<class 'redis.exceptions.TimeoutError'>"],"backoff_base":1.0,"backoff_cap":60.0},"clickhouse":{"service_name":null,"service_priority":-1,"service_deferred":2,"host":"acme-dev-clickhouse.internal","port":9000,"database":"default","user":"default","password":"","pool_min":1,"pool_max":3,"secret":"acme/dev/app/acme-app-worker/clickhouse","aws":{"region_name":null,"access_key_id":null,"secret_access_key":null,"session_token":null,"profile_name":"dev","role_arn":null,"pool":10,"name":"clickhouse","preload":false,"service_priority":-1}},"kafka":{"service_name":null,"service_priority":-1,"service_deferred":0,"brokers":["kafka-cluster-0.internal:9092","kafka-cluster-1.internal:9092","kafka-cluster-2.internal:9092","kafka-cluster-3.internal:9092","kafka-cluster-4.internal:9092"]},"data":{"partition":{"map":"S251R2","region_type":"state","region":"ca","backfill":""},"bin_size":300,"sources":["kafka","archive"],"archive":{"bucket":"acme-dev-app-data-archives","key":"<core_utils.contrib.template.TemplateString object at 0x7e436b2bb010>","compression":"auto","aws":"aws_acme","cache":true,"local":true,"list_batch_size":100,"margin":0,"guarantee_crosspartition":[],"poll_interval":5,"chunk_size":32768,"timestamp_buffer":0,"err_incomplete":false,"err_delete":false,"err_failure":false,"reduce_memory":true},"kafka":{"topic":"acme.dataflow.metrics_archive","key_filter":{},"min_fetch_timeout":500,"max_fetch_batch":1000,"refetch_threshold":200,"timestamp_buffer":0,"loader":"app_worker.process:kafka_record_loader","kafka":null},"output":{"topic":"acme.dataflow.output_archive","bucket":"acme-dev-app-data-archives","key":"<core_utils.contrib.template.TemplateString object at 0x7e436a9c3b00>","compression":"zstd","streams":["cache"],"aws":null,"kafka":null,"service_deferred":2},"parallel":{"count":1,"slot":1},"commit":{"key":"app_worker_local:state.ca:committed","dryrun":true,"override":null},"socket":{"service_name":null,"service_priority":-1,"service_deferred":0,"address":"tcp://localhost:0","socket_type":0,"send_buffer":31457280,"send_hwm":1,"receive_buffer":31457280,"receive_hwm":1,"bind":true,"randomize":false},"start":"committed","start_fallback":"first","start_buffer":600000,"end":"committed","end_fallback":"last","end_buffer":0,"live":true,"retry":{"limit":3,"timeout":1000.0,"exp_base":2.0,"exp_trunc":0},"cache_dir":"data"},"model_loader":{"table":"sensor_data_5min_output_thresholds","buffer":"0:10:00","refill":"0:05:00"},"processor":{"granularity":"0:15:00","deviation_scales":{"aog":-1.0,"sf":1.0,"dly":120.0},"severity_conditions":["severity=180 deviation=0.2 reliable=240.0 bordering=False","severity=120 deviation=0.1 reliable=240.0 bordering=False","severity=120 deviation=0.05 reliable=480.0 bordering=False","severity=60 deviation=0.0001 reliable=0.0 bordering=False"]}}}
+[38;5;144m2025-11-18 23:46:48.93[0m [[38;5;76mINF[0m] app_worker_local - Initializing AWS session [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mclickhouse[0m
+{"log_time":"2025-11-18T23:46:48.932088+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Initializing AWS session","name":"clickhouse"}
+[38;5;144m2025-11-18 23:46:48.93[0m [[38;5;76mINF[0m] app_worker_local - Fetching AWS client [1;38;5;67mtype[0m[38;5;97m=[0m[3;38;5;95msecretsmanager[0m
+{"log_time":"2025-11-18T23:46:48.938221+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Fetching AWS client","type":"secretsmanager"}
+[38;5;144m2025-11-18 23:46:49.06[0m [[38;5;76mINF[0m] app_worker_local - Launching [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mcore_utils.contrib.data_pipeline[0m
+{"log_time":"2025-11-18T23:46:49.064064+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Launching","name":"core_utils.contrib.data_pipeline"}
+[38;5;144m2025-11-18 23:46:49.06[0m [[38;5;38mDBG[0m] app_worker_local - Launch arguments [1;38;5;67margs[0m[38;5;97m=[0m[3;38;5;95m/home/user/dev/acme/acme-app-worker/.venv/bin/python,-m,core_utils.contrib.data_pipeline,--log-name,app_worker_local,data,--data-socket-address,tcp://127.0.0.1:45473,--data-socket-bind=false,--lock-disabled=true[0m [1;38;5;67mkwargs[0m[38;5;97m=[0m[3;38;5;95m{}[0m
+{"log_time":"2025-11-18T23:46:49.064181+00:00","log_level":"DEBUG","log_name":["app_worker_local"],"message":"Launch arguments","args":["/home/user/dev/acme/acme-app-worker/.venv/bin/python","-m","core_utils.contrib.data_pipeline","--log-name","app_worker_local,data","--data-socket-address","tcp://127.0.0.1:45473","--data-socket-bind=false","--lock-disabled=true"],"kwargs":{}}
+[38;5;144m2025-11-18 23:46:49.06[0m [[38;5;76mINF[0m] app_worker_local - Child process started [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mcore_utils.contrib.data_pipeline[0m [1;38;5;67mpid[0m[38;5;97m=[0m[3;38;5;95m470461[0m
+{"log_time":"2025-11-18T23:46:49.065627+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Child process started","name":"core_utils.contrib.data_pipeline","pid":470461}
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Logger configured
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Connecting to Redis [1;38;5;67mhost[0m[38;5;97m=[0m[3;38;5;95macme-dev-redis[0m [1;38;5;67mport[0m[38;5;97m=[0m[3;38;5;95m6379[0m [1;38;5;67mdb[0m[38;5;97m=[0m[3;38;5;95m1[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;214mWRN[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Redis processing lock disabled, which means no protection against multiple running processes [1;38;5;67mkey[0m[38;5;97m=[0m[3;38;5;95mapp_worker_local:lock[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Connecting to ZMQ [1;38;5;67maddress[0m[38;5;97m=[0m[3;38;5;95mtcp://127.0.0.1:45473[0m [1;38;5;67msocket_type[0m[38;5;97m=[0m[3;38;5;95mPAIR[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Registered AWS session parameters [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95macme[0m [1;38;5;67mcredentials[0m[38;5;97m=[0m[3;38;5;95mprofile:dev[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Registered AWS session parameters [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mclickhouse[0m [1;38;5;67mcredentials[0m[38;5;97m=[0m[3;38;5;95mprofile:dev[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Process manager starting [1;38;5;67mpid[0m[38;5;97m=[0m[3;38;5;95m470461[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Started data server
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;214mWRN[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Live mode enabled; 'committed' end changed to 'last'
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Requested time [1;38;5;67mrange[0m[38;5;97m=[0m[3;38;5;95m[committed, last)[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Full time [1;38;5;67mrange[0m[38;5;97m=[0m[3;38;5;95m[first, last)[0m
+[38;5;144m2025-11-18 23:46:49.83[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Fetching commited offset [1;38;5;67mkey[0m[38;5;97m=[0m[3;38;5;95mapp_worker_local:state.ca:committed[0m
+{"log_time":"2025-11-18T23:46:49.835429+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Logger configured"}
+{"log_time":"2025-11-18T23:46:49.835771+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Connecting to Redis","host":"acme-dev-redis","port":6379,"db":1}
+{"log_time":"2025-11-18T23:46:49.836319+00:00","log_level":"WARNING","log_name":["app_worker_local","data"],"message":"Redis processing lock disabled, which means no protection against multiple running processes","key":"app_worker_local:lock"}
+{"log_time":"2025-11-18T23:46:49.836670+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Connecting to ZMQ","address":"tcp://127.0.0.1:45473","socket_type":0}
+{"log_time":"2025-11-18T23:46:49.837357+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Registered AWS session parameters","name":"acme","credentials":"profile:dev"}
+{"log_time":"2025-11-18T23:46:49.837663+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Registered AWS session parameters","name":"clickhouse","credentials":"profile:dev"}
+{"log_time":"2025-11-18T23:46:49.838074+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Process manager starting","pid":470461}
+{"log_time":"2025-11-18T23:46:49.838464+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Started data server"}
+{"log_time":"2025-11-18T23:46:49.838526+00:00","log_level":"WARNING","log_name":["app_worker_local","data"],"message":"Live mode enabled; 'committed' end changed to 'last'"}
+{"log_time":"2025-11-18T23:46:49.838573+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Requested time","range":"[committed, last)"}
+{"log_time":"2025-11-18T23:46:49.838613+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Full time","range":"[first, last)"}
+{"log_time":"2025-11-18T23:46:49.838687+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Fetching commited offset","key":"app_worker_local:state.ca:committed"}
+[38;5;144m2025-11-18 23:46:50.28[0m [[38;5;76mINF[0m] app_worker_local - Creating ClickHouse connection pool [1;38;5;67mhost[0m[38;5;97m=[0m[3;38;5;95macme-dev-clickhouse.internal[0m [1;38;5;67mport[0m[38;5;97m=[0m[3;38;5;95m9000[0m [1;38;5;67mdatabase[0m[38;5;97m=[0m[3;38;5;95mdefault[0m [1;38;5;67muser[0m[38;5;97m=[0m[3;38;5;95macme_app_worker[0m [1;38;5;67mminsize[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mmaxsize[0m[38;5;97m=[0m[3;38;5;95m3[0m
+{"log_time":"2025-11-18T23:46:50.287561+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Creating ClickHouse connection pool","host":"acme-dev-clickhouse.internal","port":9000,"database":"default","user":"acme_app_worker","minsize":1,"maxsize":3}
+[38;5;144m2025-11-18 23:46:50.30[0m [[1;38;5;196mERR[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - No offset has been committed
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Resolved time [1;38;5;67mrange[0m[38;5;97m=[0m[3;38;5;95m[first, last)[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Starting archive data ingestion
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Using archive source [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Fetching latest archived file list [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Attempting operation [1;38;5;67mattempt[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mlimit[0m[38;5;97m=[0m[3;38;5;95m3[0m [1;38;5;67moperation[0m[38;5;97m=[0m[3;38;5;95mlisting files[0m [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:50:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:55:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:00:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:05:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-10-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:10:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - File listed [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-15-00/metrics.parquet[0m [1;38;5;67mregion_type[0m[38;5;97m=[0m[3;38;5;95mstate[0m [1;38;5;67mregion[0m[38;5;97m=[0m[3;38;5;95mca[0m [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:15:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - No more archive file remain to be listed
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Stopped indexing archive files
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Found archive files [1;38;5;67mcount[0m[38;5;97m=[0m[3;38;5;95m6[0m [1;38;5;67mstart[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:50:00+00:00[0m [1;38;5;67mend[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:15:00+00:00[0m [1;38;5;67mpartial[0m[38;5;97m=[0m[3;38;5;95mFalse[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Attempting operation [1;38;5;67mattempt[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mlimit[0m[38;5;97m=[0m[3;38;5;95m3[0m [1;38;5;67moperation[0m[38;5;97m=[0m[3;38;5;95mread archive files[0m [1;38;5;67msouce[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mbin[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:50:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.30[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Reading archive file [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet[0m
+[38;5;144m2025-11-18 23:46:50.31[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending batch
+[38;5;144m2025-11-18 23:46:50.31[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending data [1;38;5;67mlength[0m[38;5;97m=[0m[3;38;5;95m4723802[0m
+[38;5;144m2025-11-18 23:46:50.31[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+[38;5;144m2025-11-18 23:46:50.31[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending command [1;38;5;67mcommand[0m[38;5;97m=[0m[3;38;5;95mbin_complete[0m [1;38;5;67mdata[0m[38;5;97m=[0m[3;38;5;95m1762404600[0m
+[38;5;144m2025-11-18 23:46:50.31[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+{"log_time":"2025-11-18T23:46:50.300452+00:00","log_level":"ERROR","log_name":["app_worker_local","data"],"message":"No offset has been committed"}
+{"log_time":"2025-11-18T23:46:50.300664+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Resolved time","range":"[first, last)"}
+{"log_time":"2025-11-18T23:46:50.300871+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Starting archive data ingestion"}
+{"log_time":"2025-11-18T23:46:50.301174+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Using archive source","source":"local"}
+{"log_time":"2025-11-18T23:46:50.301300+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Fetching latest archived file list","source":"local"}
+{"log_time":"2025-11-18T23:46:50.301403+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Attempting operation","attempt":1,"limit":3,"operation":"listing files","source":"local"}
+{"log_time":"2025-11-18T23:46:50.302366+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T04:50:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.302627+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T04:55:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.302882+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T05:00:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.303119+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T05:05:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.303358+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/05-10-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T05:10:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.303563+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"File listed","source":"local","path":"sensor_data_5min/state.ca/2025/11/06/05-15-00/metrics.parquet","region_type":"state","region":"ca","time":"2025-11-06T05:15:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.303650+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"No more archive file remain to be listed"}
+{"log_time":"2025-11-18T23:46:50.303690+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Stopped indexing archive files"}
+{"log_time":"2025-11-18T23:46:50.303791+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Found archive files","count":6,"start":"2025-11-06T04:50:00+00:00","end":"2025-11-06T05:15:00+00:00","partial":false}
+{"log_time":"2025-11-18T23:46:50.303914+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Attempting operation","attempt":1,"limit":3,"operation":"read archive files","souce":"local","bin":"2025-11-06T04:50:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.304014+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Reading archive file","source":"local","path":"data/sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet"}
+{"log_time":"2025-11-18T23:46:50.314514+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"Sending batch"}
+{"log_time":"2025-11-18T23:46:50.314659+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending data","length":4723802}
+{"log_time":"2025-11-18T23:46:50.316559+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+{"log_time":"2025-11-18T23:46:50.316651+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending command","command":"bin_complete","data":"1762404600"}
+{"log_time":"2025-11-18T23:46:50.317098+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Attempting operation [1;38;5;67mattempt[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mlimit[0m[38;5;97m=[0m[3;38;5;95m3[0m [1;38;5;67moperation[0m[38;5;97m=[0m[3;38;5;95mread archive files[0m [1;38;5;67msouce[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mbin[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:55:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Reading archive file [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet[0m
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending batch
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending data [1;38;5;67mlength[0m[38;5;97m=[0m[3;38;5;95m4645614[0m
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending command [1;38;5;67mcommand[0m[38;5;97m=[0m[3;38;5;95mbin_complete[0m [1;38;5;67mdata[0m[38;5;97m=[0m[3;38;5;95m1762404900[0m
+[38;5;144m2025-11-18 23:46:50.36[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+{"log_time":"2025-11-18T23:46:50.360686+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Attempting operation","attempt":1,"limit":3,"operation":"read archive files","souce":"local","bin":"2025-11-06T04:55:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.360939+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Reading archive file","source":"local","path":"data/sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet"}
+{"log_time":"2025-11-18T23:46:50.368275+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"Sending batch"}
+{"log_time":"2025-11-18T23:46:50.368389+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending data","length":4645614}
+{"log_time":"2025-11-18T23:46:50.368515+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+{"log_time":"2025-11-18T23:46:50.368567+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending command","command":"bin_complete","data":"1762404900"}
+{"log_time":"2025-11-18T23:46:50.368788+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+[38;5;144m2025-11-18 23:46:50.41[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Attempting operation [1;38;5;67mattempt[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mlimit[0m[38;5;97m=[0m[3;38;5;95m3[0m [1;38;5;67moperation[0m[38;5;97m=[0m[3;38;5;95mread archive files[0m [1;38;5;67msouce[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mbin[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:00:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.41[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Reading archive file [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet[0m
+[38;5;144m2025-11-18 23:46:50.41[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending batch
+[38;5;144m2025-11-18 23:46:50.41[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending data [1;38;5;67mlength[0m[38;5;97m=[0m[3;38;5;95m4599584[0m
+{"log_time":"2025-11-18T23:46:50.410663+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Attempting operation","attempt":1,"limit":3,"operation":"read archive files","souce":"local","bin":"2025-11-06T05:00:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.410851+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Reading archive file","source":"local","path":"data/sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet"}
+{"log_time":"2025-11-18T23:46:50.419860+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"Sending batch"}
+{"log_time":"2025-11-18T23:46:50.419991+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending data","length":4599584}
+[38;5;144m2025-11-18 23:46:50.65[0m [[38;5;76mINF[0m] app_worker_local - Listening to data server
+{"log_time":"2025-11-18T23:46:50.659986+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Listening to data server"}
+[38;5;144m2025-11-18 23:46:50.66[0m [[38;5;242mTRC[0m] app_worker_local - Polling data server [1;38;5;67mtimeout[0m[38;5;97m=[0m[3;38;5;95m5000[0m
+{"log_time":"2025-11-18T23:46:50.660246+00:00","log_level":"TRACE","log_name":["app_worker_local"],"message":"Polling data server","timeout":5000}
+[38;5;144m2025-11-18 23:46:50.66[0m [[38;5;242mTRC[0m] app_worker_local - Polling finished
+{"log_time":"2025-11-18T23:46:50.660738+00:00","log_level":"TRACE","log_name":["app_worker_local"],"message":"Polling finished"}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;242mTRC[0m] app_worker_local - Polling data server [1;38;5;67mtimeout[0m[38;5;97m=[0m[3;38;5;95m5000[0m
+{"log_time":"2025-11-18T23:46:50.852897+00:00","log_level":"TRACE","log_name":["app_worker_local"],"message":"Polling data server","timeout":5000}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;242mTRC[0m] app_worker_local - Polling finished
+{"log_time":"2025-11-18T23:46:50.853473+00:00","log_level":"TRACE","log_name":["app_worker_local"],"message":"Polling finished"}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;38mDBG[0m] app_worker_local - Received command from data server [1;38;5;67mcommand[0m[38;5;97m=[0m[3;38;5;95mbin_complete[0m [1;38;5;67mdata[0m[38;5;97m=[0m[3;38;5;95m1762404600[0m
+{"log_time":"2025-11-18T23:46:50.855150+00:00","log_level":"DEBUG","log_name":["app_worker_local"],"message":"Received command from data server","command":"bin_complete","data":1762404600}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;38mDBG[0m] app_worker_local - Processing batch
+{"log_time":"2025-11-18T23:46:50.855322+00:00","log_level":"DEBUG","log_name":["app_worker_local"],"message":"Processing batch"}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;76mINF[0m] app_worker_local - Processing time bin [1;38;5;67mtime[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:50:00+00:00[0m [1;38;5;67mrows[0m[38;5;97m=[0m[3;38;5;95m159585[0m
+{"log_time":"2025-11-18T23:46:50.858313+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Processing time bin","time":"2025-11-06T04:50:00+00:00","rows":159585}
+[38;5;144m2025-11-18 23:46:50.95[0m [[38;5;76mINF[0m] app_worker_local - Fetching model batch [1;38;5;67mgranularity[0m[38;5;97m=[0m[3;38;5;95m15[0m [1;38;5;67mstart[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T04:50:00+00:00[0m [1;38;5;67mend[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:00:00+00:00[0m [1;38;5;67mfeed_id[0m[38;5;97m=[0m[3;38;5;95mstate.ca[0m
+{"log_time":"2025-11-18T23:46:50.955273+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Fetching model batch","granularity":15,"start":"2025-11-06T04:50:00+00:00","end":"2025-11-06T05:00:00+00:00","feed_id":"state.ca"}
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending command [1;38;5;67mcommand[0m[38;5;97m=[0m[3;38;5;95mbin_complete[0m [1;38;5;67mdata[0m[38;5;97m=[0m[3;38;5;95m1762405200[0m
+[38;5;144m2025-11-18 23:46:50.85[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sent
+[38;5;144m2025-11-18 23:46:50.90[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Attempting operation [1;38;5;67mattempt[0m[38;5;97m=[0m[3;38;5;95m1[0m [1;38;5;67mlimit[0m[38;5;97m=[0m[3;38;5;95m3[0m [1;38;5;67moperation[0m[38;5;97m=[0m[3;38;5;95mread archive files[0m [1;38;5;67msouce[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mbin[0m[38;5;97m=[0m[3;38;5;95m2025-11-06T05:05:00+00:00[0m
+[38;5;144m2025-11-18 23:46:50.90[0m [[38;5;76mINF[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Reading archive file [1;38;5;67msource[0m[38;5;97m=[0m[3;38;5;95mlocal[0m [1;38;5;67mpath[0m[38;5;97m=[0m[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet[0m
+[38;5;144m2025-11-18 23:46:50.90[0m [[38;5;38mDBG[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending batch
+[38;5;144m2025-11-18 23:46:50.90[0m [[38;5;242mTRC[0m] app_worker_local[38;5;97m/[0m[38;5;12mdata[0m - Sending data [1;38;5;67mlength[0m[38;5;97m=[0m[3;38;5;95m4664153[0m
+{"log_time":"2025-11-18T23:46:50.858474+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+{"log_time":"2025-11-18T23:46:50.858689+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending command","command":"bin_complete","data":"1762405200"}
+{"log_time":"2025-11-18T23:46:50.859163+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sent"}
+{"log_time":"2025-11-18T23:46:50.901443+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Attempting operation","attempt":1,"limit":3,"operation":"read archive files","souce":"local","bin":"2025-11-06T05:05:00+00:00"}
+{"log_time":"2025-11-18T23:46:50.901627+00:00","log_level":"INFO","log_name":["app_worker_local","data"],"message":"Reading archive file","source":"local","path":"data/sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet"}
+{"log_time":"2025-11-18T23:46:50.909401+00:00","log_level":"DEBUG","log_name":["app_worker_local","data"],"message":"Sending batch"}
+{"log_time":"2025-11-18T23:46:50.909513+00:00","log_level":"TRACE","log_name":["app_worker_local","data"],"message":"Sending data","length":4664153}
+[38;5;144m2025-11-18 23:46:51.23[0m [[1;38;5;196mERR[0m] app_worker_local - Unhandled async exception encountered: Exception in callback ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84 [1;38;5;67mhandle[0m[38;5;97m=[0m[3;38;5;95m<Handle ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84>[0m
+[1;38;5;196mException Traceback (most recent call last):[0m
+[38;5;166m╭─ [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:88"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » task_done() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m   88 [0m[38;5;240m▎ [0mtask.result()
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:139"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » fetch() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  139 [0m[38;5;240m▎ [0mawait cursor.execute(query, params)
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py:75"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mcursors » execute() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m   75 [0m[38;5;240m▎ [0mresponse = await execute(query, args=args, with_column_types=True, **execute_kwargs)
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:638"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » execute() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  638 [0m[38;5;240m▎ [0masync with ExecuteContext(self, query, settings):
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py:60"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.context » __aexit__() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m   60 [0m[38;5;240m▎ [0mraise exc_val
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:653"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » execute() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  653 [0m[38;5;240m▎ [0mrv = await self.process_ordinary_query(
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:780"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » process_ordinary_query() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  780 [0m[38;5;240m▎ [0mreturn await self.receive_result(with_column_types=with_column_types, columnar=columnar)
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:502"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » receive_result() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  502 [0m[38;5;240m▎ [0mreturn await result.get_result()
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py:56"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.result » get_result() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m   56 [0m[38;5;240m▎ [0masync for packet in self.packet_generator:
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:481"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » packet_generator() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  481 [0m[38;5;240m▎ [0mpacket = await self.receive_packet()
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:410"[0m
+[38;5;166m│  [0m  [1;38;5;166masynch » [0m[38;5;166mproto.connection » receive_packet() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  410 [0m[38;5;240m▎ [0mraise packet.exception
+[38;5;166m╰◉ ServerException: Code: 62.
+DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }
+            AND record_timestamp >= {start}
+            AND record_timestamp <= {end}
+            AND feed_id = {feed_id}
+        . Expected colon between name and type[0m
+
+[38;5;167m╭─ [0m[2mFile "/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py:89"[0m
+[38;5;167m│  [0m  [1;38;5;167mpy » [0m[38;5;167masyncio.events » _run() | [0m[2;38;5;167m]8;;vscode://file//home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.pyVSCode]8;; ]8;;file://devbox/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m   89 [0m[38;5;240m▎ [0mself._context.run(self._callback, *self._args)
+[38;5;167m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:91"[0m
+[38;5;167m│  [0m  [1;38;5;167mapp_worker » [0m[38;5;167mprocess » task_done() | [0m[2;38;5;167m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m   91 [0m[38;5;240m▎ [0mraise RuntimeError(msg) from e
+[38;5;167m╰◉ RuntimeError: Error fetching model batch[0m
+
+[38;5;166m◉ ServerException: Code: 62.
+DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }
+            AND record_timestamp >= {start}
+            AND record_timestamp <= {end}
+            AND feed_id = {feed_id}
+        . Expected colon between name and type[0m
+[38;5;167m╰─◉ RuntimeError: Error fetching model batch[0m
+{"log_time":"2025-11-18T23:46:51.234607+00:00","log_level":"ERROR","log_name":["app_worker_local"],"message":"Unhandled async exception encountered: Exception in callback ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84","handle":"<Handle ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84>","exception":[{"type":"ServerException","message":"Code: 62.\nDB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }\n            AND record_timestamp >= {start}\n            AND record_timestamp <= {end}\n            AND feed_id = {feed_id}\n        . Expected colon between name and type","stack":[{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":88,"name":"task_done","line":"task.result()"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":139,"name":"fetch","line":"await cursor.execute(query, params)"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py","lineno":75,"name":"execute","line":"response = await execute(query, args=args, with_column_types=True, **execute_kwargs)"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":638,"name":"execute","line":"async with ExecuteContext(self, query, settings):"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py","lineno":60,"name":"__aexit__","line":"raise exc_val"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":653,"name":"execute","line":"rv = await self.process_ordinary_query("},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":780,"name":"process_ordinary_query","line":"return await self.receive_result(with_column_types=with_column_types, columnar=columnar)"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":502,"name":"receive_result","line":"return await result.get_result()"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py","lineno":56,"name":"get_result","line":"async for packet in self.packet_generator:"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":481,"name":"packet_generator","line":"packet = await self.receive_packet()"},{"filename":"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py","lineno":410,"name":"receive_packet","line":"raise packet.exception"}]},{"type":"RuntimeError","message":"Error fetching model batch","stack":[{"filename":"/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py","lineno":89,"name":"_run","line":"self._context.run(self._callback, *self._args)"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":91,"name":"task_done","line":"raise RuntimeError(msg) from e"}]}]}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Process manager stopping
+{"log_time":"2025-11-18T23:46:51.240707+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Process manager stopping"}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Process exiting [1;38;5;67mcode[0m[38;5;97m=[0m[3;38;5;95m1[0m
+{"log_time":"2025-11-18T23:46:51.240867+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Process exiting","code":1}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Orphan listener cancelled
+{"log_time":"2025-11-18T23:46:51.241146+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Orphan listener cancelled"}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Closing AWS session and all clients [1;38;5;67mname[0m[38;5;97m=[0m[3;38;5;95mclickhouse[0m
+{"log_time":"2025-11-18T23:46:51.242019+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Closing AWS session and all clients","name":"clickhouse"}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Closing ZMQ connection [1;38;5;67maddress[0m[38;5;97m=[0m[3;38;5;95mtcp://localhost:0[0m
+{"log_time":"2025-11-18T23:46:51.242745+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Closing ZMQ connection","address":"tcp://localhost:0"}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Disconnecting from Redis [1;38;5;67mhost[0m[38;5;97m=[0m[3;38;5;95macme-dev-redis[0m [1;38;5;67mport[0m[38;5;97m=[0m[3;38;5;95m6379[0m [1;38;5;67mdb[0m[38;5;97m=[0m[3;38;5;95m1[0m
+{"log_time":"2025-11-18T23:46:51.243488+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Disconnecting from Redis","host":"acme-dev-redis","port":6379,"db":1}
+[38;5;144m2025-11-18 23:46:51.24[0m [[1;38;5;196mERR[0m] app_worker_local - Unhandled async exception encountered: unhandled exception during asyncio.run() shutdown [1;38;5;67mtask[0m[38;5;97m=[0m[3;38;5;95m{'repr': <Task finished name='Task-1' coro=<main() done, defined at /home/user/dev/acme/acme-app-worker/app_worker/__main__.py:15> exception=SafeExitStackError('Unhandled exception captured by exit stack')>, 'name': 'Task-1', 'done': True, 'coro': <coroutine object main at 0x7e436bd30160>}[0m
+[1;38;5;196mException Traceback (most recent call last):[0m
+[38;5;166m╭─ [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/__main__.py:31"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166m__main__ » main() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/__main__.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/__main__.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m   31 [0m[38;5;240m▎ [0mawait processor.ingest()
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:590"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » ingest() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  590 [0m[38;5;240m▎ [0mawait self.process()
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:505"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » process() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  505 [0m[38;5;240m▎ [0mmodel_df = await self._model_loader.get(self._time, granularity_numeric)
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:249"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » get() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  249 [0m[38;5;240m▎ [0mreturn await batch.get(time)
+[38;5;166m│  [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/process.py:183"[0m
+[38;5;166m│  [0m  [1;38;5;166mapp_worker » [0m[38;5;166mprocess » get() | [0m[2;38;5;166m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.pyText]8;;[0m
+[38;5;166m│  [0m  [38;5;244;48;5;237m  183 [0m[38;5;240m▎ [0mawait self.task
+[38;5;166m╰◉ ServerException: Code: 62.
+DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }
+            AND record_timestamp >= {start}
+            AND record_timestamp <= {end}
+            AND feed_id = {feed_id}
+        . Expected colon between name and type[0m
+
+[38;5;167m╭─ [0m[2mFile "/home/user/dev/acme/acme-app-worker/app_worker/__main__.py:18"[0m
+[38;5;167m│  [0m  [1;38;5;167mapp_worker » [0m[38;5;167m__main__ » main() | [0m[2;38;5;167m]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/__main__.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/__main__.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m   18 [0m[38;5;240m▎ [0masync with ApplicationContext(services=[mgr]) as app:
+[38;5;167m│  [0m[2mFile "/home/user/dev/acme/acme-core/core_utils/contrib/config/context.py:420"[0m
+[38;5;167m│  [0m  [38;5;167m../../acme-core/core_utils/contrib/config/context.py » __aexit__() | [0m[2;38;5;167m]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/config/context.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/config/context.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m  420 [0m[38;5;240m▎ [0mreturn await self._exit_stack.exit(exc_type, exc_val, exc_tb)
+[38;5;167m│  [0m[2mFile "/home/user/dev/acme/acme-core/core_utils/contrib/asio.py:425"[0m
+[38;5;167m│  [0m  [38;5;167m../../acme-core/core_utils/contrib/asio.py » exit() | [0m[2;38;5;167m]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/asio.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/asio.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m  425 [0m[38;5;240m▎ [0mraise exc_val
+[38;5;167m│  [0m[2mFile "/home/user/dev/acme/acme-core/core_utils/contrib/asio.py:415"[0m
+[38;5;167m│  [0m  [38;5;167m../../acme-core/core_utils/contrib/asio.py » exit() | [0m[2;38;5;167m]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/asio.pyVSCode]8;; ]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/asio.pyText]8;;[0m
+[38;5;167m│  [0m  [38;5;244;48;5;237m  415 [0m[38;5;240m▎ [0mraise r from exc_val
+[38;5;167m╰◉ SafeExitStackError: Unhandled exception captured by exit stack[0m
+
+[38;5;166m◉ ServerException: Code: 62.
+DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }
+            AND record_timestamp >= {start}
+            AND record_timestamp <= {end}
+            AND feed_id = {feed_id}
+        . Expected colon between name and type[0m
+[38;5;167m╰─◉ SafeExitStackError: Unhandled exception captured by exit stack[0m
+{"log_time":"2025-11-18T23:46:51.243693+00:00","log_level":"ERROR","log_name":["app_worker_local"],"message":"Unhandled async exception encountered: unhandled exception during asyncio.run() shutdown","task":{"repr":"<Task finished name='Task-1' coro=<main() done, defined at /home/user/dev/acme/acme-app-worker/app_worker/__main__.py:15> exception=SafeExitStackError('Unhandled exception captured by exit stack')>","name":"Task-1","done":true,"coro":"<coroutine object main at 0x7e436bd30160>"},"exception":[{"type":"ServerException","message":"Code: 62.\nDB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }\n            AND record_timestamp >= {start}\n            AND record_timestamp <= {end}\n            AND feed_id = {feed_id}\n        . Expected colon between name and type","stack":[{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py","lineno":31,"name":"main","line":"await processor.ingest()"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":590,"name":"ingest","line":"await self.process()"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":505,"name":"process","line":"model_df = await self._model_loader.get(self._time, granularity_numeric)"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":249,"name":"get","line":"return await batch.get(time)"},{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/process.py","lineno":183,"name":"get","line":"await self.task"}]},{"type":"SafeExitStackError","message":"Unhandled exception captured by exit stack","stack":[{"filename":"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py","lineno":18,"name":"main","line":"async with ApplicationContext(services=[mgr]) as app:"},{"filename":"/home/user/dev/acme/acme-core/core_utils/contrib/config/context.py","lineno":420,"name":"__aexit__","line":"return await self._exit_stack.exit(exc_type, exc_val, exc_tb)"},{"filename":"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py","lineno":425,"name":"exit","line":"raise exc_val"},{"filename":"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py","lineno":415,"name":"exit","line":"raise r from exc_val"}]}]}
+[38;5;144m2025-11-18 23:46:51.24[0m [[38;5;76mINF[0m] app_worker_local - Process exiting [1;38;5;67mcode[0m[38;5;97m=[0m[3;38;5;95m1[0m
+{"log_time":"2025-11-18T23:46:51.248851+00:00","log_level":"INFO","log_name":["app_worker_local"],"message":"Process exiting","code":1}
+<sys>:0: RuntimeWarning: coroutine 'BaseEventLoop.shutdown_asyncgens' was never awaited
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
