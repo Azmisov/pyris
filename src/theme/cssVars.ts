@@ -54,7 +54,7 @@ function generateThemeCSS(scheme: ColorScheme): string {
 }
 
 // Add a singleton CSS styles element to the page, replacing if found already
-function addStyles(id : string, css : string): void {
+function addStyles(id: string, css: string): void {
   // Remove if already present
   const existingStyle = document.getElementById(id);
   if (existingStyle) {

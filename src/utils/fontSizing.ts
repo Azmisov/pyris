@@ -16,7 +16,7 @@
 export function calculateFontSize(
   fontFamily: string,
   targetHeight: number,
-  char: string = '█'
+  char = '█'
 ): number {
   // Setup Canvas
   const canvas = document.createElement('canvas');

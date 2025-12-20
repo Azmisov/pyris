@@ -3,7 +3,7 @@ import { ProcessedLogRow, LogsPanelOptions } from '../types';
 // Simple hash function for stable memoization keys
 function simpleHash(str: string): string {
   let hash = 0;
-  if (str.length === 0) return hash.toString();
+  if (str.length === 0) {return hash.toString();}
 
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
@@ -37,7 +37,7 @@ export class ProcessedRowCache {
   private accessOrder = new Map<string, number>();
   private accessCounter = 0;
 
-  constructor(maxSize: number = 1000) {
+  constructor(maxSize = 1000) {
     this.maxSize = maxSize;
   }
 
@@ -96,7 +96,7 @@ export class ProcessedRowCache {
   }
 
   private evictLRU(): void {
-    if (this.accessOrder.size === 0) return;
+    if (this.accessOrder.size === 0) {return;}
 
     // Find least recently used item
     let lruKey = '';

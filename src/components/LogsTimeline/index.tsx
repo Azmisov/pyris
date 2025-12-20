@@ -62,7 +62,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
 
   // Track container width for tooltip clamping
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setContainerWidth(entry.contentRect.width);
@@ -86,7 +86,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
 
   // Initialize chart (only once)
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     const chart = new TimelineChart(containerRef.current, colorScheme, fontFamily, timeZone);
     chartRef.current = chart;
@@ -135,7 +135,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   // Track local hover via mouse events on container
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container) {return;}
 
     const handleMouseEnter = () => {
       isLocalHoverRef.current = true;

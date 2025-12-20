@@ -37,7 +37,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
 
   // Handle time range change from timeline
   const handleTimeRangeChange = useMemo(() => {
-    if (!onChangeTimeRange) return undefined;
+    if (!onChangeTimeRange) {return undefined;}
 
     return (startTimeMs: number, endTimeMs: number) => {
       onChangeTimeRange({
@@ -49,7 +49,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
 
   // Convert dashboard time range to milliseconds
   const dashboardTimeRangeMs = useMemo(() => {
-    if (!timeRange) return undefined;
+    if (!timeRange) {return undefined;}
 
     const fromMs = typeof timeRange.from === 'number' ? timeRange.from : timeRange.from.valueOf();
     const toMs = typeof timeRange.to === 'number' ? timeRange.to : timeRange.to.valueOf();

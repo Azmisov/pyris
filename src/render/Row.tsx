@@ -16,9 +16,12 @@ interface RowProps {
 // Main row component with memoization
 export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRowHover, style }) => {
   // Process the row with caching
+  // Intentionally using specific properties to avoid unnecessary recomputation
+  /* eslint-disable react-hooks/exhaustive-deps */
   const processedRow = useMemo(() => {
     return processLogRow(row, options);
   }, [row.message, row.id, options.maxLineLength, options.wrapMode]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const handleClick = useMemo(() => {
     return onRowClick ? () => onRowClick(row) : undefined;
@@ -34,9 +37,9 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
 
   const className = useMemo(() => {
     const classes = ['logs-row'];
-    if (isSelected) classes.push('selected');
-    if (row.level) classes.push(`level-${row.level.toLowerCase()}`);
-    if (options.wrapMode === 'soft-wrap') classes.push('wrap-mode-soft');
+    if (isSelected) {classes.push('selected');}
+    if (row.level) {classes.push(`level-${row.level.toLowerCase()}`);}
+    if (options.wrapMode === 'soft-wrap') {classes.push('wrap-mode-soft');}
     return classes.join(' ');
   }, [isSelected, row.level, options.wrapMode]);
 

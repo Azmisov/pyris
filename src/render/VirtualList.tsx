@@ -72,7 +72,7 @@ export const VirtualList = memo<VirtualListProps>(({
   // Just reverse for desc display
   const displayRows = useMemo(() => {
     let displayRows = rows;
-    let desc = sortOrder == 'desc';
+    let desc = sortOrder === 'desc';
     if (rows.length > maxRows || desc) {
       displayRows = rows.slice(0, maxRows);
       if (desc) {
@@ -365,10 +365,12 @@ export const VirtualList = memo<VirtualListProps>(({
   // Line truncation indicators are shown inline at the end of each truncated row
   const HeaderComponent = useMemo(() => {
     if (!hasRowCountTruncation) {
-      return () => <div style={{ height: HEADER_HEIGHT }} />;
+      const EmptyHeader = () => <div style={{ height: HEADER_HEIGHT }} />;
+      EmptyHeader.displayName = 'EmptyHeader';
+      return EmptyHeader;
     }
 
-    return () => (
+    const TruncationHeader = () => (
       <div style={{ paddingTop: HEADER_HEIGHT }}>
         <TruncationWarning
           type="row-count"
@@ -377,6 +379,8 @@ export const VirtualList = memo<VirtualListProps>(({
         />
       </div>
     );
+    TruncationHeader.displayName = 'TruncationHeader';
+    return TruncationHeader;
   }, [hasRowCountTruncation, maxRows, effectiveTotalRowCount]);
 
   return (

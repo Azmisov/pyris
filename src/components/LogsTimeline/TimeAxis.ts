@@ -3,6 +3,7 @@
  * Handles conversion between time and pixel coordinates, zoom, and rendering
  */
 import { dateTimeParse, dateTimeAsMoment } from '@grafana/data';
+// eslint-disable-next-line no-restricted-imports -- Type imports only, actual moment comes from @grafana/data
 import { Moment, unitOfTime } from 'moment';
 import { ColorScheme, colorToCSS } from '../../theme/colorSchemes';
 
@@ -137,39 +138,39 @@ class GridLineGenerator {
   private tzOffset: number;
 
   /** Current minor unit for grid lines (e.g., 's', 'm', 'h', 'd', 'M', 'y') */
-  private unit: string = '';
+  private unit = '';
 
   /** Major unit for emphasized grid lines (e.g., 'h' if unit is 'm') */
-  private majorUnit: string = '';
+  private majorUnit = '';
 
   /** Number of minor units between each grid line (e.g., 2 for "every 2 months") */
-  private interval: number = 1;
+  private interval = 1;
 
   /** Index into spacings array for current unit (used for walking up to find max aligned unit) */
-  private spacingIndex: number = 0;
+  private spacingIndex = 0;
 
   /** Format function for the current (minor) unit */
   private format: (d: Moment) => string = () => '';
 
   /** Calculated minimum interval width based on font metrics */
-  private minIntervalWidth: number = 80;
+  private minIntervalWidth = 80;
 
   /** Minimum grid spacing in milliseconds (computed from minIntervalWidth and current zoom) */
-  private minGridMs: number = 0;
+  private minGridMs = 0;
 
   /** Font family used for label width calculation (for cache invalidation) */
-  private fontFamily: string = '';
+  private fontFamily = '';
 
   /** Font size used for labels */
-  private fontSize: number = 12;
+  private fontSize = 12;
 
   /** Timezone string for date parsing */
-  private timeZone: string = 'browser';
+  private timeZone = 'browser';
 
   constructor(
     gridSettings: GridSettings,
     tzOffset: number,
-    timeZone: string = 'browser'
+    timeZone = 'browser'
   ) {
     this.gridSettings = gridSettings;
     this.tzOffset = tzOffset;
@@ -282,7 +283,7 @@ class GridLineGenerator {
       }
 
       // No interval for this unit is sufficient, try next unit
-      if (best == -1) {
+      if (best === -1) {
         continue
       }
 
@@ -315,7 +316,7 @@ class GridLineGenerator {
    * @yields GridLine objects with {major, time, label}
    */
   *generate(zoomRangeMs: [number, number]): Generator<GridLine> {
-    if (!this.unit) return;
+    if (!this.unit) {return;}
 
     const unit = this.unit as unitOfTime.Base;
     const majorUnit = this.majorUnit as unitOfTime.Base;
@@ -435,13 +436,13 @@ const LABEL_FONT_SIZE = 12;
 
 export class TimeAxis {
   private chart: any;
-  private width: number = 0;
+  private width = 0;
   private zoomRange: [number, number] | null = null;
   private gridLineGenerator: GridLineGenerator | null = null;
   /** Cached grid line timestamps (invalidated on re-render) */
   private gridLineTimestamps: number[] | null = null;
   /** Timezone offset in hours */
-  private tzOffset: number = 0;
+  private tzOffset = 0;
   /** Holds dragging state; see mousedrag */
   private dragData: { id: number; center: number } | null = null;
   private gridSettings: GridSettings;
@@ -449,7 +450,7 @@ export class TimeAxis {
   private fontFamily: string;
   /** Timezone string (e.g., "browser", "utc", or IANA timezone like "America/New_York") */
   private timeZone: string;
-  public y: number = 0;
+  public y = 0;
 
   constructor(chart: any, colorScheme: ColorScheme, fontFamily?: string, gridSettings?: Partial<GridSettings>, timeZone?: string) {
     this.chart = chart;
@@ -498,7 +499,7 @@ export class TimeAxis {
    * @param endX Current/ending position of drag
    */
   shift(id: number | null, startX: number, endX: number): boolean {
-    if (!this.zoomRange) return false;
+    if (!this.zoomRange) {return false;}
 
     // New drag; mark starting time to be the fixed reference for drag
     let d = this.dragData;
@@ -531,7 +532,7 @@ export class TimeAxis {
    * @param centerX Mouse coordinate to center the zoom on
    */
   zoom(factor: number, centerX: number): boolean {
-    if (!this.zoomRange) return false;
+    if (!this.zoomRange) {return false;}
     const G = this.gridSettings;
 
     // How many zoom scaling iterations to perform
@@ -572,7 +573,7 @@ export class TimeAxis {
    * Convert time coordinate to pixel coords
    */
   time2pixel(t: number): number {
-    if (!this.zoomRange) return 0;
+    if (!this.zoomRange) {return 0;}
     const normalized = (t - this.zoomRange[0]) / (this.zoomRange[1] - this.zoomRange[0]);
     return normalized * this.width;
   }
@@ -581,7 +582,7 @@ export class TimeAxis {
    * Convert pixel coordinate to time coords
    */
   pixel2time(p: number): number {
-    if (!this.zoomRange) return 0;
+    if (!this.zoomRange) {return 0;}
     const normalized = p / this.width;
     return normalized * this.zoomRange[1] + (1 - normalized) * this.zoomRange[0];
   }
@@ -590,13 +591,13 @@ export class TimeAxis {
    * Convert time duration to pixel width
    */
   duration2pixels(d: number): number {
-    if (!this.zoomRange) return 0;
+    if (!this.zoomRange) {return 0;}
     return (d / (this.zoomRange[1] - this.zoomRange[0])) * this.width;
   }
 
   /** Convert pixel width to time duration */
 	pixels2duration(p: number): number {
-    if (!this.zoomRange) return 0;
+    if (!this.zoomRange) {return 0;}
 		return p*(this.zoomRange[1]-this.zoomRange[0])/this.width;
 	}
 

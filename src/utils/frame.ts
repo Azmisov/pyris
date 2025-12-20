@@ -40,15 +40,15 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
       fieldCandidate('msg', 2, f);
     }
     // "time" or "ts" string name takes precedence, else the first seen field
-    if (f.type == FieldType.time) {
-      fieldCandidate('time', n.includes('time') || n == 'ts' ? 0 : 1, f)
+    if (f.type === FieldType.time) {
+      fieldCandidate('time', n.includes('time') || n === 'ts' ? 0 : 1, f)
     }
     // numbers that look like timestamps
-    else if (f.type == FieldType.number && f.values[0] > 1000000000) {
+    else if (f.type === FieldType.number && f.values[0] > 1000000000) {
       fieldCandidate('time', 2, f)
     }
     // messages prefer the first seen candidate, else first seen string field
-    else if (f.type == FieldType.string) {
+    else if (f.type === FieldType.string) {
       fieldCandidate('msg', msgCandidates.includes(n) ? 0 : 1, f)
       if (lblCandidates.includes(n)) {
         fieldCandidate('lbls', 0, f)
@@ -62,7 +62,7 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
   for (const expected of ["time", "msg"]) {
     if (!(expected in extracted)) {
       out.error = `Series ${seriesName || 'unknown'} is missing a ${expected} field`
-      if (expected == "time") {
+      if (expected === "time") {
         out.extra = {needsTimeField: true}
       } else {
         out.extra = {needsStringField: true}
@@ -128,7 +128,7 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
 
 // Parse DataFrame with multiple series, merging successful parses and tracking failures
 export function parseDataFrame(data: any): DataFrameParseResult {
-  console.debug("Parsing log data:", data);
+  console.log("Parsing log data:", data);
 
   const result: DataFrameParseResult = {
     parsed: {

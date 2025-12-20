@@ -1,89 +1,79 @@
-# Grafana ANSI Logs Panel Plugin
+# Pyris
 
-## Development
+A log viewer panel for Grafana with JSON and ANSI styling support.
 
-Boilerplate was created using `npx @grafana/create-plugin@latest`.
+![Grafana 10.4+](https://img.shields.io/badge/Grafana-10.4%2B-orange)
+![License](https://img.shields.io/badge/license-LGPL--3.0-blue)
 
-```bash
-npm install
-npm exec playwright install chromium
-npm run dev
-docker compose up
-```
+## Features
 
-App will then be accessible at http://localhost:3000 with live reloading.
+**300+ built-in color themes** from [Gogh](https://gogh-co.github.io/Gogh/) terminal themes, plus two custom Grafana light/dark terminal themes. View logs with the same ease
+as your terminal or code editor.
 
-*Running Jest tests:*
+### ANSI logs:
+- Full styling support (colors, underline, italic, etc)
+- Link support (OSC links), with link navigation confirmation for security
+- Regex and case-sensitive filtering
 
-```bash
-npm run test:ci
-# with live reloading
-npm run test
-```
+### JSON logs:
+- Automatic detection of JSON log line
+- Collapsible nested objects and arrays
+- Syntax highlighting using terminal color theme
+- Expression-based filtering (e.g., `r.level == "error"` or `r.status >= 400`)
 
-*Running E2E tests:*
+### Log timeline chart:
+- Histogram visualization of log density over time
+- Quickly navigate, then sync the Grafana dashboard to your current view
+- Cursor synchronization across panels (shared crosshair)
 
-```bash
-# Spins up a Grafana instance first that we test against
-npm run server
-# Optionally specify specific grafana version
-GRAFANA_VERSION=11.3.0 npm run server
+### Performance Optimized
+- Virtual scrolling for handling large log volumes
+- Configurable row limits and line length truncation
+- Efficient memory usage with lazy rendering
 
-# Starts the tests
-npm run e2e
-```
+### Additional Features
+- View log labels as badges or in a popup modal
+- Easily copy full logs, a single log line, or individual fields
 
-*Running linter:*
+## Installation
 
-```bash
-npm run lint
-# apply fixes
-npm run lint:fix
-```
+### From Grafana Catalog
 
-# Distributing your plugin
+1. In Grafana, go to **Configuration > Plugins**
+2. Search for "Pyris"
+3. Click **Install**
 
-When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
+### Manual Installation
 
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
+1. Download the latest release from the [releases page](https://github.com/Azmisov/pyris/releases)
+2. Extract to your Grafana plugins directory (e.g., `/var/lib/grafana/plugins/`)
+3. Restart Grafana
 
-## Initial steps
+## Configuration
 
-Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
+### Panel Options
 
-`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
+| Option | Description |
+|--------|-------------|
+| **Default Dark Theme** | Color scheme when Grafana is in dark mode |
+| **Default Light Theme** | Color scheme when Grafana is in light mode |
+| **Font Family** | Monospace font for log display |
+| **Show Labels** | Display log labels as inline badges |
+| **ANSI Max Line Length** | Truncate lines beyond this character count |
+| **Max Renderable Rows** | Performance limit for total rendered rows |
 
-Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
+### Data Source Requirements
 
-1. Create a [Grafana Cloud account](https://grafana.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
-   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Grafana Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
+This panel works with any data source that returns log data in a standard format:
 
-## Signing a plugin
+- **Time field**: Timestamp for each log entry
+- **Message/Body field**: Log content (string) - can contain ANSI codes or JSON
+- **Labels** (optional): Key-value metadata attached to log lines
 
-### Using Github actions release workflow
+## Contributing
 
-If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
+## License
 
-#### Push a version tag
-
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
-
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
-## Learn more
-
-Below you can find source code for existing app plugins and other related documentation.
-
-- [Basic panel plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/panel-basic#readme)
-- [`plugin.json` documentation](https://grafana.com/developers/plugin-tools/reference/plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+LGPL-3.0 - see [LICENSE](LICENSE) for details.

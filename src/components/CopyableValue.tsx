@@ -78,7 +78,7 @@ export const CopyableValue = memo<CopyableValueProps>(({
   const { copyWithToast, Toast } = useCopyToast();
 
   const handleClick = useCallback((e: React.MouseEvent) => {
-    if (!enabled) return;
+    if (!enabled) {return;}
     e.stopPropagation();
     const copyText = formatValueForCopy(value);
     copyWithToast(copyText, e);

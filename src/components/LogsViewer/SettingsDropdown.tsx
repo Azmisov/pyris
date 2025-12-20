@@ -41,7 +41,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {return;}
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;

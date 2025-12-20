@@ -277,15 +277,7 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
 }) => {
   const entries = Object.entries(obj);
 
-  if (entries.length === 0) {
-    return (
-      <span className="ansi-fg-14">
-        &#123;&#125;
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
-      </span>
-    );
-  }
-
+  // Hook must be called unconditionally (before any early returns)
   const { pathString, shouldCollapse, shouldFlash, handleClick } = useJsonCollapse(
     depth,
     path,
@@ -294,6 +286,15 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
     onToggleExpand,
     obj
   );
+
+  if (entries.length === 0) {
+    return (
+      <span className="ansi-fg-14">
+        &#123;&#125;
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
+    );
+  }
 
   return (
     <JsonContainer
@@ -349,15 +350,7 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
   hasComma,
   copyEnabled,
 }) => {
-  if (arr.length === 0) {
-    return (
-      <span className="ansi-fg-14">
-        &#91;&#93;
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
-      </span>
-    );
-  }
-
+  // Hook must be called unconditionally (before any early returns)
   const { pathString, shouldCollapse, shouldFlash, handleClick } = useJsonCollapse(
     depth,
     path,
@@ -366,6 +359,15 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
     onToggleExpand,
     arr
   );
+
+  if (arr.length === 0) {
+    return (
+      <span className="ansi-fg-14">
+        &#91;&#93;
+        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+      </span>
+    );
+  }
 
   return (
     <JsonContainer

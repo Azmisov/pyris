@@ -15,11 +15,11 @@ export interface HistogramBin {
 
 export class LogCountIndex {
   private timestamps: number[];
-  private currentIndex: number = 0;
-  private binStartTime: number = 0;
+  private currentIndex = 0;
+  private binStartTime = 0;
   private bins: HistogramBin[] = [];
   /** Cache last bin index for hover lookups */
-  private lastBinIndex: number = 0;
+  private lastBinIndex = 0;
 
   constructor(timestamps: number[]) {
     this.timestamps = timestamps;
