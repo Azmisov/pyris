@@ -47,7 +47,7 @@ function fetchGrafanaScss(filename) {
 function parseGrafanaColors(scssContent) {
   // Extract color values - handle both hex and rgba formats, and variable references
   const extractColor = (...candidates) => {
-    for (var varName of candidates) {
+    for (let varName of candidates) {
       // Try hex format first
       const hexMatch = scssContent.match(new RegExp(`\\$${varName}\\s*:\\s*(#[0-9a-fA-F]{3,6})`));
       if (hexMatch) {
@@ -65,9 +65,9 @@ function parseGrafanaColors(scssContent) {
       // Try rgba format
       const rgbaMatch = scssContent.match(new RegExp(`\\$${varName}\\s*:\\s*rgba?\\s*\\(\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*,\\s*([0-9]+)`));
       if (rgbaMatch) {
-        const r = parseInt(rgbaMatch[1]);
-        const g = parseInt(rgbaMatch[2]);
-        const b = parseInt(rgbaMatch[3]);
+        const r = parseInt(rgbaMatch[1], 10);
+        const g = parseInt(rgbaMatch[2], 10);
+        const b = parseInt(rgbaMatch[3], 10);
         // Convert to hex
         return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
       }
@@ -124,11 +124,11 @@ function convertToGoghFormat(grafanaColors, themeName, isDark) {
 
   // Generate brighter versions for bright colors using OKLab perceptual color space
   const brighten = (hex) => {
-    if (!hex || !hex.startsWith('#')) return hex;
+    if (!hex || !hex.startsWith('#')) {return hex;}
 
     // Parse color and convert to OKLab
     const color = parse(hex);
-    if (!color) return hex;
+    if (!color) {return hex;}
 
     const oklab = converter('oklab');
     const oklabColor = oklab(color);
@@ -136,7 +136,7 @@ function convertToGoghFormat(grafanaColors, themeName, isDark) {
     // Increase lightness by 0.15 in OKLab space (more perceptually accurate)
     let shift = 0.15;
     if (!isDark)
-      shift = -shift;
+      {shift = -shift;}
     const brighterColor = {
       ...oklabColor,
       l: Math.min(1, oklabColor.l + shift),

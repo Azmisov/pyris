@@ -23,7 +23,7 @@ function buildFrequencyMap(tokens: string[]): Map<string, number> {
  * This is a geometric series that converges to 2, giving diminishing returns for repeated tokens.
  */
 function decreasingWeightSum(n: number): number {
-  if (n <= 0) return 0;
+  if (n <= 0) {return 0;}
   // Sum = 2 * (1 - (1/2)^n) = 2 - 2^(1-n)
   return 2 - Math.pow(2, 1 - n);
 }
@@ -72,7 +72,7 @@ export function findNearestByTimestamp(
   rows: Array<{ timestamp: number }>,
   target: number
 ): number {
-  if (rows.length === 0) return 0;
+  if (rows.length === 0) {return 0;}
 
   let left = 0;
   let right = rows.length - 1;
@@ -108,7 +108,7 @@ function findTimestampBounds(
   center: number,
   buffer: number
 ): { left: number; right: number } {
-  if (rows.length === 0) return { left: 0, right: -1 };
+  if (rows.length === 0) {return { left: 0, right: -1 };}
 
   const minTimestamp = center - buffer;
   const maxTimestamp = center + buffer;
@@ -158,7 +158,7 @@ export function findMatchingRow(
   targetRows: LogRow[],
   timestampBuffer: number = TIMESTAMP_BUFFER_MS
 ): number | undefined {
-  if (targetRows.length === 0) return undefined;
+  if (targetRows.length === 0) {return undefined;}
 
   const sourceText = getRowText(sourceRow);
   const sourceTokens = tokenize(sourceText);

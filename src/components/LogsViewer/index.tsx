@@ -191,10 +191,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Subscribe to Grafana cursor sync events (shared crosshair)
   useEffect(() => {
-    if (!eventBus) return;
+    if (!eventBus) {return;}
 
     // Helper to get origin panel key from event
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const getOriginPanelKey = (evt: any): string | null => {
       return evt.origin?._eventsOrigin?.getPathId?.() ?? null;
     };
@@ -232,11 +232,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
       .subscribe({
         next: (evt) => {
           // Filter out events when mouse is inside panel - we handle everything internally
-          if (isMouseInsidePanelRef.current) return;
+          if (isMouseInsidePanelRef.current) {return;}
 
           const timestamp = evt.payload?.point?.time;
           const originPanelKey = getOriginPanelKey(evt);
-          if (!originPanelKey || typeof timestamp !== 'number') return;
+          if (!originPanelKey || typeof timestamp !== 'number') {return;}
 
           // Get per-source state and check for stale hovers
           const sourceState = getSourceState(originPanelKey);
@@ -269,10 +269,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
       .subscribe({
         next: (evt) => {
           // Filter out events when mouse is inside panel - we handle everything internally
-          if (isMouseInsidePanelRef.current) return;
+          if (isMouseInsidePanelRef.current) {return;}
 
           const originPanelKey = getOriginPanelKey(evt);
-          if (!originPanelKey) return;
+          if (!originPanelKey) {return;}
 
           // Update per-source state: mark clear time for this source
           const sourceState = getSourceState(originPanelKey);
@@ -586,7 +586,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle timeline hover - only publish to eventBus (timeline shows its own indicator)
   const handleTimelineHover = useCallback((timestamp: number | null) => {
-    if (!eventBus) return;
+    if (!eventBus) {return;}
 
     // Publish to other panels
     isPublishingRef.current = true;
@@ -634,7 +634,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Handle log selection from timeline (binary search for nearest log)
   const handleLogSelect = useCallback((timestamp: number) => {
-    if (filteredRows.length === 0) return;
+    if (filteredRows.length === 0) {return;}
 
     // Binary search for nearest timestamp (rows are always in ascending order)
     let left = 0;
@@ -733,7 +733,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Handle view mode change with navigation sync
   const handleViewModeChange = useCallback((mode: 'ansi' | 'json') => {
     // If already in the target mode, do nothing
-    if (mode === viewMode) return;
+    if (mode === viewMode) {return;}
 
     // Get source and target filtered rows (both pre-computed)
     const sourceRows = viewMode === 'json' ? filteredJsonRows : filteredAnsiRows;

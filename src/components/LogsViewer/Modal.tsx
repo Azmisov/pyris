@@ -24,7 +24,7 @@ export const Modal = memo<ModalProps>(({
   footer,
   bodyPadded = false,
 }) => {
-  if (!isOpen) return null;
+  if (!isOpen) {return null;}
 
   return (
     <div className={styles.overlay} onClick={onClose}>

@@ -51,8 +51,8 @@ export class TimelineChart {
   private filteredLogCountIndex: LogCountIndex | null = null;
   private fullTimeRange: [number, number] | null = null;
   // Logical dimensions (CSS pixels, not scaled)
-  private logicalWidth: number = 0;
-  private logicalHeight: number = 0;
+  private logicalWidth = 0;
+  private logicalHeight = 0;
   private grayPattern: CanvasPattern | null = null;
   private hoverIndicator: VerticalIndicator | null = null;
   private selectedIndicator: VerticalIndicator | null = null;
@@ -67,9 +67,9 @@ export class TimelineChart {
 
   // Mouse state
   /** Autoincrementing drag identifier to indicate for knowing when a new drag has begun */
-  private dragId: number = 0;
+  private dragId = 0;
   private dragStart: [number, number] | null = null;
-  private dragging: boolean = false;
+  private dragging = false;
   private pointerCapture: number | null = null;
   private mouseX: number | null = null;
   private hoveredBin: HistogramBin | null = null;
@@ -146,7 +146,7 @@ export class TimelineChart {
     patternCanvas.height = patternSize;
 
     const pctx = patternCanvas.getContext('2d');
-    if (!pctx) return null;
+    if (!pctx) {return null;}
 
     // Use bgAccent1 for subtle background
     const bgColor = this.colorScheme.bgAccent1;
@@ -214,15 +214,15 @@ export class TimelineChart {
   }
 
   /** Yield all indicators in render order (optionally include hover) */
-  private *getNamedIndicators(includeHover: boolean = false): Generator<VerticalIndicator> {
+  private *getNamedIndicators(includeHover = false): Generator<VerticalIndicator> {
     // Render order: range indicators → dashboard indicators → selected → hover
     // This ensures proper z-ordering (back to front)
-    if (this.rangeStartIndicator) yield this.rangeStartIndicator;
-    if (this.rangeEndIndicator) yield this.rangeEndIndicator;
-    if (this.dashboardStartIndicator) yield this.dashboardStartIndicator;
-    if (this.dashboardEndIndicator) yield this.dashboardEndIndicator;
-    if (this.selectedIndicator) yield this.selectedIndicator;
-    if (includeHover && this.hoverIndicator) yield this.hoverIndicator;
+    if (this.rangeStartIndicator) {yield this.rangeStartIndicator;}
+    if (this.rangeEndIndicator) {yield this.rangeEndIndicator;}
+    if (this.dashboardStartIndicator) {yield this.dashboardStartIndicator;}
+    if (this.dashboardEndIndicator) {yield this.dashboardEndIndicator;}
+    if (this.selectedIndicator) {yield this.selectedIndicator;}
+    if (includeHover && this.hoverIndicator) {yield this.hoverIndicator;}
   }
 
   /**
@@ -303,7 +303,7 @@ export class TimelineChart {
     evt.preventDefault();
 
     // Disallow while clicking/dragging
-    if (this.dragStart) return;
+    if (this.dragStart) {return;}
 
     // Conversion factor from wheel delta to approximate pixels
     let fac = 1;
@@ -469,8 +469,8 @@ export class TimelineChart {
     let maxTime = -Infinity;
 
     for (const timestamp of timestamps) {
-      if (timestamp < minTime) minTime = timestamp;
-      if (timestamp > maxTime) maxTime = timestamp;
+      if (timestamp < minTime) {minTime = timestamp;}
+      if (timestamp > maxTime) {maxTime = timestamp;}
     }
 
     // If all logs have the same timestamp (or no logs), add some padding
@@ -721,7 +721,7 @@ export class TimelineChart {
   render(): void {
     const zoomRange = this.getZoomRange();
     // setData not called yet
-    if (!zoomRange) return
+    if (!zoomRange) {return}
 
     // Use logical dimensions (not scaled canvas buffer size)
     const width = this.logicalWidth;
@@ -757,7 +757,7 @@ export class TimelineChart {
   }
 
   private renderHistogram(zoomRange: [number, number], availableHeight: number): void {
-    if (!this.logCountIndex || !this.fullTimeRange) return;
+    if (!this.logCountIndex || !this.fullTimeRange) {return;}
 
     const histStart = performance.now();
 
@@ -786,7 +786,7 @@ export class TimelineChart {
     }
 
     const allBins = this.logCountIndex.getBins();
-    if (maxCount === 0) return;
+    if (maxCount === 0) {return;}
 
     // Generate bins for filtered data (if active)
     let filteredBins: HistogramBin[] = [];

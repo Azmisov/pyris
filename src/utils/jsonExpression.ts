@@ -37,7 +37,7 @@ export function parseExpression(exprBody: string): ParsedExpression {
     console.log('[parseExpression] Parsing expression:', trimmed);
 
     // Create function with 'r' as parameter
-    // eslint-disable-next-line no-new-func
+     
     const func = new Function('r', `return ${trimmed}`);
 
     console.log('[parseExpression] Successfully created function');

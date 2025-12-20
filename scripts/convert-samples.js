@@ -43,10 +43,10 @@ function extractTimestampFromLogLine(line) {
       year,
       month - 1,
       day,
-      parseInt(hour),
-      parseInt(minute),
-      parseInt(second),
-      parseInt(centiseconds) * 10 // Convert centiseconds to milliseconds
+      parseInt(hour, 10),
+      parseInt(minute, 10),
+      parseInt(second, 10),
+      parseInt(centiseconds, 10) * 10 // Convert centiseconds to milliseconds
     );
 
     return timestamp;

@@ -51,7 +51,7 @@ export function useKeyboardNavigation(
      */
     const handleKeyDown = (event: KeyboardEvent) => {
       // Ignore keyboard events when focus is on input elements
-      if (event.target !== document.body) return;
+      if (event.target !== document.body) {return;}
 
       switch (event.key) {
         case 'ArrowDown':

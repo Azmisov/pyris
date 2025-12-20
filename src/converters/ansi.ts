@@ -205,7 +205,7 @@ function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionRe
 function parseOsc8Params(paramString: string): Record<string, string> {
   const params: Record<string, string> = {};
 
-  if (!paramString) return params;
+  if (!paramString) {return params;}
 
   const pairs = paramString.split(':');
   for (const pair of pairs) {
@@ -603,7 +603,7 @@ export function stripAnsiCodes(input: string): string {
     console.warn('Failed to parse ANSI text for stripping:', error);
     // Fallback to regex-based stripping if parser fails
     return input.replace(
-      // eslint-disable-next-line no-control-regex
+       
       /\x1b\[[0-9;]*[a-zA-Z]|\x1b\][^\x07]*\x07|\x1b\][^\x1b]*\x1b\\/g,
       ''
     );
