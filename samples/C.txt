@@ -1,0 +1,153 @@
+Basic Colors - Foreground (30-37):
+[30mBlack[0m [31mRed[0m [32mGreen[0m [33mYellow[0m [34mBlue[0m [35mMagenta[0m [36mCyan[0m [37mWhite[0m
+
+Bright Colors - Foreground (90-97):
+[90mBright Black[0m [91mBright Red[0m [92mBright Green[0m [93mBright Yellow[0m [94mBright Blue[0m [95mBright Magenta[0m [96mBright Cyan[0m [97mBright White[0m
+
+Basic Colors - Background (40-47):
+[40mBlack BG[0m [41mRed BG[0m [42mGreen BG[0m [43mYellow BG[0m [44mBlue BG[0m [45mMagenta BG[0m [46mCyan BG[0m [47mWhite BG[0m
+
+Bright Colors - Background (100-107):
+[100mBright Black BG[0m [101mBright Red BG[0m [102mBright Green BG[0m [103mBright Yellow BG[0m [104mBright Blue BG[0m [105mBright Magenta BG[0m [106mBright Cyan BG[0m [107mBright White BG[0m
+
+256 Color Mode - Foreground (38;5;n):
+[38;5;0mColor 0[0m [38;5;16mColor 16[0m [38;5;95mColor 95[0m [38;5;124mColor 124[0m [38;5;196mColor 196[0m [38;5;226mColor 226[0m [38;5;255mColor 255[0m
+
+256 Color Mode - Background (48;5;n):
+[48;5;17mColor 17 BG[0m [48;5;53mColor 53 BG[0m [48;5;125mColor 125 BG[0m [48;5;197mColor 197 BG[0m
+
+Truecolor - Foreground (38;2;r;g;b):
+[38;2;255;0;0mRed RGB[0m [38;2;0;255;0mGreen RGB[0m [38;2;0;0;255mBlue RGB[0m [38;2;255;128;0mOrange RGB[0m [38;2;128;0;128mPurple RGB[0m
+
+Truecolor - Background (48;2;r;g;b):
+[48;2;255;192;203mPink BG[0m [48;2;255;255;0mYellow BG[0m [48;2;0;255;255mCyan BG[0m
+
+Text Styles - Bold (1):
+[1mBold text[0m [1;31mBold red[0m [1;32mBold green[0m
+
+Text Styles - Faint/Dim (2):
+[2mFaint text[0m [2;33mFaint yellow[0m
+
+Text Styles - Italic (3):
+[3mItalic text[0m [3;34mItalic blue[0m
+
+Text Styles - Underline (4):
+[4mUnderlined text[0m [4;35mUnderlined magenta[0m
+
+Text Styles - Double Underline (21):
+[21mDouble underlined text[0m [21;36mDouble underlined cyan[0m
+
+Text Styles - Slow Blink (5):
+[5mSlow blinking text[0m
+
+Text Styles - Rapid Blink (6):
+[6mRapid blinking text[0m
+
+Text Styles - Conceal (8):
+Visible [8mHidden text[0m Visible again
+
+Text Styles - Strike (9):
+[9mStrikethrough text[0m [9;31mStrikethrough red[0m
+
+Text Styles - Framed (51):
+[51mFramed text[0m [51;32mFramed green[0m
+
+Text Styles - Encircled (52):
+[52mEncircled text[0m [52;33mEncircled yellow[0m
+
+Text Styles - Overline (53):
+[53mOverlined text[0m [53;34mOverlined blue[0m
+
+Text Styles - Superscript (73):
+Normal[73mSuperscript[0m
+
+Text Styles - Subscript (74):
+Normal[74mSubscript[0m
+
+Underline Color (58;5;n):
+[4;58;5;196mRed underline[0m [4;58;5;46mGreen underline[0m [4;58;5;21mBlue underline[0m
+
+Underline Color RGB (58;2;r;g;b):
+[4;58;2;255;0;255mMagenta underline[0m [4;58;2;255;165;0mOrange underline[0m
+
+Combined Styles:
+[1;3;4;31mBold Italic Underlined Red[0m
+[1;32;48;5;235mBold Green on Gray[0m
+[3;38;5;141;48;5;236mItalic Purple on Dark Gray[0m
+
+Multi-code sequence test (the bug fix case):
+[3;38;5;95mItalic with 256-color 95[0m
+[1;4;38;5;124mBold Underlined with 256-color 124[0m
+
+Reset codes:
+[1mBold[22m Not bold
+[3mItalic[23m Not italic
+[4mUnderline[24m Not underlined
+[9mStrike[29m Not striked
+
+Color reset:
+[31mRed[39m Default foreground
+[41mRed BG[49m Default background
+
+Complex nesting:
+[1m[31mBold Red [4mUnderlined[24m Not underlined[0m
+
+Edge cases:
+[0m Reset only
+[m Empty SGR (should reset)
+Normal [31m[32m[33mRapid color changes[0m
+[1;2;3;4;5;9;21;51;53;73mAll styles at once[0m
+
+Default colors with 256-color overrides:
+[31mBasic Red[0m vs [38;5;196m256-Red[0m
+[34mBasic Blue[0m vs [38;5;21m256-Blue[0m
+
+Performance test - long sequence:
+[38;5;196m█[38;5;202m█[38;5;208m█[38;5;214m█[38;5;220m█[38;5;226m█[38;5;190m█[38;5;154m█[38;5;118m█[38;5;82m█[38;5;46m█[0m
+
+Multiple resets:
+[31mRed[0m [32mGreen[0m [33mYellow[0m
+
+Foreground + Background combinations:
+[31;42mRed on Green[0m [33;44mYellow on Blue[0m [37;41mWhite on Red[0m
+
+256-color foreground + background:
+[38;5;226;48;5;18mYellow on Navy[0m [38;5;46;48;5;196mGreen on Red[0m
+
+OSC-8 Hyperlinks:
+]8;;https://example.comExample Website]8;;[0m
+]8;;https://github.comGitHub]8;;[0m
+]8;;mailto:test@example.comEmail Link]8;;[0m
+
+File Links (file://):
+]8;;file:///home/user/example.txtLocal File Link]8;;[0m
+]8;;file:///var/log/system.logSystem Log File]8;;[0m
+
+VSCode Links (vscode://):
+]8;;vscode://file/home/user/project/main.ts:42:10VSCode Link with Line]8;;[0m
+]8;;vscode://file/home/user/project/README.mdVSCode File Link]8;;[0m
+
+Plain URL Detection (no OSC-8):
+https://docs.grafana.com/
+file:///home/user/documents/report.pdf
+vscode://file/workspace/src/index.ts:10:5
+http://localhost:3000/dashboard
+
+Dangerous Schemes (NOT auto-linked for security - displayed as plain text):
+javascript:alert(document.domain)
+javascript:void(0)
+data:text/html,alert-test
+vbscript:msgbox-test
+
+Dangerous URLs with :// (auto-linked but will show warning modal):
+javascript://example.com/path
+data://text/html,test
+vbscript://test
+
+Safe Non-URL Schemes (auto-linked):
+mailto:user@example.com
+tel:+1234567890
+sms:+1234567890
+callto:+1234567890
+
+End of test file

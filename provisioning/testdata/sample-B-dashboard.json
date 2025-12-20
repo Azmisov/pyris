@@ -1,0 +1,2230 @@
+[
+  {
+    "columns": [
+      {
+        "text": "Time",
+        "type": "time"
+      },
+      {
+        "text": "Message",
+        "type": "string"
+      },
+      {
+        "text": "Labels",
+        "type": "string"
+      }
+    ],
+    "rows": [
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Logger configured",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608927,
+        "{\"log_time\":\"2025-11-18T23:46:48.927082+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Logger configured\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Connecting to Redis \u001b[1;38;5;67mhost\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme-dev-redis\u001b[0m \u001b[1;38;5;67mport\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m6379\u001b[0m \u001b[1;38;5;67mdb\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608927,
+        "{\"log_time\":\"2025-11-18T23:46:48.927447+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Connecting to Redis\",\"host\":\"acme-dev-redis\",\"port\":6379,\"db\":1}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;214mWRN\u001b[0m] app_worker_local - Redis processing lock disabled, which means no protection against multiple running processes \u001b[1;38;5;67mkey\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mapp_worker_local:lock\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608928,
+        "{\"log_time\":\"2025-11-18T23:46:48.928015+00:00\",\"log_level\":\"WARNING\",\"log_name\":[\"app_worker_local\"],\"message\":\"Redis processing lock disabled, which means no protection against multiple running processes\",\"key\":\"app_worker_local:lock\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Binding to ZMQ \u001b[1;38;5;67maddress\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mtcp://localhost:0\u001b[0m \u001b[1;38;5;67msocket_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mPAIR\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608928,
+        "{\"log_time\":\"2025-11-18T23:46:48.928370+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Binding to ZMQ\",\"address\":\"tcp://localhost:0\",\"socket_type\":0}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local - ZMQ address resolved \u001b[1;38;5;67maddress\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mtcp://127.0.0.1:45473\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608929,
+        "{\"log_time\":\"2025-11-18T23:46:48.929208+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\"],\"message\":\"ZMQ address resolved\",\"address\":\"tcp://127.0.0.1:45473\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Registered AWS session parameters \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme\u001b[0m \u001b[1;38;5;67mcredentials\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mprofile:dev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608929,
+        "{\"log_time\":\"2025-11-18T23:46:48.929475+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Registered AWS session parameters\",\"name\":\"acme\",\"credentials\":\"profile:dev\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Registered AWS session parameters \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mclickhouse\u001b[0m \u001b[1;38;5;67mcredentials\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mprofile:dev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608929,
+        "{\"log_time\":\"2025-11-18T23:46:48.929720+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Registered AWS session parameters\",\"name\":\"clickhouse\",\"credentials\":\"profile:dev\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608920,
+        "\u001b[38;5;144m2025-11-18 23:46:48.92\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Process manager starting \u001b[1;38;5;67mpid\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m470441\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608929,
+        "{\"log_time\":\"2025-11-18T23:46:48.929852+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Process manager starting\",\"pid\":470441}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "\u001b[38;5;144m2025-11-18 23:46:48.93\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Application started",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "{\"log_time\":\"2025-11-18T23:46:48.930492+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Application started\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "\u001b[38;5;144m2025-11-18 23:46:48.93\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Config loaded \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "{\"log_time\":\"2025-11-18T23:46:48.930546+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Config loaded\",\"path\":\"local\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "\u001b[38;5;144m2025-11-18 23:46:48.93\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local -",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;166mConfig\u001b[0m: \u001b[38;5;78mAppConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167moverrides\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mlog\u001b[0m: \u001b[38;5;78mStructuredLoggingConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-990\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_deferred\u001b[0m: \u001b[3;38;5;95mCRITICAL\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mname\u001b[0m: \u001b[38;5;78mProcessName\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mroot\u001b[0m: \u001b[3;38;5;95mapp_worker_local\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mhuman\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mmachine\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mlevel\u001b[0m: \u001b[3;38;5;95m5\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mlevel_libs\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mapp_worker\u001b[0m: \u001b[3;38;5;95m5\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mcore_utils\u001b[0m: \u001b[3;38;5;95m5\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mlevel_abbrev\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mstyles\u001b[0m: \u001b[38;5;78mPresetStylesConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mroot\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;170m│ \u001b[0m\u001b[38;5;170msp_data\u001b[0m: \u001b[3;38;5;95m12\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mlock\u001b[0m: \u001b[38;5;78mProcessingLockConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_deferred\u001b[0m: \u001b[3;38;5;95mCRITICAL\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mredis\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mname\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mdisabled\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mexpire\u001b[0m: \u001b[3;38;5;95m60.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mtimeout\u001b[0m: \u001b[3;38;5;95m10.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mheartbeat\u001b[0m: \u001b[3;38;5;95m30.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167maws\u001b[0m: \u001b[38;5;78mAWSParamsConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mregion_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168maccess_key_id\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168msecret_access_key\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168msession_token\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mprofile_name\u001b[0m: \u001b[3;38;5;80mdev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mrole_arn\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpool\u001b[0m: \u001b[3;38;5;95m10\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mname\u001b[0m: \u001b[3;38;5;80macme\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpreload\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mredis\u001b[0m: \u001b[38;5;78mRedisConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_deferred\u001b[0m: \u001b[3;38;5;95mWEAK\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mhost\u001b[0m: \u001b[3;38;5;80macme-dev-redis\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mport\u001b[0m: \u001b[3;38;5;95m6379\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mdb\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mprotocol\u001b[0m: \u001b[3;38;5;95m2\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mretry\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mretry_on_error\u001b[0m: \u001b[3;38;5;95m<class 'redis.exceptions.BusyLoadingError'>,<class 'redis.exceptions.ConnectionError'>,<class 'redis.exceptions.TimeoutError'>\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mbackoff_base\u001b[0m: \u001b[3;38;5;95m1.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mbackoff_cap\u001b[0m: \u001b[3;38;5;95m60.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mclickhouse\u001b[0m: \u001b[38;5;78mClickHouseConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_deferred\u001b[0m: \u001b[3;38;5;95mWEAK\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mhost\u001b[0m: \u001b[3;38;5;80macme-dev-clickhouse.internal\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mport\u001b[0m: \u001b[3;38;5;95m9000\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mdatabase\u001b[0m: \u001b[3;38;5;80mdefault\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168muser\u001b[0m: \u001b[3;38;5;80mdefault\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpassword\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpool_min\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpool_max\u001b[0m: \u001b[3;38;5;95m3\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168msecret\u001b[0m: \u001b[3;38;5;80macme/dev/app/acme-app-worker/clickhouse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168maws\u001b[0m: \u001b[38;5;78mAWSParamsConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mregion_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169maccess_key_id\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msecret_access_key\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msession_token\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mprofile_name\u001b[0m: \u001b[3;38;5;80mdev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mrole_arn\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mpool\u001b[0m: \u001b[3;38;5;95m10\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mname\u001b[0m: \u001b[3;38;5;80mclickhouse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mpreload\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mkafka\u001b[0m: \u001b[38;5;78mKafkaConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mservice_deferred\u001b[0m: \u001b[3;38;5;95mCRITICAL\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mbrokers\u001b[0m: \u001b[3;38;5;95mkafka-cluster-0.internal:9092,kafka-cluster-1.internal:9092,kafka-cluster-2.internal:9092,kafka-cluster-3.internal:9092,kafka-cluster-4.internal:9092\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mdata\u001b[0m: \u001b[38;5;78mPipelineConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mpartition\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mmap\u001b[0m: \u001b[3;38;5;80mS251R2\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mregion_type\u001b[0m: \u001b[3;38;5;80mstate\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mregion\u001b[0m: \u001b[3;38;5;80mca\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mbackfill\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mbin_size\u001b[0m: \u001b[3;38;5;95m300\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168msources\u001b[0m: \u001b[3;38;5;95mkafka,archive\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168marchive\u001b[0m: \u001b[38;5;78mArchiveConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mbucket\u001b[0m: \u001b[3;38;5;80macme-dev-app-data-archives\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkey\u001b[0m: \u001b[3;38;5;95m<core_utils.contrib.template.TemplateString object at 0x7e436b2bb010>\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mcompression\u001b[0m: \u001b[3;38;5;80mauto\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169maws\u001b[0m: \u001b[3;38;5;80maws_acme\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mcache\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mlocal\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mlist_batch_size\u001b[0m: \u001b[3;38;5;95m100\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mmargin\u001b[0m: \u001b[3;38;5;95m0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mguarantee_crosspartition\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mpoll_interval\u001b[0m: \u001b[3;38;5;95m5\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mchunk_size\u001b[0m: \u001b[3;38;5;95m32768\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mtimestamp_buffer\u001b[0m: \u001b[3;38;5;95m0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169merr_incomplete\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169merr_delete\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169merr_failure\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mreduce_memory\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mkafka\u001b[0m: \u001b[38;5;78mKafkaConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mtopic\u001b[0m: \u001b[3;38;5;80macme.dataflow.metrics_archive\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkey_filter\u001b[0m: \u001b[3;38;5;95m{}\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mmin_fetch_timeout\u001b[0m: \u001b[3;38;5;95m500\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mmax_fetch_batch\u001b[0m: \u001b[3;38;5;95m1000\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mrefetch_threshold\u001b[0m: \u001b[3;38;5;95m200\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mtimestamp_buffer\u001b[0m: \u001b[3;38;5;95m0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mloader\u001b[0m: \u001b[3;38;5;80mapp_worker.process:kafka_record_loader\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkafka\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168moutput\u001b[0m: \u001b[38;5;78mOutputConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mtopic\u001b[0m: \u001b[3;38;5;80macme.dataflow.output_archive\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mbucket\u001b[0m: \u001b[3;38;5;80macme-dev-app-data-archives\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkey\u001b[0m: \u001b[3;38;5;95m<core_utils.contrib.template.TemplateString object at 0x7e436a9c3b00>\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mcompression\u001b[0m: \u001b[3;38;5;80mzstd\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mstreams\u001b[0m: \u001b[3;38;5;95mcache\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169maws\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkafka\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mservice_deferred\u001b[0m: \u001b[3;38;5;95mWEAK\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mparallel\u001b[0m: \u001b[38;5;78mParallelConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mcount\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mslot\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mcommit\u001b[0m: \u001b[38;5;78mCommitConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mkey\u001b[0m: \u001b[3;38;5;80mapp_worker_local:state.ca:committed\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mdryrun\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169moverride\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168msocket\u001b[0m: \u001b[38;5;78mZMQConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mservice_name\u001b[0m: \u001b[3;38;5;95mNone\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mservice_priority\u001b[0m: \u001b[3;38;5;95m-1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mservice_deferred\u001b[0m: \u001b[3;38;5;95mCRITICAL\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169maddress\u001b[0m: \u001b[3;38;5;80mtcp://localhost:0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msocket_type\u001b[0m: \u001b[3;38;5;95mPAIR\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msend_buffer\u001b[0m: \u001b[3;38;5;95m31457280\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msend_hwm\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mreceive_buffer\u001b[0m: \u001b[3;38;5;95m31457280\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mreceive_hwm\u001b[0m: \u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mbind\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mrandomize\u001b[0m: \u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mstart\u001b[0m: \u001b[3;38;5;80mcommitted\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mstart_fallback\u001b[0m: \u001b[3;38;5;80mfirst\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mstart_buffer\u001b[0m: \u001b[3;38;5;95m600000\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mend\u001b[0m: \u001b[3;38;5;80mcommitted\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mend_fallback\u001b[0m: \u001b[3;38;5;80mlast\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mend_buffer\u001b[0m: \u001b[3;38;5;95m0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mlive\u001b[0m: \u001b[3;38;5;95mTrue\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mretry\u001b[0m: \u001b[38;5;78mExponentialRetryConfig\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mlimit\u001b[0m: \u001b[3;38;5;95m3\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mtimeout\u001b[0m: \u001b[3;38;5;95m1000.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mexp_base\u001b[0m: \u001b[3;38;5;95m2.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mexp_trunc\u001b[0m: \u001b[3;38;5;95m0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mcache_dir\u001b[0m: \u001b[3;38;5;95mdata\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mmodel_loader\u001b[0m: \u001b[38;5;78mModelLoader\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mtable\u001b[0m: \u001b[3;38;5;80msensor_data_5min_output_thresholds\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mbuffer\u001b[0m: \u001b[3;38;5;95m0:10:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mrefill\u001b[0m: \u001b[3;38;5;95m0:05:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;167mprocessor\u001b[0m: \u001b[38;5;78mProcessor\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mgranularity\u001b[0m: \u001b[3;38;5;95m0:15:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mdeviation_scales\u001b[0m:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169maog\u001b[0m: \u001b[3;38;5;95m-1.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169msf\u001b[0m: \u001b[3;38;5;95m1.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;169m│ \u001b[0m\u001b[38;5;169mdly\u001b[0m: \u001b[3;38;5;95m120.0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        " \u001b[38;5;167m│ \u001b[0m\u001b[38;5;168m│ \u001b[0m\u001b[38;5;168mseverity_conditions\u001b[0m: \u001b[3;38;5;95mseverity=180 deviation=0.2 reliable=240.0 bordering=False,severity=120 deviation=0.1 reliable=240.0 bordering=False,severity=120 deviation=0.05 reliable=480.0 bordering=False,severity=60 deviation=0.0001 reliable=0.0 bordering=False\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608931,
+        "{\"log_time\":\"2025-11-18T23:46:48.931616+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":{\"overrides\":[],\"log\":{\"service_name\":null,\"service_priority\":-990,\"service_deferred\":0,\"name\":{\"root\":[\"app_worker_local\"]},\"human\":true,\"machine\":true,\"level\":5,\"level_libs\":{\"app_worker\":5,\"core_utils\":5},\"level_abbrev\":null,\"styles\":{\"root\":{\"sp_data\":12}}},\"lock\":{\"service_name\":null,\"service_priority\":-1,\"service_deferred\":0,\"redis\":null,\"name\":null,\"disabled\":true,\"expire\":60.0,\"timeout\":10.0,\"heartbeat\":30.0},\"aws\":{\"region_name\":null,\"access_key_id\":null,\"secret_access_key\":null,\"session_token\":null,\"profile_name\":\"dev\",\"role_arn\":null,\"pool\":10,\"name\":\"acme\",\"preload\":false,\"service_priority\":-1},\"redis\":{\"service_name\":null,\"service_priority\":-1,\"service_deferred\":2,\"host\":\"acme-dev-redis\",\"port\":6379,\"db\":1,\"protocol\":2,\"retry\":-1,\"retry_on_error\":[\"<class 'redis.exceptions.BusyLoadingError'>\",\"<class 'redis.exceptions.ConnectionError'>\",\"<class 'redis.exceptions.TimeoutError'>\"],\"backoff_base\":1.0,\"backoff_cap\":60.0},\"clickhouse\":{\"service_name\":null,\"service_priority\":-1,\"service_deferred\":2,\"host\":\"acme-dev-clickhouse.internal\",\"port\":9000,\"database\":\"default\",\"user\":\"default\",\"password\":\"\",\"pool_min\":1,\"pool_max\":3,\"secret\":\"acme/dev/app/acme-app-worker/clickhouse\",\"aws\":{\"region_name\":null,\"access_key_id\":null,\"secret_access_key\":null,\"session_token\":null,\"profile_name\":\"dev\",\"role_arn\":null,\"pool\":10,\"name\":\"clickhouse\",\"preload\":false,\"service_priority\":-1}},\"kafka\":{\"service_name\":null,\"service_priority\":-1,\"service_deferred\":0,\"brokers\":[\"kafka-cluster-0.internal:9092\",\"kafka-cluster-1.internal:9092\",\"kafka-cluster-2.internal:9092\",\"kafka-cluster-3.internal:9092\",\"kafka-cluster-4.internal:9092\"]},\"data\":{\"partition\":{\"map\":\"S251R2\",\"region_type\":\"state\",\"region\":\"ca\",\"backfill\":\"\"},\"bin_size\":300,\"sources\":[\"kafka\",\"archive\"],\"archive\":{\"bucket\":\"acme-dev-app-data-archives\",\"key\":\"<core_utils.contrib.template.TemplateString object at 0x7e436b2bb010>\",\"compression\":\"auto\",\"aws\":\"aws_acme\",\"cache\":true,\"local\":true,\"list_batch_size\":100,\"margin\":0,\"guarantee_crosspartition\":[],\"poll_interval\":5,\"chunk_size\":32768,\"timestamp_buffer\":0,\"err_incomplete\":false,\"err_delete\":false,\"err_failure\":false,\"reduce_memory\":true},\"kafka\":{\"topic\":\"acme.dataflow.metrics_archive\",\"key_filter\":{},\"min_fetch_timeout\":500,\"max_fetch_batch\":1000,\"refetch_threshold\":200,\"timestamp_buffer\":0,\"loader\":\"app_worker.process:kafka_record_loader\",\"kafka\":null},\"output\":{\"topic\":\"acme.dataflow.output_archive\",\"bucket\":\"acme-dev-app-data-archives\",\"key\":\"<core_utils.contrib.template.TemplateString object at 0x7e436a9c3b00>\",\"compression\":\"zstd\",\"streams\":[\"cache\"],\"aws\":null,\"kafka\":null,\"service_deferred\":2},\"parallel\":{\"count\":1,\"slot\":1},\"commit\":{\"key\":\"app_worker_local:state.ca:committed\",\"dryrun\":true,\"override\":null},\"socket\":{\"service_name\":null,\"service_priority\":-1,\"service_deferred\":0,\"address\":\"tcp://localhost:0\",\"socket_type\":0,\"send_buffer\":31457280,\"send_hwm\":1,\"receive_buffer\":31457280,\"receive_hwm\":1,\"bind\":true,\"randomize\":false},\"start\":\"committed\",\"start_fallback\":\"first\",\"start_buffer\":600000,\"end\":\"committed\",\"end_fallback\":\"last\",\"end_buffer\":0,\"live\":true,\"retry\":{\"limit\":3,\"timeout\":1000.0,\"exp_base\":2.0,\"exp_trunc\":0},\"cache_dir\":\"data\"},\"model_loader\":{\"table\":\"sensor_data_5min_output_thresholds\",\"buffer\":\"0:10:00\",\"refill\":\"0:05:00\"},\"processor\":{\"granularity\":\"0:15:00\",\"deviation_scales\":{\"aog\":-1.0,\"sf\":1.0,\"dly\":120.0},\"severity_conditions\":[\"severity=180 deviation=0.2 reliable=240.0 bordering=False\",\"severity=120 deviation=0.1 reliable=240.0 bordering=False\",\"severity=120 deviation=0.05 reliable=480.0 bordering=False\",\"severity=60 deviation=0.0001 reliable=0.0 bordering=False\"]}}}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "\u001b[38;5;144m2025-11-18 23:46:48.93\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Initializing AWS session \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mclickhouse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608932,
+        "{\"log_time\":\"2025-11-18T23:46:48.932088+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Initializing AWS session\",\"name\":\"clickhouse\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608930,
+        "\u001b[38;5;144m2025-11-18 23:46:48.93\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Fetching AWS client \u001b[1;38;5;67mtype\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msecretsmanager\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509608938,
+        "{\"log_time\":\"2025-11-18T23:46:48.938221+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Fetching AWS client\",\"type\":\"secretsmanager\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609060,
+        "\u001b[38;5;144m2025-11-18 23:46:49.06\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Launching \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mcore_utils.contrib.data_pipeline\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609064,
+        "{\"log_time\":\"2025-11-18T23:46:49.064064+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Launching\",\"name\":\"core_utils.contrib.data_pipeline\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609060,
+        "\u001b[38;5;144m2025-11-18 23:46:49.06\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local - Launch arguments \u001b[1;38;5;67margs\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m/home/user/dev/acme/acme-app-worker/.venv/bin/python,-m,core_utils.contrib.data_pipeline,--log-name,app_worker_local,data,--data-socket-address,tcp://127.0.0.1:45473,--data-socket-bind=false,--lock-disabled=true\u001b[0m \u001b[1;38;5;67mkwargs\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m{}\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609064,
+        "{\"log_time\":\"2025-11-18T23:46:49.064181+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\"],\"message\":\"Launch arguments\",\"args\":[\"/home/user/dev/acme/acme-app-worker/.venv/bin/python\",\"-m\",\"core_utils.contrib.data_pipeline\",\"--log-name\",\"app_worker_local,data\",\"--data-socket-address\",\"tcp://127.0.0.1:45473\",\"--data-socket-bind=false\",\"--lock-disabled=true\"],\"kwargs\":{}}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609060,
+        "\u001b[38;5;144m2025-11-18 23:46:49.06\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Child process started \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mcore_utils.contrib.data_pipeline\u001b[0m \u001b[1;38;5;67mpid\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m470461\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609065,
+        "{\"log_time\":\"2025-11-18T23:46:49.065627+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Child process started\",\"name\":\"core_utils.contrib.data_pipeline\",\"pid\":470461}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Logger configured",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Connecting to Redis \u001b[1;38;5;67mhost\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme-dev-redis\u001b[0m \u001b[1;38;5;67mport\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m6379\u001b[0m \u001b[1;38;5;67mdb\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;214mWRN\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Redis processing lock disabled, which means no protection against multiple running processes \u001b[1;38;5;67mkey\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mapp_worker_local:lock\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Connecting to ZMQ \u001b[1;38;5;67maddress\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mtcp://127.0.0.1:45473\u001b[0m \u001b[1;38;5;67msocket_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mPAIR\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Registered AWS session parameters \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme\u001b[0m \u001b[1;38;5;67mcredentials\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mprofile:dev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Registered AWS session parameters \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mclickhouse\u001b[0m \u001b[1;38;5;67mcredentials\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mprofile:dev\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Process manager starting \u001b[1;38;5;67mpid\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m470461\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Started data server",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;214mWRN\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Live mode enabled; 'committed' end changed to 'last'",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Requested time \u001b[1;38;5;67mrange\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m[committed, last)\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Full time \u001b[1;38;5;67mrange\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m[first, last)\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609830,
+        "\u001b[38;5;144m2025-11-18 23:46:49.83\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Fetching commited offset \u001b[1;38;5;67mkey\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mapp_worker_local:state.ca:committed\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609835,
+        "{\"log_time\":\"2025-11-18T23:46:49.835429+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Logger configured\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609835,
+        "{\"log_time\":\"2025-11-18T23:46:49.835771+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Connecting to Redis\",\"host\":\"acme-dev-redis\",\"port\":6379,\"db\":1}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609836,
+        "{\"log_time\":\"2025-11-18T23:46:49.836319+00:00\",\"log_level\":\"WARNING\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Redis processing lock disabled, which means no protection against multiple running processes\",\"key\":\"app_worker_local:lock\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609836,
+        "{\"log_time\":\"2025-11-18T23:46:49.836670+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Connecting to ZMQ\",\"address\":\"tcp://127.0.0.1:45473\",\"socket_type\":0}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609837,
+        "{\"log_time\":\"2025-11-18T23:46:49.837357+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Registered AWS session parameters\",\"name\":\"acme\",\"credentials\":\"profile:dev\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609837,
+        "{\"log_time\":\"2025-11-18T23:46:49.837663+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Registered AWS session parameters\",\"name\":\"clickhouse\",\"credentials\":\"profile:dev\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838074+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Process manager starting\",\"pid\":470461}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838464+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Started data server\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838526+00:00\",\"log_level\":\"WARNING\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Live mode enabled; 'committed' end changed to 'last'\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838573+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Requested time\",\"range\":\"[committed, last)\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838613+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Full time\",\"range\":\"[first, last)\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509609838,
+        "{\"log_time\":\"2025-11-18T23:46:49.838687+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Fetching commited offset\",\"key\":\"app_worker_local:state.ca:committed\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610280,
+        "\u001b[38;5;144m2025-11-18 23:46:50.28\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Creating ClickHouse connection pool \u001b[1;38;5;67mhost\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme-dev-clickhouse.internal\u001b[0m \u001b[1;38;5;67mport\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m9000\u001b[0m \u001b[1;38;5;67mdatabase\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mdefault\u001b[0m \u001b[1;38;5;67muser\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme_app_worker\u001b[0m \u001b[1;38;5;67mminsize\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mmaxsize\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610287,
+        "{\"log_time\":\"2025-11-18T23:46:50.287561+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Creating ClickHouse connection pool\",\"host\":\"acme-dev-clickhouse.internal\",\"port\":9000,\"database\":\"default\",\"user\":\"acme_app_worker\",\"minsize\":1,\"maxsize\":3}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[1;38;5;196mERR\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - No offset has been committed",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Resolved time \u001b[1;38;5;67mrange\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m[first, last)\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Starting archive data ingestion",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Using archive source \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Fetching latest archived file list \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Attempting operation \u001b[1;38;5;67mattempt\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mlimit\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m \u001b[1;38;5;67moperation\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlisting files\u001b[0m \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:50:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:55:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:00:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:05:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-10-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:10:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - File listed \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95msensor_data_5min/state.ca/2025/11/06/05-15-00/metrics.parquet\u001b[0m \u001b[1;38;5;67mregion_type\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate\u001b[0m \u001b[1;38;5;67mregion\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mca\u001b[0m \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:15:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - No more archive file remain to be listed",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Stopped indexing archive files",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Found archive files \u001b[1;38;5;67mcount\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m6\u001b[0m \u001b[1;38;5;67mstart\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:50:00+00:00\u001b[0m \u001b[1;38;5;67mend\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:15:00+00:00\u001b[0m \u001b[1;38;5;67mpartial\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mFalse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Attempting operation \u001b[1;38;5;67mattempt\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mlimit\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m \u001b[1;38;5;67moperation\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mread archive files\u001b[0m \u001b[1;38;5;67msouce\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mbin\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:50:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "\u001b[38;5;144m2025-11-18 23:46:50.30\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Reading archive file \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610310,
+        "\u001b[38;5;144m2025-11-18 23:46:50.31\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending batch",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610310,
+        "\u001b[38;5;144m2025-11-18 23:46:50.31\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending data \u001b[1;38;5;67mlength\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m4723802\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610310,
+        "\u001b[38;5;144m2025-11-18 23:46:50.31\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610310,
+        "\u001b[38;5;144m2025-11-18 23:46:50.31\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending command \u001b[1;38;5;67mcommand\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mbin_complete\u001b[0m \u001b[1;38;5;67mdata\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1762404600\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610310,
+        "\u001b[38;5;144m2025-11-18 23:46:50.31\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "{\"log_time\":\"2025-11-18T23:46:50.300452+00:00\",\"log_level\":\"ERROR\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"No offset has been committed\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "{\"log_time\":\"2025-11-18T23:46:50.300664+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Resolved time\",\"range\":\"[first, last)\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610300,
+        "{\"log_time\":\"2025-11-18T23:46:50.300871+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Starting archive data ingestion\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610301,
+        "{\"log_time\":\"2025-11-18T23:46:50.301174+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Using archive source\",\"source\":\"local\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610301,
+        "{\"log_time\":\"2025-11-18T23:46:50.301300+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Fetching latest archived file list\",\"source\":\"local\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610301,
+        "{\"log_time\":\"2025-11-18T23:46:50.301403+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Attempting operation\",\"attempt\":1,\"limit\":3,\"operation\":\"listing files\",\"source\":\"local\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610302,
+        "{\"log_time\":\"2025-11-18T23:46:50.302366+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T04:50:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610302,
+        "{\"log_time\":\"2025-11-18T23:46:50.302627+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T04:55:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610302,
+        "{\"log_time\":\"2025-11-18T23:46:50.302882+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T05:00:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303119+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T05:05:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303358+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/05-10-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T05:10:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303563+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"File listed\",\"source\":\"local\",\"path\":\"sensor_data_5min/state.ca/2025/11/06/05-15-00/metrics.parquet\",\"region_type\":\"state\",\"region\":\"ca\",\"time\":\"2025-11-06T05:15:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303650+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"No more archive file remain to be listed\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303690+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Stopped indexing archive files\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303791+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Found archive files\",\"count\":6,\"start\":\"2025-11-06T04:50:00+00:00\",\"end\":\"2025-11-06T05:15:00+00:00\",\"partial\":false}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610303,
+        "{\"log_time\":\"2025-11-18T23:46:50.303914+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Attempting operation\",\"attempt\":1,\"limit\":3,\"operation\":\"read archive files\",\"souce\":\"local\",\"bin\":\"2025-11-06T04:50:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610304,
+        "{\"log_time\":\"2025-11-18T23:46:50.304014+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Reading archive file\",\"source\":\"local\",\"path\":\"data/sensor_data_5min/state.ca/2025/11/06/04-50-00/metrics.parquet\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610314,
+        "{\"log_time\":\"2025-11-18T23:46:50.314514+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending batch\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610314,
+        "{\"log_time\":\"2025-11-18T23:46:50.314659+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending data\",\"length\":4723802}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610316,
+        "{\"log_time\":\"2025-11-18T23:46:50.316559+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610316,
+        "{\"log_time\":\"2025-11-18T23:46:50.316651+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending command\",\"command\":\"bin_complete\",\"data\":\"1762404600\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610317,
+        "{\"log_time\":\"2025-11-18T23:46:50.317098+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Attempting operation \u001b[1;38;5;67mattempt\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mlimit\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m \u001b[1;38;5;67moperation\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mread archive files\u001b[0m \u001b[1;38;5;67msouce\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mbin\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:55:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Reading archive file \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending batch",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending data \u001b[1;38;5;67mlength\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m4645614\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending command \u001b[1;38;5;67mcommand\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mbin_complete\u001b[0m \u001b[1;38;5;67mdata\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1762404900\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "\u001b[38;5;144m2025-11-18 23:46:50.36\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "{\"log_time\":\"2025-11-18T23:46:50.360686+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Attempting operation\",\"attempt\":1,\"limit\":3,\"operation\":\"read archive files\",\"souce\":\"local\",\"bin\":\"2025-11-06T04:55:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610360,
+        "{\"log_time\":\"2025-11-18T23:46:50.360939+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Reading archive file\",\"source\":\"local\",\"path\":\"data/sensor_data_5min/state.ca/2025/11/06/04-55-00/metrics.parquet\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610368,
+        "{\"log_time\":\"2025-11-18T23:46:50.368275+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending batch\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610368,
+        "{\"log_time\":\"2025-11-18T23:46:50.368389+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending data\",\"length\":4645614}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610368,
+        "{\"log_time\":\"2025-11-18T23:46:50.368515+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610368,
+        "{\"log_time\":\"2025-11-18T23:46:50.368567+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending command\",\"command\":\"bin_complete\",\"data\":\"1762404900\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610368,
+        "{\"log_time\":\"2025-11-18T23:46:50.368788+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "\u001b[38;5;144m2025-11-18 23:46:50.41\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Attempting operation \u001b[1;38;5;67mattempt\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mlimit\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m \u001b[1;38;5;67moperation\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mread archive files\u001b[0m \u001b[1;38;5;67msouce\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mbin\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:00:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "\u001b[38;5;144m2025-11-18 23:46:50.41\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Reading archive file \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "\u001b[38;5;144m2025-11-18 23:46:50.41\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending batch",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "\u001b[38;5;144m2025-11-18 23:46:50.41\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending data \u001b[1;38;5;67mlength\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m4599584\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "{\"log_time\":\"2025-11-18T23:46:50.410663+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Attempting operation\",\"attempt\":1,\"limit\":3,\"operation\":\"read archive files\",\"souce\":\"local\",\"bin\":\"2025-11-06T05:00:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610410,
+        "{\"log_time\":\"2025-11-18T23:46:50.410851+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Reading archive file\",\"source\":\"local\",\"path\":\"data/sensor_data_5min/state.ca/2025/11/06/05-00-00/metrics.parquet\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610419,
+        "{\"log_time\":\"2025-11-18T23:46:50.419860+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending batch\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610419,
+        "{\"log_time\":\"2025-11-18T23:46:50.419991+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending data\",\"length\":4599584}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610650,
+        "\u001b[38;5;144m2025-11-18 23:46:50.65\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Listening to data server",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610659,
+        "{\"log_time\":\"2025-11-18T23:46:50.659986+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Listening to data server\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610660,
+        "\u001b[38;5;144m2025-11-18 23:46:50.66\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local - Polling data server \u001b[1;38;5;67mtimeout\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m5000\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610660,
+        "{\"log_time\":\"2025-11-18T23:46:50.660246+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\"],\"message\":\"Polling data server\",\"timeout\":5000}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610660,
+        "\u001b[38;5;144m2025-11-18 23:46:50.66\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local - Polling finished",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610660,
+        "{\"log_time\":\"2025-11-18T23:46:50.660738+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\"],\"message\":\"Polling finished\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610850,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local - Polling data server \u001b[1;38;5;67mtimeout\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m5000\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610852,
+        "{\"log_time\":\"2025-11-18T23:46:50.852897+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\"],\"message\":\"Polling data server\",\"timeout\":5000}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610850,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local - Polling finished",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610853,
+        "{\"log_time\":\"2025-11-18T23:46:50.853473+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\"],\"message\":\"Polling finished\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610850,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local - Received command from data server \u001b[1;38;5;67mcommand\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mbin_complete\u001b[0m \u001b[1;38;5;67mdata\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1762404600\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610855,
+        "{\"log_time\":\"2025-11-18T23:46:50.855150+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\"],\"message\":\"Received command from data server\",\"command\":\"bin_complete\",\"data\":1762404600}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610850,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local - Processing batch",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610855,
+        "{\"log_time\":\"2025-11-18T23:46:50.855322+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\"],\"message\":\"Processing batch\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610850,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Processing time bin \u001b[1;38;5;67mtime\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:50:00+00:00\u001b[0m \u001b[1;38;5;67mrows\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m159585\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610858,
+        "{\"log_time\":\"2025-11-18T23:46:50.858313+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Processing time bin\",\"time\":\"2025-11-06T04:50:00+00:00\",\"rows\":159585}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610950,
+        "\u001b[38;5;144m2025-11-18 23:46:50.95\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Fetching model batch \u001b[1;38;5;67mgranularity\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m15\u001b[0m \u001b[1;38;5;67mstart\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T04:50:00+00:00\u001b[0m \u001b[1;38;5;67mend\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:00:00+00:00\u001b[0m \u001b[1;38;5;67mfeed_id\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mstate.ca\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610955,
+        "{\"log_time\":\"2025-11-18T23:46:50.955273+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Fetching model batch\",\"granularity\":15,\"start\":\"2025-11-06T04:50:00+00:00\",\"end\":\"2025-11-06T05:00:00+00:00\",\"feed_id\":\"state.ca\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610951,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610952,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending command \u001b[1;38;5;67mcommand\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mbin_complete\u001b[0m \u001b[1;38;5;67mdata\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1762405200\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610953,
+        "\u001b[38;5;144m2025-11-18 23:46:50.85\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sent",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610954,
+        "\u001b[38;5;144m2025-11-18 23:46:50.90\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Attempting operation \u001b[1;38;5;67mattempt\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m \u001b[1;38;5;67mlimit\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m3\u001b[0m \u001b[1;38;5;67moperation\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mread archive files\u001b[0m \u001b[1;38;5;67msouce\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mbin\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m2025-11-06T05:05:00+00:00\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610955,
+        "\u001b[38;5;144m2025-11-18 23:46:50.90\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Reading archive file \u001b[1;38;5;67msource\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mlocal\u001b[0m \u001b[1;38;5;67mpath\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mdata/sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610956,
+        "\u001b[38;5;144m2025-11-18 23:46:50.90\u001b[0m [\u001b[38;5;38mDBG\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending batch",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610957,
+        "\u001b[38;5;144m2025-11-18 23:46:50.90\u001b[0m [\u001b[38;5;242mTRC\u001b[0m] app_worker_local\u001b[38;5;97m/\u001b[0m\u001b[38;5;12mdata\u001b[0m - Sending data \u001b[1;38;5;67mlength\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m4664153\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610956,
+        "{\"log_time\":\"2025-11-18T23:46:50.858474+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610957,
+        "{\"log_time\":\"2025-11-18T23:46:50.858689+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending command\",\"command\":\"bin_complete\",\"data\":\"1762405200\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610958,
+        "{\"log_time\":\"2025-11-18T23:46:50.859163+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sent\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610959,
+        "{\"log_time\":\"2025-11-18T23:46:50.901443+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Attempting operation\",\"attempt\":1,\"limit\":3,\"operation\":\"read archive files\",\"souce\":\"local\",\"bin\":\"2025-11-06T05:05:00+00:00\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610960,
+        "{\"log_time\":\"2025-11-18T23:46:50.901627+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Reading archive file\",\"source\":\"local\",\"path\":\"data/sensor_data_5min/state.ca/2025/11/06/05-05-00/metrics.parquet\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610961,
+        "{\"log_time\":\"2025-11-18T23:46:50.909401+00:00\",\"log_level\":\"DEBUG\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending batch\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509610962,
+        "{\"log_time\":\"2025-11-18T23:46:50.909513+00:00\",\"log_level\":\"TRACE\",\"log_name\":[\"app_worker_local\",\"data\"],\"message\":\"Sending data\",\"length\":4664153}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;144m2025-11-18 23:46:51.23\u001b[0m [\u001b[1;38;5;196mERR\u001b[0m] app_worker_local - Unhandled async exception encountered: Exception in callback ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84 \u001b[1;38;5;67mhandle\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m<Handle ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84>\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[1;38;5;196mException Traceback (most recent call last):\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m╭─ \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:88\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » task_done() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m   88 \u001b[0m\u001b[38;5;240m▎ \u001b[0mtask.result()",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:139\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » fetch() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  139 \u001b[0m\u001b[38;5;240m▎ \u001b[0mawait cursor.execute(query, params)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py:75\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mcursors » execute() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m   75 \u001b[0m\u001b[38;5;240m▎ \u001b[0mresponse = await execute(query, args=args, with_column_types=True, **execute_kwargs)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:638\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » execute() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  638 \u001b[0m\u001b[38;5;240m▎ \u001b[0masync with ExecuteContext(self, query, settings):",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py:60\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.context » __aexit__() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m   60 \u001b[0m\u001b[38;5;240m▎ \u001b[0mraise exc_val",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:653\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » execute() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  653 \u001b[0m\u001b[38;5;240m▎ \u001b[0mrv = await self.process_ordinary_query(",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:780\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » process_ordinary_query() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  780 \u001b[0m\u001b[38;5;240m▎ \u001b[0mreturn await self.receive_result(with_column_types=with_column_types, columnar=columnar)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:502\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » receive_result() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  502 \u001b[0m\u001b[38;5;240m▎ \u001b[0mreturn await result.get_result()",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py:56\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.result » get_result() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m   56 \u001b[0m\u001b[38;5;240m▎ \u001b[0masync for packet in self.packet_generator:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:481\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » packet_generator() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  481 \u001b[0m\u001b[38;5;240m▎ \u001b[0mpacket = await self.receive_packet()",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py:410\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166masynch » \u001b[0m\u001b[38;5;166mproto.connection » receive_packet() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  410 \u001b[0m\u001b[38;5;240m▎ \u001b[0mraise packet.exception",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m╰◉ ServerException: Code: 62.",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND record_timestamp >= {start}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND record_timestamp <= {end}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND feed_id = {feed_id}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "        . Expected colon between name and type\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m╭─ \u001b[0m\u001b[2mFile \"/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py:89\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[1;38;5;167mpy » \u001b[0m\u001b[38;5;167masyncio.events » _run() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m   89 \u001b[0m\u001b[38;5;240m▎ \u001b[0mself._context.run(self._callback, *self._args)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:91\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[1;38;5;167mapp_worker » \u001b[0m\u001b[38;5;167mprocess » task_done() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m   91 \u001b[0m\u001b[38;5;240m▎ \u001b[0mraise RuntimeError(msg) from e",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m╰◉ RuntimeError: Error fetching model batch\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;166m◉ ServerException: Code: 62.",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND record_timestamp >= {start}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND record_timestamp <= {end}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "            AND feed_id = {feed_id}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "        . Expected colon between name and type\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611230,
+        "\u001b[38;5;167m╰─◉ RuntimeError: Error fetching model batch\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611234,
+        "{\"log_time\":\"2025-11-18T23:46:51.234607+00:00\",\"log_level\":\"ERROR\",\"log_name\":[\"app_worker_local\"],\"message\":\"Unhandled async exception encountered: Exception in callback ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84\",\"handle\":\"<Handle ModelBatch.__init__.<locals>.task_done() at /home/user/dev/acme/acme-app-worker/app_worker/process.py:84>\",\"exception\":[{\"type\":\"ServerException\",\"message\":\"Code: 62.\\nDB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }\\n            AND record_timestamp >= {start}\\n            AND record_timestamp <= {end}\\n            AND feed_id = {feed_id}\\n        . Expected colon between name and type\",\"stack\":[{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":88,\"name\":\"task_done\",\"line\":\"task.result()\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":139,\"name\":\"fetch\",\"line\":\"await cursor.execute(query, params)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/cursors.py\",\"lineno\":75,\"name\":\"execute\",\"line\":\"response = await execute(query, args=args, with_column_types=True, **execute_kwargs)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":638,\"name\":\"execute\",\"line\":\"async with ExecuteContext(self, query, settings):\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/context.py\",\"lineno\":60,\"name\":\"__aexit__\",\"line\":\"raise exc_val\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":653,\"name\":\"execute\",\"line\":\"rv = await self.process_ordinary_query(\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":780,\"name\":\"process_ordinary_query\",\"line\":\"return await self.receive_result(with_column_types=with_column_types, columnar=columnar)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":502,\"name\":\"receive_result\",\"line\":\"return await result.get_result()\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/result.py\",\"lineno\":56,\"name\":\"get_result\",\"line\":\"async for packet in self.packet_generator:\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":481,\"name\":\"packet_generator\",\"line\":\"packet = await self.receive_packet()\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/.venv/lib/python3.13/site-packages/asynch/proto/connection.py\",\"lineno\":410,\"name\":\"receive_packet\",\"line\":\"raise packet.exception\"}]},{\"type\":\"RuntimeError\",\"message\":\"Error fetching model batch\",\"stack\":[{\"filename\":\"/home/user/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/asyncio/events.py\",\"lineno\":89,\"name\":\"_run\",\"line\":\"self._context.run(self._callback, *self._args)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":91,\"name\":\"task_done\",\"line\":\"raise RuntimeError(msg) from e\"}]}]}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Process manager stopping",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "{\"log_time\":\"2025-11-18T23:46:51.240707+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Process manager stopping\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Process exiting \u001b[1;38;5;67mcode\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "{\"log_time\":\"2025-11-18T23:46:51.240867+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Process exiting\",\"code\":1}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Orphan listener cancelled",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611241,
+        "{\"log_time\":\"2025-11-18T23:46:51.241146+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Orphan listener cancelled\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Closing AWS session and all clients \u001b[1;38;5;67mname\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mclickhouse\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611242,
+        "{\"log_time\":\"2025-11-18T23:46:51.242019+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Closing AWS session and all clients\",\"name\":\"clickhouse\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Closing ZMQ connection \u001b[1;38;5;67maddress\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95mtcp://localhost:0\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611242,
+        "{\"log_time\":\"2025-11-18T23:46:51.242745+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Closing ZMQ connection\",\"address\":\"tcp://localhost:0\"}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Disconnecting from Redis \u001b[1;38;5;67mhost\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95macme-dev-redis\u001b[0m \u001b[1;38;5;67mport\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m6379\u001b[0m \u001b[1;38;5;67mdb\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611243,
+        "{\"log_time\":\"2025-11-18T23:46:51.243488+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Disconnecting from Redis\",\"host\":\"acme-dev-redis\",\"port\":6379,\"db\":1}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[1;38;5;196mERR\u001b[0m] app_worker_local - Unhandled async exception encountered: unhandled exception during asyncio.run() shutdown \u001b[1;38;5;67mtask\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m{'repr': <Task finished name='Task-1' coro=<main() done, defined at /home/user/dev/acme/acme-app-worker/app_worker/__main__.py:15> exception=SafeExitStackError('Unhandled exception captured by exit stack')>, 'name': 'Task-1', 'done': True, 'coro': <coroutine object main at 0x7e436bd30160>}\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[1;38;5;196mException Traceback (most recent call last):\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m╭─ \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py:31\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166m__main__ » main() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/__main__.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/__main__.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m   31 \u001b[0m\u001b[38;5;240m▎ \u001b[0mawait processor.ingest()",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:590\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » ingest() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  590 \u001b[0m\u001b[38;5;240m▎ \u001b[0mawait self.process()",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:505\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » process() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  505 \u001b[0m\u001b[38;5;240m▎ \u001b[0mmodel_df = await self._model_loader.get(self._time, granularity_numeric)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:249\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » get() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  249 \u001b[0m\u001b[38;5;240m▎ \u001b[0mreturn await batch.get(time)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/process.py:183\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[1;38;5;166mapp_worker » \u001b[0m\u001b[38;5;166mprocess » get() | \u001b[0m\u001b[2;38;5;166m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/process.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m│  \u001b[0m  \u001b[38;5;244;48;5;237m  183 \u001b[0m\u001b[38;5;240m▎ \u001b[0mawait self.task",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m╰◉ ServerException: Code: 62.",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND record_timestamp >= {start}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND record_timestamp <= {end}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND feed_id = {feed_id}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "        . Expected colon between name and type\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m╭─ \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py:18\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[1;38;5;167mapp_worker » \u001b[0m\u001b[38;5;167m__main__ » main() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/dev/acme/acme-app-worker/app_worker/__main__.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-app-worker/app_worker/__main__.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m   18 \u001b[0m\u001b[38;5;240m▎ \u001b[0masync with ApplicationContext(services=[mgr]) as app:",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-core/core_utils/contrib/config/context.py:420\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;167m../../acme-core/core_utils/contrib/config/context.py » __aexit__() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/config/context.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/config/context.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m  420 \u001b[0m\u001b[38;5;240m▎ \u001b[0mreturn await self._exit_stack.exit(exc_type, exc_val, exc_tb)",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py:425\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;167m../../acme-core/core_utils/contrib/asio.py » exit() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/asio.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/asio.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m  425 \u001b[0m\u001b[38;5;240m▎ \u001b[0mraise exc_val",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m\u001b[2mFile \"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py:415\"\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;167m../../acme-core/core_utils/contrib/asio.py » exit() | \u001b[0m\u001b[2;38;5;167m\u001b]8;;vscode://file//home/user/dev/acme/acme-core/core_utils/contrib/asio.py\u0007VSCode\u001b]8;;\u0007 \u001b]8;;file://devbox/home/user/dev/acme/acme-core/core_utils/contrib/asio.py\u0007\u0007Text\u001b]8;;\u0007\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m│  \u001b[0m  \u001b[38;5;244;48;5;237m  415 \u001b[0m\u001b[38;5;240m▎ \u001b[0mraise r from exc_val",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m╰◉ SafeExitStackError: Unhandled exception captured by exit stack\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;166m◉ ServerException: Code: 62.",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "DB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND record_timestamp >= {start}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND record_timestamp <= {end}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "            AND feed_id = {feed_id}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "        . Expected colon between name and type\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;167m╰─◉ SafeExitStackError: Unhandled exception captured by exit stack\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611243,
+        "{\"log_time\":\"2025-11-18T23:46:51.243693+00:00\",\"log_level\":\"ERROR\",\"log_name\":[\"app_worker_local\"],\"message\":\"Unhandled async exception encountered: unhandled exception during asyncio.run() shutdown\",\"task\":{\"repr\":\"<Task finished name='Task-1' coro=<main() done, defined at /home/user/dev/acme/acme-app-worker/app_worker/__main__.py:15> exception=SafeExitStackError('Unhandled exception captured by exit stack')>\",\"name\":\"Task-1\",\"done\":true,\"coro\":\"<coroutine object main at 0x7e436bd30160>\"},\"exception\":[{\"type\":\"ServerException\",\"message\":\"Code: 62.\\nDB::Exception: Syntax error: failed at position 906 (}) (line 19, col 37): }\\n            AND record_timestamp >= {start}\\n            AND record_timestamp <= {end}\\n            AND feed_id = {feed_id}\\n        . Expected colon between name and type\",\"stack\":[{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py\",\"lineno\":31,\"name\":\"main\",\"line\":\"await processor.ingest()\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":590,\"name\":\"ingest\",\"line\":\"await self.process()\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":505,\"name\":\"process\",\"line\":\"model_df = await self._model_loader.get(self._time, granularity_numeric)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":249,\"name\":\"get\",\"line\":\"return await batch.get(time)\"},{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/process.py\",\"lineno\":183,\"name\":\"get\",\"line\":\"await self.task\"}]},{\"type\":\"SafeExitStackError\",\"message\":\"Unhandled exception captured by exit stack\",\"stack\":[{\"filename\":\"/home/user/dev/acme/acme-app-worker/app_worker/__main__.py\",\"lineno\":18,\"name\":\"main\",\"line\":\"async with ApplicationContext(services=[mgr]) as app:\"},{\"filename\":\"/home/user/dev/acme/acme-core/core_utils/contrib/config/context.py\",\"lineno\":420,\"name\":\"__aexit__\",\"line\":\"return await self._exit_stack.exit(exc_type, exc_val, exc_tb)\"},{\"filename\":\"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py\",\"lineno\":425,\"name\":\"exit\",\"line\":\"raise exc_val\"},{\"filename\":\"/home/user/dev/acme/acme-core/core_utils/contrib/asio.py\",\"lineno\":415,\"name\":\"exit\",\"line\":\"raise r from exc_val\"}]}]}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "\u001b[38;5;144m2025-11-18 23:46:51.24\u001b[0m [\u001b[38;5;76mINF\u001b[0m] app_worker_local - Process exiting \u001b[1;38;5;67mcode\u001b[0m\u001b[38;5;97m=\u001b[0m\u001b[3;38;5;95m1\u001b[0m",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611248,
+        "{\"log_time\":\"2025-11-18T23:46:51.248851+00:00\",\"log_level\":\"INFO\",\"log_name\":[\"app_worker_local\"],\"message\":\"Process exiting\",\"code\":1}",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "<sys>:0: RuntimeWarning: coroutine 'BaseEventLoop.shutdown_asyncgens' was never awaited",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "RuntimeWarning: Enable tracemalloc to get the object allocation traceback",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ],
+      [
+        1763509611240,
+        "",
+        "{\"source\":\"sample-B\",\"app\":\"app_worker\",\"type\":\"hybrid\"}"
+      ]
+    ]
+  }
+]
