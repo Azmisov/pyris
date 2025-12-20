@@ -76,10 +76,12 @@ jobs:
       - name: Check for E2E
         id: check-for-e2e
         run: |
-          if [ -f "playwright.config.ts" ]
-          then
-            echo "has-e2e=true" >> $GITHUB_OUTPUT
-          fi
+          # E2E tests disabled - scaffold tests removed, need to implement proper tests
+          # if [ -f "playwright.config.ts" ]
+          # then
+          #   echo "has-e2e=true" >> $GITHUB_OUTPUT
+          # fi
+          echo "has-e2e=false" >> $GITHUB_OUTPUT
 
       - name: Sign plugin
         run: npm run sign

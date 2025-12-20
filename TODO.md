@@ -1,4 +1,5 @@
 - test:
+  - implement proper e2e tests (scaffold tests removed, CI pipeline disabled)
   - navigation syncing: test with filtering
   - truncated line/rows works with selection sync, filtering, etc sensibly
   - select snapping to nearest log should respect filtering?
