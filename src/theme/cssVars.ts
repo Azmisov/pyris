@@ -3,14 +3,14 @@ import { XTERM_256_PALETTE } from './palette256';
 
 // Apply base palette and ANSI classes to the document
 export function applyPalette(): void {
-  addStyles('ansi-palette', generatePaletteCSS());
+  addStyles('logs-palette', generatePaletteCSS());
 }
 
 // Apply color scheme theme to document
 export function applyTheme(name: string): void {
   const scheme = getColorScheme(name);
   const css = generateThemeCSS(scheme);
-  addStyles('ansi-panel-theme', css);
+  addStyles('logs-panel-theme', css);
 }
 
 // Generate base palette CSS variables and classes, which don't depend on a selected theme
@@ -37,13 +37,13 @@ function generateThemeCSS(scheme: ColorScheme): string {
   // TODO: generate bg accent on the fly to keep bundle smaller? need to add oklab conversions, so
   // might not save any space
   let vars = [
-    `--ansi-bg: ${colorToCSS(scheme.background)}`,
-    `--ansi-fg: ${colorToCSS(scheme.foreground)}`,
-    `--ansi-fg-muted-1: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.5)`,
-    `--ansi-fg-muted-2: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.25)`,
-    `--ansi-bg-accent-1: ${colorToCSS(scheme.bgAccent1)}`,
-    `--ansi-bg-accent-2: ${colorToCSS(scheme.bgAccent2)}`,
-    `--ansi-bg-accent-3: ${colorToCSS(scheme.bgAccent3)}`,
+    `--logs-bg: ${colorToCSS(scheme.background)}`,
+    `--logs-fg: ${colorToCSS(scheme.foreground)}`,
+    `--logs-fg-muted-1: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.5)`,
+    `--logs-fg-muted-2: rgba(${scheme.foreground.r}, ${scheme.foreground.g}, ${scheme.foreground.b}, 0.25)`,
+    `--logs-bg-accent-1: ${colorToCSS(scheme.bgAccent1)}`,
+    `--logs-bg-accent-2: ${colorToCSS(scheme.bgAccent2)}`,
+    `--logs-bg-accent-3: ${colorToCSS(scheme.bgAccent3)}`,
   ];
   // theme customizes the base 16 colors
   for (let i=0; i<16; i++) {

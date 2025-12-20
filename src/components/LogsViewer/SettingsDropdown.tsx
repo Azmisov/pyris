@@ -84,7 +84,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
         <SettingsIcon />
       </button>
       {isOpen && (
-        <div className={`${styles.dropdown} ansi-shadowed`}>
+        <div className={`${styles.dropdown} logs-shadowed`}>
           <div className={styles.item}>
             <label htmlFor="theme-mode">Light/Dark Preference</label>
             <select

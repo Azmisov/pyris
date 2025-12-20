@@ -18,8 +18,8 @@
   text-align: left;
   padding: 8px 16px;
   font-weight: 500;
-  background-color: var(--ansi-bg-accent-1);
-  border-bottom: 1px solid var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-1);
+  border-bottom: 1px solid var(--logs-fg-muted-1);
   position: sticky;
   top: 0;
 }
@@ -30,7 +30,7 @@
 
 .table td {
   padding: 6px 16px;
-  border-bottom: 1px solid var(--ansi-fg-muted-2);
+  border-bottom: 1px solid var(--logs-fg-muted-2);
   vertical-align: top;
 }
 
@@ -39,16 +39,16 @@
 }
 
 .table tr:hover td {
-  background-color: var(--ansi-bg-accent-1);
+  background-color: var(--logs-bg-accent-1);
 }
 
 .keyCell {
   font-weight: 500;
-  color: var(--ansi-fg-muted-1);
-  font-family: var(--ansi-logs-row-font-family);
+  color: var(--logs-fg-muted-1);
+  font-family: var(--logs-row-font-family);
 }
 
 .valueCell {
-  font-family: var(--ansi-logs-row-font-family);
+  font-family: var(--logs-row-font-family);
   word-break: break-word;
 }

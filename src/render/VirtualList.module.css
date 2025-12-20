@@ -5,7 +5,7 @@
   height: 100%;
   outline: none;
 
-  font-family: var(--ansi-logs-row-font-family);
+  font-family: var(--logs-row-font-family);
 
   /* styles to try and improve pixel-perfect alignment of glyphs */
   font-variant-ligatures: none;
@@ -30,7 +30,7 @@
 /* Firefox scrollbar styling */
 .list {
   /* scrollbar-width: thin; */
-  scrollbar-color: var(--ansi-fg-muted-1) var(--ansi-bg);
+  scrollbar-color: var(--logs-fg-muted-1) var(--logs-bg);
 }
 
 /* Chrome/Safari/Edge scrollbar styling */
@@ -41,16 +41,16 @@
 
 .list::-webkit-scrollbar-track,
 .list::-webkit-scrollbar-corner {
-  background: var(--ansi-bg);
+  background: var(--logs-bg);
 }
 
 .list::-webkit-scrollbar-thumb {
-  background-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-fg-muted-1);
   border-radius: 4px;
 }
 
 .list::-webkit-scrollbar-thumb:hover {
-  background-color: var(--ansi-fg);
+  background-color: var(--logs-fg);
 }
 
 /* Container for auto-sizing */

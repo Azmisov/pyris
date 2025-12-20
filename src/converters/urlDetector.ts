@@ -120,7 +120,7 @@ function createLinkHtml(url: string, text: string): string {
   const escapedUrl = escapeHtml(url);
   const escapedText = escapeHtml(text);
 
-  return `<a href="${escapedUrl}" title="${escapedUrl}" class="ansi-detected-link" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="logs-detected-link" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
 }
 
 /**

@@ -8,8 +8,8 @@
   top: 100%;
   left: 0;
   margin-top: 4px;
-  background-color: var(--ansi-bg-accent-1);
-  border: 1px solid var(--ansi-fg-muted-2);
+  background-color: var(--logs-bg-accent-1);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 4px;
   padding: 8px;
   min-width: 200px;
@@ -32,14 +32,14 @@
 .item label {
   font-size: 11px;
   font-weight: 800;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   opacity: 0.7;
 }
 
 .item select {
   background-color: transparent;
-  color: var(--ansi-fg);
-  border: 1px solid var(--ansi-fg-muted-2);
+  color: var(--logs-fg);
+  border: 1px solid var(--logs-fg-muted-2);
   border-radius: 3px;
   padding: 4px 6px;
   font-size: 12px;
@@ -58,18 +58,18 @@
   background-position: right 6px center;
   background-size: 12px;
   padding-right: 24px;
-  background-color: var(--ansi-bg-accent-2);
+  background-color: var(--logs-bg-accent-2);
 }
 
 .item select option {
-  background-color: var(--ansi-bg);
-  color: var(--ansi-fg);
+  background-color: var(--logs-bg);
+  color: var(--logs-fg);
 }
 
 .item select:hover,
 .item select:focus {
-  border-color: var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .item select:focus {
@@ -83,9 +83,9 @@
 }
 
 .rowHeightBtn {
-  color: var(--ansi-fg);
-  border: 1px solid var(--ansi-fg-muted-2);
-  background-color: var(--ansi-bg-accent-2);
+  color: var(--logs-fg);
+  border: 1px solid var(--logs-fg-muted-2);
+  background-color: var(--logs-bg-accent-2);
   padding: 4px 8px;
   font-size: 12px;
   font-family: inherit;
@@ -115,12 +115,12 @@
 
 .rowHeightBtn.active {
   font-weight: 500;
-  background-color: var(--ansi-bg-accent-3);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .rowHeightBtn:hover:not(:disabled) {
-  border-color: var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
 }
 
 /* Make +/- buttons more prominent */

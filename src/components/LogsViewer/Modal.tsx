@@ -28,7 +28,7 @@ export const Modal = memo<ModalProps>(({
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={`${styles.modal} ansi-shadowed`} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modal} logs-shadowed`} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3>{title}</h3>
           {headerMeta && <span className={styles.headerMeta}>{headerMeta}</span>}

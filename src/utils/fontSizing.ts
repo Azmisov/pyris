@@ -68,7 +68,7 @@ export function applyFontSizeVars(
   fontFamily: string
 ): void {
   const fontSize = calculateFontSize(fontFamily, rowHeight);
-  element.style.setProperty('--ansi-logs-row-height', `${rowHeight}px`);
-  element.style.setProperty('--ansi-logs-row-font-size', `${fontSize}px`);
-  element.style.setProperty('--ansi-logs-row-font-family', fontFamily);
+  element.style.setProperty('--logs-row-height', `${rowHeight}px`);
+  element.style.setProperty('--logs-row-font-size', `${fontSize}px`);
+  element.style.setProperty('--logs-row-font-family', fontFamily);
 }

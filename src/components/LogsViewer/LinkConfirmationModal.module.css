@@ -9,11 +9,11 @@
 
 .url {
   padding: 8px 12px;
-  background-color: var(--ansi-bg-accent-2);
+  background-color: var(--logs-bg-accent-2);
   border-radius: 4px;
   font-family: monospace;
   font-size: 12px;
   word-break: break-all;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   opacity: 0.9;
 }

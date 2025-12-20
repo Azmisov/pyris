@@ -3,8 +3,8 @@
 .panel {
   display: flex;
   flex-direction: column;
-  background-color: var(--ansi-bg);
-  color: var(--ansi-fg);
+  background-color: var(--logs-bg);
+  color: var(--logs-fg);
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   font-size: 13px;
   line-height: 1.4;

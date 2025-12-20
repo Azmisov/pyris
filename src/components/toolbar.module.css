@@ -24,7 +24,7 @@
   border: none;
   border-radius: 3px;
   background-color: transparent;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
@@ -35,8 +35,8 @@
 
 .button:hover, .button.active {
   opacity: 1;
-  background-color: var(--ansi-bg-accent-3);
-  border-color: var(--ansi-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
 }
 
 .button svg {
@@ -48,10 +48,10 @@
 .copyButton {
   padding: 0px 6px;
   font-size: 13px;
-  border: 1px solid var(--ansi-fg-muted-2);
-  background-color: var(--ansi-bg-accent-2);
+  border: 1px solid var(--logs-fg-muted-2);
+  background-color: var(--logs-bg-accent-2);
   border-radius: 3px;
-  color: var(--ansi-fg);
+  color: var(--logs-fg);
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s ease;
@@ -60,8 +60,8 @@
 }
 
 .copyButton:hover {
-  border-color: var(--ansi-fg-muted-1);
-  background-color: var(--ansi-bg-accent-3);
+  border-color: var(--logs-fg-muted-1);
+  background-color: var(--logs-bg-accent-3);
 }
 
 .copyButton svg {

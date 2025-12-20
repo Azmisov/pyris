@@ -17,11 +17,11 @@ export function useThemeManagement(
   // Initialize fixed palette styles once on mount
   useEffect(applyPalette, []); // Empty deps - only run once on mount
 
-  // Set data-ansi-theme on body for global theme-aware styling (e.g., shadows on portaled elements)
+  // Set data-logs-theme on body for global theme-aware styling (e.g., shadows on portaled elements)
   useEffect(() => {
-    document.body.setAttribute('data-ansi-theme', effectiveThemeMode);
+    document.body.setAttribute('data-logs-theme', effectiveThemeMode);
     return () => {
-      document.body.removeAttribute('data-ansi-theme');
+      document.body.removeAttribute('data-logs-theme');
     };
   }, [effectiveThemeMode]);
 
