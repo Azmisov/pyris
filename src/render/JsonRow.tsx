@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import { JsonLogRow, LogsPanelOptions } from '../types';
 import { JsonValue } from './JsonComponents';
+import styles from './JsonRow.module.css';
 
 interface JsonRowProps {
   row: JsonLogRow;
@@ -52,15 +53,15 @@ export const JsonRow = memo<JsonRowProps>(({
   }, [onRowHover]);
 
   const className = useMemo(() => {
-    const classes = ['json-row'];
+    const classes = [styles.jsonRow];
     if (isSelected) {
-      classes.push('selected');
+      classes.push(styles.selected);
     }
     if (row.level) {
       classes.push(`level-${row.level.toLowerCase()}`);
     }
     if (options.wrapMode === 'soft-wrap') {
-      classes.push('wrap-mode-soft');
+      classes.push(styles.wrapModeSoft);
     }
     return classes.join(' ');
   }, [isSelected, row.level, options.wrapMode]);
@@ -76,7 +77,7 @@ export const JsonRow = memo<JsonRowProps>(({
       {options.showLabels && row.labels && (
         <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} />
       )}
-      <span className={isSelected ? 'json-content' : 'json-content compact'}>
+      <span className={isSelected ? styles.jsonContent : `${styles.jsonContent} ${styles.compact}`}>
         <JsonValue
           value={row.data}
           depth={0}
@@ -124,9 +125,9 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
   }
 
   return (
-    <span className="logs-labels-container">
+    <span className={styles.labelsContainer}>
       {labelEntries.map(([key, value]) => (
-        <span key={key} className="logs-label-badge" title={`${key}=${value}`}>
+        <span key={key} className={styles.labelBadge} title={`${key}=${value}`}>
           {key}={value}
         </span>
       ))}

@@ -1,0 +1,84 @@
+/* ANSI Log Row styles */
+
+.logsRow {
+  display: block;
+  white-space: pre;
+  padding: 0 4px;
+  user-select: text;
+  cursor: default;
+  position: relative;
+  border: none;
+  font-size: var(--logs-row-font-size);
+  line-height: var(--logs-row-height);
+  min-height: var(--logs-row-height);
+}
+
+.logsRow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-color 0.15s ease;
+}
+
+.logsRow.wrapModeSoft {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.logsRow.wrapModeSoft .labelsContainer,
+.logsRow.selected .labelsContainer {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.logsRow:hover::before {
+  background-color: var(--logs-bg-accent-1);
+}
+
+.logsRow.selected::before {
+  background-color: var(--logs-bg-accent-3);
+}
+
+.logsRow.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Label badges */
+.labelsContainer {
+  display: inline;
+  margin-right: 4px;
+}
+
+.labelBadge {
+  display: inline;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
+  background-color: var(--logs-fg-muted-2);
+  border-radius: 2px;
+  color: var(--logs-fg);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+/* Truncation indicator */
+.truncationIndicator {
+  display: inline;
+  margin-left: 8px;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
+  color: var(--ansi-color-1);
+  background-color: var(--logs-bg-accent-1);
+  border-radius: 2px;
+  cursor: help;
+  user-select: none;
+  white-space: nowrap;
+}

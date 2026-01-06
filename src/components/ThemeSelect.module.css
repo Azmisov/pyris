@@ -55,6 +55,7 @@
   z-index: 9999;
   display: none;
   margin: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
 }
 
 .menu.open {

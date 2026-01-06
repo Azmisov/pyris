@@ -1,5 +1,6 @@
 import React, { memo, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import styles from './Copyable.module.css';
 
 /**
  * Hook for managing copy-to-clipboard with toast notification
@@ -21,7 +22,7 @@ export function useCopyToast() {
 
   const Toast = toastPosition ? createPortal(
     <span
-      className="json-copy-toast"
+      className={styles.copyToast}
       style={{
         position: 'fixed',
         left: `${toastPosition.x}px`,
@@ -89,7 +90,7 @@ export const CopyableValue = memo<CopyableValueProps>(({
   return (
     <>
       <span
-        className={`${enabled ? 'json-primitive-copyable' : ''} ${className}`.trim()}
+        className={`${enabled ? styles.copyable : ''} ${className}`.trim()}
         onClick={enabled ? handleClick : undefined}
         title={enabled ? 'Click to copy' : undefined}
       >

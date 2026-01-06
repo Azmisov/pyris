@@ -1,5 +1,6 @@
 import React, { memo, ReactNode } from 'react';
 import styles from './Modal.module.css';
+import sharedStyles from '../../shared.module.css';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ export const Modal = memo<ModalProps>(({
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={`${styles.modal} logs-shadowed`} onClick={(e) => e.stopPropagation()}>
+      <div className={`${styles.modal} ${sharedStyles.shadowed}`} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h3>{title}</h3>
           {headerMeta && <span className={styles.headerMeta}>{headerMeta}</span>}
