@@ -14,6 +14,11 @@
 - cleanup:
   - remove debug logging
   - finalize logo
+- known issues / tech debt:
+  - Virtuoso `overscan` prop is disabled because it breaks `rangeChanged` reporting, which scroll
+    preservation relies on. This means slightly more re-renders during scroll, but scroll position
+    is preserved correctly when toggling sort order/word wrap after view mode switch. See:
+    https://github.com/petyosi/react-virtuoso/issues/118
 - future version or needs more thought:
   - save search expression in local storage
   - have count of all records be the limit for histogram scaling, rather than view dependent?

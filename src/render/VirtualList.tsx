@@ -396,7 +396,8 @@ export const VirtualList = memo<VirtualListProps>(({
         rangeChanged={handleRangeChanged}
         className={virtualListClassName}
         fixedItemHeight={useFixedHeight ? itemHeight : undefined}
-        overscan={overscanConfig}
+        // overscan disabled: breaks rangeChanged reporting which scroll preservation relies on
+        // overscan={overscanConfig}
         components={{
           Header: HeaderComponent,
         }}
