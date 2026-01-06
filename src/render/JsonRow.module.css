@@ -1,0 +1,139 @@
+/* JSON Log Row styles */
+
+.jsonRow {
+  display: block;
+  padding: 0 4px;
+  user-select: text;
+  cursor: default;
+  position: relative;
+  border: none;
+  font-size: var(--logs-row-font-size);
+  line-height: var(--logs-row-height);
+  min-height: var(--logs-row-height);
+  --json-indent: 16px;
+}
+
+.jsonRow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-color 0.15s ease;
+}
+
+.jsonRow:hover::before {
+  background-color: var(--logs-bg-accent-1);
+}
+
+.jsonRow.selected::before {
+  background-color: var(--logs-bg-accent-1);
+}
+
+.jsonRow.selected {
+  border-left: 8px solid var(--logs-bg-accent-3);
+}
+
+.jsonRow.wrapModeSoft {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.jsonRow.wrapModeSoft .labelsContainer,
+.jsonRow.selected .labelsContainer {
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Label badges (same as ANSI row) */
+.labelsContainer {
+  display: inline;
+  margin-right: 4px;
+}
+
+.labelBadge {
+  display: inline;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
+  background-color: var(--logs-fg-muted-2);
+  border-radius: 2px;
+  color: var(--logs-fg);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+/* JSON content */
+.jsonContent {
+  display: inline-block;
+  vertical-align: top;
+  font-family: var(--logs-row-font-family);
+  white-space: pre;
+}
+
+.jsonContent.compact {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.jsonRow.wrapModeSoft .jsonContent {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* JSON structure controls */
+.jsonIndent {
+  display: inline;
+  padding-left: 0;
+}
+
+.jsonIndent > span {
+  display: inline;
+}
+
+.jsonRow.selected .jsonIndent {
+  display: block;
+  padding-left: var(--json-indent);
+}
+
+.jsonRow.selected .jsonIndent > span {
+  display: block;
+}
+
+.jsonEllipsis {
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.jsonEllipsis:hover, .jsonCollapse:hover {
+  background-color: var(--logs-bg-accent-3);
+  text-decoration: none;
+}
+
+.jsonCollapse {
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  pointer-events: auto;
+}
+
+@keyframes json-expand-flash {
+  0% { background-color: var(--logs-bg-accent-3); }
+  50% { background-color: var(--logs-bg-accent-3); }
+  100% { background-color: transparent; }
+}
+
+.jsonExpandedFlash {
+  animation: json-expand-flash .7s ease-out;
+}

@@ -1,85 +1,7 @@
-/* Pyris Panel Styles - Global styles for log content rendering */
+/* Pyris Panel - Global styles that must remain global */
+/* These styles are dynamically applied via string class names */
 
-/* Shadowing looks better black for both light and dark themes; don't want a glow */
-.logs-shadowed {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
-}
-
-/* Individual log row styles */
-.logs-row {
-  display: block;
-  white-space: pre;
-  padding: 0 4px;
-  user-select: text;
-  cursor: default;
-  position: relative;
-  border: none;
-  /* inherited from container */
-  font-size: var(--logs-row-font-size);
-  line-height: var(--logs-row-height);
-  min-height: var(--logs-row-height);
-}
-
-/* Pseudo-element for hover/selected backgrounds.
-   Using z-index: -1 allows underlines from adjacent rows to render on top. */
-.logs-row::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  transition: background-color 0.15s ease;
-}
-
-/* Soft wrap mode - allows text to wrap */
-.logs-row.wrap-mode-soft {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Labels on own line when wrap enabled or row selected */
-.logs-row.wrap-mode-soft .logs-labels-container,
-.logs-row.selected .logs-labels-container {
-  display: block;
-  margin-bottom: 2px;
-}
-
-.logs-row:hover::before {
-  background-color: var(--logs-bg-accent-1);
-}
-
-.logs-row.selected::before {
-  background-color: var(--logs-bg-accent-3);
-}
-
-.logs-row.empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.6;
-  font-style: italic;
-}
-
-/* Label badges */
-.logs-labels-container {
-  display: inline;
-  margin-right: 4px;
-}
-
-.logs-label-badge {
-  display: inline;
-  padding: 0 4px;
-  font-size: 0.85em;
-  line-height: inherit;
-  background-color: var(--logs-fg-muted-2);
-  border-radius: 2px;
-  color: var(--logs-fg);
-  white-space: nowrap;
-  margin-right: 4px;
-}
-
-/* ANSI text styling */
+/* ANSI text styling - applied by converters/ansi.ts */
 .ansi-bold {
   font-weight: 700;
 }
@@ -98,19 +20,6 @@
 
 .ansi-double-underline {
   text-decoration: underline double;
-}
-
-/* Blink animations */
-@keyframes ansi-blink-slow {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes ansi-blink-rapid {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
 }
 
 .ansi-blink-slow {
@@ -176,9 +85,21 @@
 /* Underline color classes are dynamically generated in cssVars.ts
    for all 256 colors as .ansi-underline-color-{0-255} */
 
-/* Hyperlinks */
-.logs-detected-link,
-a {
+/* Blink animations */
+@keyframes ansi-blink-slow {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes ansi-blink-rapid {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Hyperlinks - applied by converters/urlDetector.ts as HTML string */
+.logs-detected-link {
   color: inherit;
   text-decoration: underline;
   text-decoration-style: dotted;
@@ -188,231 +109,8 @@ a {
   transition: text-decoration-style 0.15s ease, filter 0.15s ease;
 }
 
-.logs-detected-link:hover,
-a:hover {
+.logs-detected-link:hover {
   text-decoration-style: solid;
   text-decoration-thickness: 1px;
   filter: brightness(1.3);
-}
-
-/* Inline truncation indicator - shown at end of truncated lines */
-.logs-truncation-indicator {
-  display: inline;
-  margin-left: 8px;
-  padding: 0 4px;
-  font-size: 0.85em;
-  line-height: inherit;
-  color: var(--ansi-color-1);
-  background-color: var(--logs-bg-accent-1);
-  border-radius: 2px;
-  cursor: help;
-  user-select: none;
-  white-space: nowrap;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .logs-row {
-    padding: 0 4px;
-  }
-
-  .logs-labels-container {
-    margin-right: 0;
-    margin-bottom: 4px;
-  }
-}
-
-/* Print styles */
-@media print {
-  .logs-row {
-    border: none;
-    padding: 2px 0;
-    break-inside: avoid;
-  }
-
-  .logs-row:hover::before,
-  .logs-row.selected::before {
-    background: none;
-  }
-}
-
-/* JSON Row Styles */
-.json-row {
-  display: block;
-  padding: 0 4px;
-  user-select: text;
-  cursor: default;
-  position: relative;
-  border: none;
-  /* inherited from container */
-  font-size: var(--logs-row-font-size);
-  line-height: var(--logs-row-height);
-  min-height: var(--logs-row-height);
-
-  /* JSON indentation */
-  --json-indent: 16px; /* 2 spaces * 8px per space in monospace */
-}
-
-/* Pseudo-element for hover/selected backgrounds (same approach as logs-row) */
-.json-row::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  transition: background-color 0.15s ease;
-}
-
-.json-row:hover::before {
-  background-color: var(--logs-bg-accent-1);
-}
-
-.json-row.selected::before {
-  background-color: var(--logs-bg-accent-1);
-}
-
-.json-row.selected {
-  border-left: 8px solid var(--logs-bg-accent-3);
-}
-
-/* Soft wrap mode for JSON rows */
-.json-row.wrap-mode-soft {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Labels on own line when wrap enabled or row selected */
-.json-row.wrap-mode-soft .logs-labels-container,
-.json-row.selected .logs-labels-container {
-  display: block;
-  margin-bottom: 2px;
-}
-
-/* JSON content */
-.json-content {
-  display: inline-block;
-  vertical-align: top; /* Prevents extra bottom padding from baseline alignment */
-  font-family: var(--logs-row-font-family);
-  white-space: pre;
-}
-
-/* JSON indented content wrapper - only active when row is selected */
-.json-indent {
-  display: inline; /* Inline by default (compact) */
-  padding-left: 0;
-}
-
-/* Each item in multi-line arrays/objects should be on its own line - only when selected */
-.json-indent > span {
-  display: inline; /* Inline by default */
-}
-
-/* When row is selected, enable indentation and block layout */
-.json-row.selected .json-indent {
-  display: block;
-  padding-left: var(--json-indent);
-}
-
-.json-row.selected .json-indent > span {
-  display: block;
-}
-
-/* Compact mode - single line */
-.json-content.compact {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-/* Wrap mode for JSON content - inherit from parent row */
-.json-row.wrap-mode-soft .json-content {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* JSON ellipsis for collapsed structures */
-.json-ellipsis {
-  cursor: pointer;
-  text-decoration: none;
-  user-select: none;
-  padding: 0 2px;
-  border-radius: 2px;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.json-ellipsis:hover, .json-collapse:hover {
-  background-color: var(--logs-bg-accent-3);
-  text-decoration: none;
-}
-
-/* JSON primitive copyable styling */
-.json-primitive-copyable {
-  cursor: copy;
-  padding: 0 2px;
-  border-radius: 2px;
-  transition: background-color 0.15s ease;
-  display: inline-block;
-  position: relative;
-}
-
-.json-primitive-copyable:hover {
-  background-color: var(--logs-bg-accent-3);
-}
-
-/* JSON copy toast notification */
-.json-copy-toast {
-  padding: 0.08em 0.5em;
-  background-color: var(--ansi-color-2);
-  color: var(--logs-bg);
-  border-radius: 3px;
-  font-size: 0.85em;
-  font-weight: 500;
-  white-space: nowrap;
-  animation: json-toast-fade 1.5s ease-out;
-}
-
-@keyframes json-toast-fade {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* JSON collapse button for expanded structures */
-.json-collapse {
-  cursor: pointer;
-  text-decoration: none;
-  user-select: none;
-  padding: 0 2px;
-  border-radius: 2px;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  pointer-events: auto; /* Ensure hover works even in compact mode */
-}
-
-/* Flash bright blue animation for newly expanded JSON structures */
-@keyframes json-expand-flash {
-  0% {
-    background-color: var(--logs-bg-accent-3);
-  }
-  50% {
-    background-color: var(--logs-bg-accent-3);
-  }
-  100% {
-    background-color: transparent;
-  }
-}
-
-.json-expanded-flash {
-  animation: json-expand-flash .7s ease-out;
 }

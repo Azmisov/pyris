@@ -3,6 +3,7 @@ import { ThemeSelect } from '../ThemeSelect';
 import SettingsIcon from '../../icons/settings.svg';
 import styles from './SettingsDropdown.module.css';
 import toolbarStyles from '../toolbar.module.css';
+import sharedStyles from '../../shared.module.css';
 
 interface SettingsDropdownProps {
   isOpen: boolean;
@@ -84,7 +85,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
         <SettingsIcon />
       </button>
       {isOpen && (
-        <div className={`${styles.dropdown} logs-shadowed`}>
+        <div className={`${styles.dropdown} ${sharedStyles.shadowed}`}>
           <div className={styles.item}>
             <label htmlFor="theme-mode">Light/Dark Preference</label>
             <select

@@ -1,5 +1,7 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { useCopyToast, formatValueForCopy } from '../components/CopyableValue';
+import styles from './JsonRow.module.css';
+import copyStyles from '../components/Copyable.module.css';
 
 /**
  * JSON rendering components for the logs viewer.
@@ -146,7 +148,7 @@ const JsonContainer = memo<JsonContainerProps>(({
     return (
       <span>
         <span
-          className="json-ellipsis ansi-fg-14"
+          className={`${styles.jsonEllipsis} ansi-fg-14`}
           data-path={pathString}
           title="Click to expand (Shift+Click for recursive)"
           onClick={handleClick}
@@ -162,14 +164,14 @@ const JsonContainer = memo<JsonContainerProps>(({
   return (
     <span>
       <span
-        className='json-collapse ansi-fg-14'
+        className={`${styles.jsonCollapse} ansi-fg-14`}
         data-path={pathString}
         title="Click to collapse (Shift+Click for recursive)"
         onClick={handleClick}
       >
         {openBracket}
       </span>
-      <span className={`json-indent${shouldFlash ? ' json-expanded-flash' : ''}`}>
+      <span className={`${styles.jsonIndent}${shouldFlash ? ` ${styles.jsonExpandedFlash}` : ''}`}>
         {children}
       </span>
       <span className="ansi-fg-14">
@@ -247,7 +249,7 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
   return (
     <>
       <span
-        className={copyEnabled ? 'json-primitive-copyable' : ''}
+        className={copyEnabled ? copyStyles.copyable : ''}
         onClick={copyEnabled ? handleClick : undefined}
         title={copyEnabled ? "Click to copy" : undefined}
       >

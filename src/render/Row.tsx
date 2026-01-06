@@ -3,6 +3,7 @@ import { AnsiLogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
 import { convertAnsiToHtml, hasAnsiCodes, stripAnsiCodes } from '../converters/ansi';
 import { linkifyPlainUrls } from '../converters/urlDetector';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
+import styles from './Row.module.css';
 
 interface RowProps {
   row: AnsiLogRow;
@@ -36,10 +37,10 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
   }, [onRowHover]);
 
   const className = useMemo(() => {
-    const classes = ['logs-row'];
-    if (isSelected) {classes.push('selected');}
+    const classes = [styles.logsRow];
+    if (isSelected) {classes.push(styles.selected);}
     if (row.level) {classes.push(`level-${row.level.toLowerCase()}`);}
-    if (options.wrapMode === 'soft-wrap') {classes.push('wrap-mode-soft');}
+    if (options.wrapMode === 'soft-wrap') {classes.push(styles.wrapModeSoft);}
     return classes.join(' ');
   }, [isSelected, row.level, options.wrapMode]);
 
@@ -60,7 +61,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
         dangerouslySetInnerHTML={{ __html: processedRow.html }}
       />
       {processedRow.truncatedChars !== undefined && processedRow.truncatedChars > 0 && (
-        <span className="logs-truncation-indicator" title={`${processedRow.truncatedChars.toLocaleString()} characters truncated. Copy to view full line.`}>
+        <span className={styles.truncationIndicator} title={`${processedRow.truncatedChars.toLocaleString()} characters truncated. Copy to view full line.`}>
           +{processedRow.truncatedChars.toLocaleString()}
         </span>
       )}
@@ -100,9 +101,9 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
   }
 
   return (
-    <span className="logs-labels-container">
+    <span className={styles.labelsContainer}>
       {labelEntries.map(([key, value]) => (
-        <span key={key} className="logs-label-badge" title={`${key}=${value}`}>
+        <span key={key} className={styles.labelBadge} title={`${key}=${value}`}>
           {key}={value}
         </span>
       ))}

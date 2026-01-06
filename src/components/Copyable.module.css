@@ -1,0 +1,32 @@
+/* Copyable value styles */
+
+.copyable {
+  cursor: copy;
+  padding: 0 2px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+  display: inline-block;
+  position: relative;
+}
+
+.copyable:hover {
+  background-color: var(--logs-bg-accent-3);
+}
+
+.copyToast {
+  padding: 0.08em 0.5em;
+  background-color: var(--ansi-color-2);
+  color: var(--logs-bg);
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 500;
+  white-space: nowrap;
+  animation: copy-toast-fade 1.5s ease-out;
+}
+
+@keyframes copy-toast-fade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
