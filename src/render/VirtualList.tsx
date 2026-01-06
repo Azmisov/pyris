@@ -44,9 +44,9 @@ export const VirtualList = memo<VirtualListProps>(({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
-  // Track whether scrollToIndex has been consumed for this component instance
-  // Resets on remount (view mode switch), persists across re-renders (sort order change)
-  const scrollConsumedRef = useRef(false);
+  // Track the timestamp of the last consumed scrollToIndex request
+  // Used to detect new scroll requests and allow them to execute
+  const lastConsumedScrollTimestampRef = useRef<number | null>(null);
 
   // ============================================================================
   // SCROLL PRESERVATION
@@ -277,45 +277,53 @@ export const VirtualList = memo<VirtualListProps>(({
   }, [itemHeight, options.fontFamily]);
 
   // Handle external scrollToIndex requests - convert logical index to display index
-  // Only runs if scrollToIndex hasn't been consumed yet (prevents re-scroll on sort order changes)
+  // Uses timestamp comparison to detect new requests (prevents re-scroll on sort order changes)
   useEffect(() => {
-    if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current && displayRows.length > 0) {
-      // Mark as consumed so this won't fire again on sort order change
-      scrollConsumedRef.current = true;
-
-      // Clamp the index to valid range before converting
-      const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
-      const displayIndex = logicalToDisplay(clampedLogicalIndex);
-      const align = scrollToIndex.align || 'center';
-      const behavior = scrollToIndex.behavior || 'smooth';
-      // Add offset for 'start' alignment to push row below header/shadow
-      const offset = align === 'start' ? -HEADER_HEIGHT : undefined;
-
-      console.log('[VirtualList] scrollToIndex effect:', {
-        logicalIndex: scrollToIndex.index,
-        clampedLogicalIndex,
-        displayIndex,
-        align,
-        behavior,
-        offset,
-      });
-
-      virtuosoRef.current.scrollToIndex({
-        index: displayIndex,
-        align,
-        behavior,
-        offset,
-      });
+    if (!scrollToIndex || !virtuosoRef.current || displayRows.length === 0) {
+      return;
     }
+
+    // Only scroll if this is a new request (different timestamp than last consumed)
+    const isNewRequest = scrollToIndex.timestamp !== lastConsumedScrollTimestampRef.current;
+    if (!isNewRequest) {
+      return;
+    }
+
+    // Mark as consumed
+    lastConsumedScrollTimestampRef.current = scrollToIndex.timestamp;
+
+    // Clamp the index to valid range before converting
+    const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
+    const displayIndex = logicalToDisplay(clampedLogicalIndex);
+    const align = scrollToIndex.align || 'center';
+    const behavior = scrollToIndex.behavior || 'smooth';
+    // Add offset for 'start' alignment to push row below header/shadow
+    const offset = align === 'start' ? -HEADER_HEIGHT : undefined;
+
+    console.log('[VirtualList] scrollToIndex effect:', {
+      logicalIndex: scrollToIndex.index,
+      clampedLogicalIndex,
+      displayIndex,
+      align,
+      behavior,
+      offset,
+    });
+
+    virtuosoRef.current.scrollToIndex({
+      index: displayIndex,
+      align,
+      behavior,
+      offset,
+    });
   }, [scrollToIndex, logicalToDisplay, displayRows.length, sortOrder]);
 
   // Configure initial scroll position - use scrollToIndex only on first render of this instance
   // (for view mode switch remount), otherwise default based on sort order
+  // Note: This useMemo must NOT have side effects - refs are only updated in useEffect
   const initialTopMostItem = useMemo(() => {
-    // Only use scrollToIndex if not already consumed this mount and we have rows
-    // This prevents stale scrollToIndex from affecting sort order changes
-    if (scrollToIndex && !scrollConsumedRef.current && displayRows.length > 0) {
-      scrollConsumedRef.current = true;
+    // Only use scrollToIndex for initial position if it hasn't been consumed yet
+    const isNewRequest = scrollToIndex && scrollToIndex.timestamp !== lastConsumedScrollTimestampRef.current;
+    if (scrollToIndex && displayRows.length > 0 && isNewRequest) {
       // Clamp the index to valid range before converting
       const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
       const displayIndex = logicalToDisplay(clampedLogicalIndex);
