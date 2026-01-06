@@ -142,7 +142,9 @@ export const VirtualList = memo<VirtualListProps>(({
 
     // Track display indices for internal scroll restoration
     // Only skip during active restoration to avoid capturing intermediate values
-    if (!isRestoringRef.current) {
+    if (isRestoringRef.current) {
+      console.log('[ScrollChange] rangeChanged - SKIPPED updating refs (isRestoring=true)');
+    } else {
       currentDisplayFirstRef.current = range.startIndex;
       currentDisplayLastRef.current = range.endIndex;
     }
@@ -168,7 +170,7 @@ export const VirtualList = memo<VirtualListProps>(({
 
     const needsRestoration = sortOrderChanged || wrapModeChanged || rowHeightChanged || fixedRowHeightChanged;
 
-    console.log('[VirtualList] useLayoutEffect check:', {
+    console.log('[ScrollChange] VirtualList useLayoutEffect check:', {
       sortOrderChanged,
       wrapModeChanged,
       rowHeightChanged,
@@ -200,6 +202,11 @@ export const VirtualList = memo<VirtualListProps>(({
     prevFixedRowHeightRef.current = options.fixedRowHeight;
 
     if (prevDisplayFirst === null || prevDisplayLast === null || N === 0) {
+      console.log('[ScrollChange] VirtualList restoration - SKIPPED (no previous range or empty rows)', {
+        prevDisplayFirst,
+        prevDisplayLast,
+        N
+      });
       return;
     }
 
@@ -224,7 +231,7 @@ export const VirtualList = memo<VirtualListProps>(({
     // Clamp to valid range
     targetDisplayIndex = Math.max(0, Math.min(targetDisplayIndex, N - 1));
 
-    console.log('[VirtualList] Restoring scroll:', {
+    console.log('[ScrollChange] VirtualList restoration - executing scroll:', {
       sortOrderChanged,
       prevSortOrder,
       newSortOrder: sortOrder,
@@ -251,7 +258,7 @@ export const VirtualList = memo<VirtualListProps>(({
     currentDisplayFirstRef.current = targetDisplayIndex;
     currentDisplayLastRef.current = Math.min(targetDisplayIndex + viewportSize, N - 1);
 
-    console.log('[VirtualList] Updated refs after scroll:', {
+    console.log('[ScrollChange] VirtualList restoration - scrollToIndex() called, updated refs:', {
       newFirst: currentDisplayFirstRef.current,
       newLast: currentDisplayLastRef.current
     });
@@ -261,7 +268,7 @@ export const VirtualList = memo<VirtualListProps>(({
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         isRestoringRef.current = false;
-        console.log('[VirtualList] Scroll restoration complete');
+        console.log('[ScrollChange] VirtualList restoration - complete');
       });
     });
   }, [sortOrder, options.wrapMode, options.rowHeight, options.fixedRowHeight, displayRows.length]);
@@ -279,6 +286,19 @@ export const VirtualList = memo<VirtualListProps>(({
   // Handle external scrollToIndex requests - convert logical index to display index
   // Only runs if scrollToIndex hasn't been consumed yet (prevents re-scroll on sort order changes)
   useEffect(() => {
+    if (scrollToIndex && displayRows.length > 0) {
+      if (scrollConsumedRef.current) {
+        console.log('[ScrollChange] VirtualList effect - SKIPPED (already consumed)', {
+          logicalIndex: scrollToIndex.index,
+          timestamp: scrollToIndex.timestamp,
+        });
+        return;
+      }
+      if (!virtuosoRef.current) {
+        console.log('[ScrollChange] VirtualList effect - SKIPPED (no virtuosoRef)');
+        return;
+      }
+    }
     if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current && displayRows.length > 0) {
       // Mark as consumed so this won't fire again on sort order change
       scrollConsumedRef.current = true;
@@ -291,13 +311,14 @@ export const VirtualList = memo<VirtualListProps>(({
       // Add offset for 'start' alignment to push row below header/shadow
       const offset = align === 'start' ? -HEADER_HEIGHT : undefined;
 
-      console.log('[VirtualList] scrollToIndex effect:', {
+      console.log('[ScrollChange] VirtualList effect - executing scroll:', {
         logicalIndex: scrollToIndex.index,
         clampedLogicalIndex,
         displayIndex,
         align,
         behavior,
         offset,
+        timestamp: scrollToIndex.timestamp,
       });
 
       virtuosoRef.current.scrollToIndex({
@@ -306,6 +327,7 @@ export const VirtualList = memo<VirtualListProps>(({
         behavior,
         offset,
       });
+      console.log('[ScrollChange] VirtualList effect - scrollToIndex() called');
     }
   }, [scrollToIndex, logicalToDisplay, displayRows.length, sortOrder]);
 
@@ -314,25 +336,39 @@ export const VirtualList = memo<VirtualListProps>(({
   const initialTopMostItem = useMemo(() => {
     // Only use scrollToIndex if not already consumed this mount and we have rows
     // This prevents stale scrollToIndex from affecting sort order changes
-    if (scrollToIndex && !scrollConsumedRef.current && displayRows.length > 0) {
-      scrollConsumedRef.current = true;
-      // Clamp the index to valid range before converting
-      const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
-      const displayIndex = logicalToDisplay(clampedLogicalIndex);
-      const align = scrollToIndex.align || 'center';
-      console.log('[VirtualList] initialTopMostItem from scrollToIndex:', displayIndex, 'align:', align, 'clamped from:', scrollToIndex.index);
-      return {
-        index: displayIndex,
-        align,
-        behavior: scrollToIndex.behavior || 'auto',
-        offset: align === 'start' ? -HEADER_HEIGHT : undefined,
-      };
+    if (scrollToIndex && displayRows.length > 0) {
+      if (scrollConsumedRef.current) {
+        console.log('[ScrollChange] VirtualList initialTopMostItem - SKIPPED scrollToIndex (already consumed)', {
+          logicalIndex: scrollToIndex.index,
+          timestamp: scrollToIndex.timestamp,
+        });
+      } else {
+        scrollConsumedRef.current = true;
+        // Clamp the index to valid range before converting
+        const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
+        const displayIndex = logicalToDisplay(clampedLogicalIndex);
+        const align = scrollToIndex.align || 'center';
+        console.log('[ScrollChange] VirtualList initialTopMostItem - using scrollToIndex:', {
+          displayIndex,
+          align,
+          logicalIndex: scrollToIndex.index,
+          timestamp: scrollToIndex.timestamp,
+          sortOrder,
+          displayRowsLength: displayRows.length,
+        });
+        return {
+          index: displayIndex,
+          align,
+          behavior: scrollToIndex.behavior || 'auto',
+          offset: align === 'start' ? -HEADER_HEIGHT : undefined,
+        };
+      }
     }
     // Default: start at "newest" logs position
     const index = sortOrder === 'asc'
       ? (displayRows.length > 0 ? displayRows.length - 1 : 0)  // Bottom (newest at end)
       : 0;  // Top (newest at start after reverse)
-    console.log('[VirtualList] initialTopMostItem default:', index, 'sortOrder:', sortOrder);
+    console.log('[ScrollChange] VirtualList initialTopMostItem - using default:', index, 'sortOrder:', sortOrder);
     return index;
   }, [scrollToIndex, sortOrder, displayRows.length, logicalToDisplay]);
 
@@ -352,10 +388,6 @@ export const VirtualList = memo<VirtualListProps>(({
   // When word wrap is disabled, all rows have fixed height - use this for Virtuoso optimization
   // This skips per-item measurement and significantly improves scroll performance
   const useFixedHeight = options.wrapMode === 'nowrap';
-
-  // Overscan: Chunks rendering to reduce re-render frequency (renders in batches of ~200px)
-  // Note: We avoid increaseViewportBy as it affects rangeChanged reporting, breaking timeline indicators
-  const overscanConfig = useMemo(() => ({ main: 200, reverse: 200 }), []);
 
   // Determine if we need to show row count warning
   const effectiveTotalRowCount = totalRowCount ?? rows.length;

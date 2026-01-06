@@ -100,7 +100,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Use ref for isExternalHover to ensure synchronous updates (avoids race conditions with state)
   const isExternalHoverRef = useRef(false);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
-  const [visibleRange, setVisibleRange] = useState<{ first: number | null; last: number | null }>({ first: null, last: null });
+  const [visibleRange, setVisibleRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
   const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
@@ -631,9 +631,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // Handle visible range change - just update state for timeline display
   // Scroll preservation is handled internally by VirtualList
   const handleVisibleRangeChange = useCallback((firstRow: LogRow | null, lastRow: LogRow | null) => {
+    const first = firstRow?.timestamp ?? null;
+    const last = lastRow?.timestamp ?? null;
     setVisibleRange({
-      first: firstRow ? firstRow.timestamp : null,
-      last: lastRow ? lastRow.timestamp : null,
+      min: first !== null && last !== null ? Math.min(first, last) : (first ?? last),
+      max: first !== null && last !== null ? Math.max(first, last) : (last ?? first),
     });
   }, []);
 
@@ -690,6 +692,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     // Select and scroll to the nearest log
     setSelectedRowIndex(nearestIndex);
     setSelectedTimestamp(filteredRows[nearestIndex].timestamp);
+    console.log('[ScrollChange] Timeline click - requesting scroll to index:', nearestIndex);
     setScrollToIndex({ index: nearestIndex, timestamp: Date.now() });
   }, [filteredRows]);
 
@@ -784,10 +787,10 @@ export const LogsViewer = memo<LogsViewerProps>(({
       ? sourceRows[selectedRowIndex].timestamp
       : null;
     const selectedWasVisible = selectedRowTimestamp !== null &&
-      visibleRange.first !== null &&
-      visibleRange.last !== null &&
-      selectedRowTimestamp >= visibleRange.first &&
-      selectedRowTimestamp <= visibleRange.last;
+      visibleRange.min !== null &&
+      visibleRange.max !== null &&
+      selectedRowTimestamp >= visibleRange.min &&
+      selectedRowTimestamp <= visibleRange.max;
 
     console.log('[ViewModeSwitch] selectedWasVisible:', selectedWasVisible, {
       selectedRowTimestamp,
@@ -795,9 +798,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
     });
 
     // Match first visible row (for viewport sync) - only if selected wasn't visible
+    // In desc mode, first visible (top of screen) = max timestamp; in asc mode = min timestamp
     let matchedVisibleIndex: number | undefined;
-    if (!selectedWasVisible && visibleRange.first !== null && sourceRows.length > 0) {
-      const visibleIndex = findNearestByTimestamp(sourceRows, visibleRange.first);
+    const firstVisibleTimestamp = sortOrder === 'desc' ? visibleRange.max : visibleRange.min;
+    if (!selectedWasVisible && firstVisibleTimestamp !== null && sourceRows.length > 0) {
+      const visibleIndex = findNearestByTimestamp(sourceRows, firstVisibleTimestamp);
       const firstVisibleRow = sourceRows[visibleIndex];
       if (firstVisibleRow) {
         matchedVisibleIndex = findMatchingRow(firstVisibleRow, targetRows);
@@ -823,6 +828,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     // Scroll: if selected was visible, scroll to matched selected; otherwise scroll to matched visible
     if (selectedWasVisible && matchedSelectedIndex !== undefined) {
       console.log('[ViewModeSwitch] Scrolling to matched selected (center):', matchedSelectedIndex);
+      console.log('[ScrollChange] ViewModeSwitch - requesting scroll to selected index:', matchedSelectedIndex, 'align: center');
       setScrollToIndex({
         index: matchedSelectedIndex,
         timestamp: targetRows[matchedSelectedIndex].timestamp,
@@ -831,12 +837,15 @@ export const LogsViewer = memo<LogsViewerProps>(({
       });
     } else if (matchedVisibleIndex !== undefined) {
       console.log('[ViewModeSwitch] Scrolling to matched visible (start):', matchedVisibleIndex);
+      console.log('[ScrollChange] ViewModeSwitch - requesting scroll to visible index:', matchedVisibleIndex, 'align: start');
       setScrollToIndex({
         index: matchedVisibleIndex,
         timestamp: targetRows[matchedVisibleIndex].timestamp,
         align: 'start',
         behavior: 'auto',
       });
+    } else {
+      console.log('[ScrollChange] ViewModeSwitch - no scroll requested (no match found)');
     }
   }, [viewMode, selectedRowIndex, visibleRange, filteredAnsiRows, filteredJsonRows, setViewMode]);
 
@@ -1002,7 +1011,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
           height={timelineHeight}
           hoveredTimestamp={filteredRows.length === 0 ? null : hoveredTimestamp}
           selectedTimestamp={filteredRows.length === 0 ? null : selectedTimestamp}
-          visibleRange={filteredRows.length === 0 ? { first: null, last: null } : visibleRange}
+          visibleRange={filteredRows.length === 0 ? { min: null, max: null } : visibleRange}
           colorScheme={currentColorScheme}
           onLogSelect={handleLogSelect}
           onHoverChange={handleTimelineHover}
