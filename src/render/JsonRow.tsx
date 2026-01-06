@@ -2,6 +2,7 @@ import React, { memo, useMemo, useCallback } from 'react';
 import { JsonLogRow, LogsPanelOptions } from '../types';
 import { JsonValue } from './JsonComponents';
 import styles from './JsonRow.module.css';
+import sharedStyles from '../shared.module.css';
 
 interface JsonRowProps {
   row: JsonLogRow;
@@ -75,7 +76,7 @@ export const JsonRow = memo<JsonRowProps>(({
       onMouseLeave={handleMouseLeave}
     >
       {options.showLabels && row.labels && (
-        <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} />
+        <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} blockMode={isSelected || options.wrapMode === 'soft-wrap'} />
       )}
       <span className={isSelected ? styles.jsonContent : `${styles.jsonContent} ${styles.compact}`}>
         <JsonValue
@@ -99,9 +100,10 @@ JsonRow.displayName = 'JsonLogsRow';
 interface LabelsDisplayProps {
   labels: Record<string, string>;
   selectedLabels: string[];
+  blockMode?: boolean;
 }
 
-const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
+const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels, blockMode }) => {
   const filteredLabels = useMemo(() => {
     if (selectedLabels.length === 0) {
       return labels;
@@ -124,10 +126,14 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
     return null;
   }
 
+  const containerClass = blockMode
+    ? `${sharedStyles.labelsContainer} ${sharedStyles.labelsContainerBlock}`
+    : sharedStyles.labelsContainer;
+
   return (
-    <span className={styles.labelsContainer}>
+    <span className={containerClass}>
       {labelEntries.map(([key, value]) => (
-        <span key={key} className={styles.labelBadge} title={`${key}=${value}`}>
+        <span key={key} className={sharedStyles.labelBadge}>
           {key}={value}
         </span>
       ))}

@@ -4,6 +4,7 @@ import { convertAnsiToHtml, hasAnsiCodes, stripAnsiCodes } from '../converters/a
 import { linkifyPlainUrls } from '../converters/urlDetector';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
 import styles from './Row.module.css';
+import sharedStyles from '../shared.module.css';
 
 interface RowProps {
   row: AnsiLogRow;
@@ -53,7 +54,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
       onMouseLeave={handleMouseLeave}
     >
       {options.showLabels && row.labels && (
-        <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} />
+        <LabelsDisplay labels={row.labels} selectedLabels={options.selectedLabels} blockMode={isSelected || options.wrapMode === 'soft-wrap'} />
       )}
       {/* Wrapper span is required: React doesn't allow dangerouslySetInnerHTML
           on elements that have other React children (like LabelsDisplay above) */}
@@ -75,9 +76,10 @@ Row.displayName = 'AnsiLogsRow';
 interface LabelsDisplayProps {
   labels: Record<string, string>;
   selectedLabels: string[];
+  blockMode?: boolean;
 }
 
-const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
+const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels, blockMode }) => {
   const filteredLabels = useMemo(() => {
     if (selectedLabels.length === 0) {
       return labels;
@@ -100,10 +102,14 @@ const LabelsDisplay = memo<LabelsDisplayProps>(({ labels, selectedLabels }) => {
     return null;
   }
 
+  const containerClass = blockMode
+    ? `${sharedStyles.labelsContainer} ${sharedStyles.labelsContainerBlock}`
+    : sharedStyles.labelsContainer;
+
   return (
-    <span className={styles.labelsContainer}>
+    <span className={containerClass}>
       {labelEntries.map(([key, value]) => (
-        <span key={key} className={styles.labelBadge} title={`${key}=${value}`}>
+        <span key={key} className={sharedStyles.labelBadge}>
           {key}={value}
         </span>
       ))}

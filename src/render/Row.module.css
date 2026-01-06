@@ -28,12 +28,6 @@
   overflow-wrap: break-word;
 }
 
-.logsRow.wrapModeSoft .labelsContainer,
-.logsRow.selected .labelsContainer {
-  display: block;
-  margin-bottom: 2px;
-}
-
 .logsRow:hover::before {
   background-color: var(--logs-bg-accent-1);
 }
@@ -48,24 +42,6 @@
   align-items: center;
   opacity: 0.6;
   font-style: italic;
-}
-
-/* Label badges */
-.labelsContainer {
-  display: inline;
-  margin-right: 4px;
-}
-
-.labelBadge {
-  display: inline;
-  padding: 0 4px;
-  font-size: 0.85em;
-  line-height: inherit;
-  background-color: var(--logs-fg-muted-2);
-  border-radius: 2px;
-  color: var(--logs-fg);
-  white-space: nowrap;
-  margin-right: 4px;
 }
 
 /* Truncation indicator */
