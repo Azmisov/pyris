@@ -418,8 +418,13 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, [jsonRows, debouncedJsonSearchTerm, parsedExpression, searchExpanded]);
 
   // Select active filtered rows based on view mode (instant switch)
-  const filteredRows = viewMode === 'json' ? filteredJsonRows : filteredAnsiRows;
-  const hasFilter = viewMode === 'json' ? jsonHasFilter : ansiHasFilter;
+  // When search is collapsed, filtering is disabled (use unfiltered rows)
+  const filteredRows = viewMode === 'json'
+    ? filteredJsonRows
+    : (searchExpanded ? filteredAnsiRows : ansiRows);
+  const hasFilter = viewMode === 'json'
+    ? jsonHasFilter
+    : (searchExpanded && ansiHasFilter);
   const runtimeError = viewMode === 'json' ? jsonRuntimeError : null;
 
   // Update expression error to include runtime errors
