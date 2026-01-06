@@ -40,30 +40,6 @@
   overflow-wrap: break-word;
 }
 
-.jsonRow.wrapModeSoft .labelsContainer,
-.jsonRow.selected .labelsContainer {
-  display: block;
-  margin-bottom: 2px;
-}
-
-/* Label badges (same as ANSI row) */
-.labelsContainer {
-  display: inline;
-  margin-right: 4px;
-}
-
-.labelBadge {
-  display: inline;
-  padding: 0 4px;
-  font-size: 0.85em;
-  line-height: inherit;
-  background-color: var(--logs-fg-muted-2);
-  border-radius: 2px;
-  color: var(--logs-fg);
-  white-space: nowrap;
-  margin-right: 4px;
-}
-
 /* JSON content */
 .jsonContent {
   display: inline-block;

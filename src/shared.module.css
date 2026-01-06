@@ -3,3 +3,26 @@
 .shadowed {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
 }
+
+/* Label badges - shared between ANSI and JSON rows */
+.labelsContainer {
+  display: inline;
+  margin-right: 4px;
+}
+
+.labelsContainerBlock {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.labelBadge {
+  display: inline;
+  padding: 0 4px;
+  font-size: 0.85em;
+  line-height: inherit;
+  background-color: var(--logs-fg-muted-2);
+  border-radius: 2px;
+  color: var(--logs-fg);
+  white-space: nowrap;
+  margin-right: 4px;
+}
