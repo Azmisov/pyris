@@ -378,7 +378,12 @@ export class TimelineChart {
 
     // Find histogram bins for both unfiltered and filtered data
     const bin = this.logCountIndex?.findBinForTimestamp(timestamp) ?? null;
-    const filteredBin = this.filteredLogCountIndex?.findBinForTimestamp(timestamp) ?? null;
+    let filteredBin = this.filteredLogCountIndex?.findBinForTimestamp(timestamp) ?? null;
+
+    // When filter is active but no matching bin (0 filtered logs), create synthetic bin with count 0
+    if (this.filteredLogCountIndex !== null && filteredBin === null && bin !== null) {
+      filteredBin = { startTime: bin.startTime, endTime: bin.endTime, count: 0 };
+    }
 
     // Update hover state BEFORE render - use filtered bin if available for highlighting
     this.hoveredBin = filteredBin ?? bin;
