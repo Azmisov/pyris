@@ -5,13 +5,13 @@
   "id": "nyrix-pyris-panel",
   "info": {
     "keywords": ["panel", "logs", "json", "ansi"],
-    "description": "Pyris: JSON and ANSI styled logs viewer",
+    "description": "JSON and ANSI styled logs viewer",
     "author": {
       "name": "Isaac Nygaard"
     },
     "logos": {
-      "small": "img/logo.svg",
-      "large": "img/logo.svg"
+      "small": "icons/logo.svg",
+      "large": "icons/logo.svg"
     },
     "links": [
       { "name": "GitHub", "url": "https://github.com/Azmisov/pyris" },
