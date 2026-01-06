@@ -19,7 +19,7 @@ interface LogsTimelineProps {
   height?: number;
   hoveredTimestamp?: number | null;
   selectedTimestamp?: number | null;
-  visibleRange?: { first: number | null; last: number | null };
+  visibleRange?: { min: number | null; max: number | null };
   colorScheme: ColorScheme;
   onTimeRangeChange?: (startTime: number, endTime: number) => void;
   onLogSelect?: (timestamp: number) => void;
@@ -40,7 +40,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   height = DEFAULT_HEIGHT,
   hoveredTimestamp = null,
   selectedTimestamp = null,
-  visibleRange = { first: null, last: null },
+  visibleRange = { min: null, max: null },
   colorScheme,
   onTimeRangeChange,
   onLogSelect,
@@ -223,7 +223,7 @@ export const LogsTimeline: React.FC<LogsTimelineProps> = ({
   // Update visible range indicators
   useEffect(() => {
     if (chartRef.current) {
-      chartRef.current.setVisibleRange(visibleRange.first ?? null, visibleRange.last ?? null);
+      chartRef.current.setVisibleRange(visibleRange.min ?? null, visibleRange.max ?? null);
     }
   }, [visibleRange]);
 
