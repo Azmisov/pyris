@@ -101,7 +101,11 @@ export const LogsViewer = memo<LogsViewerProps>(({
   const isExternalHoverRef = useRef(false);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
   const [visibleRange, setVisibleRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
-  const [scrollToIndex, setScrollToIndex] = useState<{ index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
+  const [scrollToIndexState, setScrollToIndexState] = useState<{ index: number; scrollId: number; timestamp?: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' } | undefined>();
+  const scrollIdRef = useRef(0);
+  const setScrollToIndex = useCallback((params: { index: number; timestamp?: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' }) => {
+    setScrollToIndexState({ ...params, scrollId: ++scrollIdRef.current });
+  }, []);
   const [error, setError] = useState<string | null>(null);
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [useRegex, setUseRegex] = useState(false);
@@ -1041,7 +1045,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
             selectedIndex={selectedRowIndex}
             minHeight={contentHeight}
             sortOrder={sortOrder}
-            scrollToIndex={scrollToIndex}
+            scrollToIndex={scrollToIndexState}
             expandedPaths={jsonExpandedPaths}
             onToggleExpand={handleToggleExpand}
             totalRowCount={logRows.length}

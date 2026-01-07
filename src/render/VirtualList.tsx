@@ -19,7 +19,7 @@ interface VirtualListProps {
   selectedIndex?: number;
   onScroll?: (scrollOffset: number) => void;
   sortOrder?: 'asc' | 'desc';
-  scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
+  scrollToIndex?: { index: number; scrollId: number; timestamp?: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
   onToggleExpand?: (path: string | string[]) => void;
   /** Total row count before truncation (used for row count warning) */
@@ -44,9 +44,11 @@ export const VirtualList = memo<VirtualListProps>(({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const virtuosoRef = useRef<any>(null);
-  // Track whether scrollToIndex has been consumed for this component instance
-  // Resets on remount (view mode switch), persists across re-renders (sort order change)
-  const scrollConsumedRef = useRef(false);
+  // Track last scrollId to deduplicate scroll requests
+  // Prevents re-scrolling when effect re-runs due to other dep changes (e.g. sortOrder)
+  const lastScrollIdRef = useRef<number | null>(null);
+  // Track if this is the first render (for initialTopMostItem to know when to consume scrollId)
+  const hasMountedRef = useRef(false);
 
   // ============================================================================
   // SCROLL PRESERVATION
@@ -284,13 +286,13 @@ export const VirtualList = memo<VirtualListProps>(({
   }, [itemHeight, options.fontFamily]);
 
   // Handle external scrollToIndex requests - convert logical index to display index
-  // Only runs if scrollToIndex hasn't been consumed yet (prevents re-scroll on sort order changes)
+  // Only runs for new scrollId values (prevents re-scroll on sort order changes)
   useEffect(() => {
     if (scrollToIndex && displayRows.length > 0) {
-      if (scrollConsumedRef.current) {
-        console.log('[ScrollChange] VirtualList effect - SKIPPED (already consumed)', {
+      if (scrollToIndex.scrollId === lastScrollIdRef.current) {
+        console.log('[ScrollChange] VirtualList effect - SKIPPED (scrollId already consumed)', {
           logicalIndex: scrollToIndex.index,
-          timestamp: scrollToIndex.timestamp,
+          scrollId: scrollToIndex.scrollId,
         });
         return;
       }
@@ -298,10 +300,9 @@ export const VirtualList = memo<VirtualListProps>(({
         console.log('[ScrollChange] VirtualList effect - SKIPPED (no virtuosoRef)');
         return;
       }
-    }
-    if (scrollToIndex && virtuosoRef.current && !scrollConsumedRef.current && displayRows.length > 0) {
-      // Mark as consumed so this won't fire again on sort order change
-      scrollConsumedRef.current = true;
+
+      // Mark scrollId as consumed
+      lastScrollIdRef.current = scrollToIndex.scrollId;
 
       // Clamp the index to valid range before converting
       const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
@@ -318,7 +319,7 @@ export const VirtualList = memo<VirtualListProps>(({
         align,
         behavior,
         offset,
-        timestamp: scrollToIndex.timestamp,
+        scrollId: scrollToIndex.scrollId,
       });
 
       virtuosoRef.current.scrollToIndex({
@@ -331,19 +332,25 @@ export const VirtualList = memo<VirtualListProps>(({
     }
   }, [scrollToIndex, logicalToDisplay, displayRows.length, sortOrder]);
 
+  // Mark as mounted after first render (so initialTopMostItem stops consuming scrollId)
+  useEffect(() => {
+    hasMountedRef.current = true;
+  }, []);
+
   // Configure initial scroll position - use scrollToIndex only on first render of this instance
   // (for view mode switch remount), otherwise default based on sort order
+  // IMPORTANT: Only consume scrollId on first render - after mount, the effect handles scrolling
   const initialTopMostItem = useMemo(() => {
-    // Only use scrollToIndex if not already consumed this mount and we have rows
-    // This prevents stale scrollToIndex from affecting sort order changes
-    if (scrollToIndex && displayRows.length > 0) {
-      if (scrollConsumedRef.current) {
-        console.log('[ScrollChange] VirtualList initialTopMostItem - SKIPPED scrollToIndex (already consumed)', {
+    // Only use scrollToIndex on first render (before mount effect runs)
+    // After mount, scrollToIndex changes are handled by the effect above
+    if (!hasMountedRef.current && scrollToIndex && displayRows.length > 0) {
+      if (scrollToIndex.scrollId === lastScrollIdRef.current) {
+        console.log('[ScrollChange] VirtualList initialTopMostItem - SKIPPED scrollToIndex (scrollId already consumed)', {
           logicalIndex: scrollToIndex.index,
-          timestamp: scrollToIndex.timestamp,
+          scrollId: scrollToIndex.scrollId,
         });
       } else {
-        scrollConsumedRef.current = true;
+        lastScrollIdRef.current = scrollToIndex.scrollId;
         // Clamp the index to valid range before converting
         const clampedLogicalIndex = Math.max(0, Math.min(scrollToIndex.index, displayRows.length - 1));
         const displayIndex = logicalToDisplay(clampedLogicalIndex);
@@ -352,7 +359,7 @@ export const VirtualList = memo<VirtualListProps>(({
           displayIndex,
           align,
           logicalIndex: scrollToIndex.index,
-          timestamp: scrollToIndex.timestamp,
+          scrollId: scrollToIndex.scrollId,
           sortOrder,
           displayRowsLength: displayRows.length,
         });
@@ -370,7 +377,9 @@ export const VirtualList = memo<VirtualListProps>(({
       : 0;  // Top (newest at start after reverse)
     console.log('[ScrollChange] VirtualList initialTopMostItem - using default:', index, 'sortOrder:', sortOrder);
     return index;
-  }, [scrollToIndex, sortOrder, displayRows.length, logicalToDisplay]);
+    // Note: scrollToIndex intentionally not in deps - only used on first render (hasMountedRef check)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortOrder, displayRows.length, logicalToDisplay]);
 
   // Compute className based on wrap mode
   const virtualListClassName = useMemo(() => {
@@ -451,7 +460,7 @@ interface AutoSizedVirtualListProps {
   onScroll?: (scrollOffset: number) => void;
   minHeight?: number;
   sortOrder?: 'asc' | 'desc';
-  scrollToIndex?: { index: number; timestamp: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
+  scrollToIndex?: { index: number; scrollId: number; timestamp?: number; behavior?: 'smooth' | 'auto'; align?: 'start' | 'center' | 'end' };
   expandedPaths?: Set<string>;
   onToggleExpand?: (path: string | string[]) => void;
   /** Total row count before truncation (used for row count warning) */

@@ -1,5 +1,3 @@
-- bugs:
-  - click timeline should scroll to position
 - test:
   - add e2e tests (scaffold tests removed, CI pipeline disabled currently)
   - navigation syncing: test with filtering
@@ -34,6 +32,8 @@
   - issues:
     - JSON clickable container, e.g. { bracket, has some bottom clipping for certain font sizes.
       Initial investigation don't think there's anything to do without ruining box drawing fidelity
+    - occasionally get some odd behavior (switch sort order very quickly) where it seems virtuoso
+      bugs and adds a bottom padding that messes scrolling up; I can't consistently reproduce
   - optimization:
     - check if virtuoso there is a way to do fixed height for json but only non-selected rows? then
       it only needs to compute one height
