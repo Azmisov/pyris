@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { ThemeSelect } from '../ThemeSelect';
-import SettingsIcon from '../../icons/settings.svg';
+import { Icon } from '@grafana/ui';
 import styles from './SettingsDropdown.module.css';
 import toolbarStyles from '../toolbar.module.css';
 import sharedStyles from '../../shared.module.css';
@@ -82,7 +82,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
         title="Settings"
         aria-label="Settings"
       >
-        <SettingsIcon />
+        <Icon name="cog" />
       </button>
       {isOpen && (
         <div className={`${styles.dropdown} ${sharedStyles.shadowed}`}>

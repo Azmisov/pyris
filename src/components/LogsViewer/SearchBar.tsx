@@ -1,6 +1,5 @@
 import React from 'react';
 import { Icon } from '@grafana/ui';
-import SearchIcon from '../../icons/search.svg';
 import RegexIcon from '../../icons/regex.svg';
 import styles from './SearchBar.module.css';
 import toolbarStyles from '../toolbar.module.css';
@@ -53,7 +52,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         title={searchExpanded ? 'Hide Search' : 'Show Search'}
         aria-label="Toggle Search"
       >
-        <SearchIcon />
+        <Icon name="search" />
       </button>
 
       {searchExpanded && (
