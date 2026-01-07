@@ -1,3 +1,6 @@
+- deploy:
+  - update plugin README
+  - vscode links not showing underlined
 - test:
   - add e2e tests (scaffold tests removed, CI pipeline disabled currently)
   - navigation syncing: test with filtering

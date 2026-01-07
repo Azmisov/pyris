@@ -1,9 +1,23 @@
-# Pyris
+# <img src="src/icons/logo.svg" alt="Pyris Logo" width="32" height="32"> Pyris
 
-A log viewer panel for Grafana with JSON and ANSI styling support.
+A log viewer panel for Grafana with JSON and ANSI styling support. It provides themes to
+match your favorite terminal emulator or IDE, and a timeline chart for quick navigation.
 
 ![Grafana 10.4+](https://img.shields.io/badge/Grafana-10.4%2B-orange)
 ![License](https://img.shields.io/badge/license-LGPL--3.0-blue)
+
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="src/img/screenshot1.png" alt="Screenshot 1"></td>
+    <td><img src="src/img/screenshot2.png" alt="Screenshot 2"></td>
+  </tr>
+  <tr>
+    <td><img src="src/img/screenshot3.png" alt="Screenshot 3"></td>
+    <td><img src="src/img/screenshot4.png" alt="Screenshot 4"></td>
+  </tr>
+</table>
 
 ## Features
 
@@ -37,17 +51,17 @@ as your terminal or code editor.
 
 ## Installation
 
-### From Grafana Catalog
-
-1. In Grafana, go to **Configuration > Plugins**
-2. Search for "Pyris"
-3. Click **Install**
-
 ### Manual Installation
 
 1. Download the latest release from the [releases page](https://github.com/Azmisov/pyris/releases)
 2. Extract to your Grafana plugins directory (e.g., `/var/lib/grafana/plugins/`)
 3. Restart Grafana
+
+### From Grafana Catalog (Pending!)
+
+1. In Grafana, go to **Configuration > Plugins**
+2. Search for "Pyris"
+3. Click **Install**
 
 ## Configuration
 
