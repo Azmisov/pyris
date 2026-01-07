@@ -21,6 +21,5 @@ jobs:
 
       - uses: grafana/plugin-actions/build-plugin@build-plugin/v1.0.2
         with:
-          # Usage of GRAFANA_API_KEY is deprecated, but still works
-          # (For more info see https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
-          grafana_token: ${{ secrets.GRAFANA_API_KEY }}
+          policy_token: ${{ secrets.GRAFANA_API_KEY }}
+          attestation: true
