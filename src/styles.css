@@ -99,9 +99,11 @@
 }
 
 /* Hyperlinks - applied by converters/urlDetector.ts as HTML string */
-.logs-detected-link {
+a.logs-detected-link,
+a.logs-detected-link:link,
+a.logs-detected-link:any-link {
   color: inherit;
-  text-decoration: underline;
+  text-decoration: underline !important;
   text-decoration-style: dotted;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
@@ -109,7 +111,8 @@
   transition: text-decoration-style 0.15s ease, filter 0.15s ease;
 }
 
-.logs-detected-link:hover {
+a.logs-detected-link:hover {
+  text-decoration: underline !important;
   text-decoration-style: solid;
   text-decoration-thickness: 1px;
   filter: brightness(1.3);
