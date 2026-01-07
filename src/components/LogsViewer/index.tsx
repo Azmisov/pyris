@@ -698,7 +698,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setSelectedTimestamp(filteredRows[nearestIndex].timestamp);
     console.log('[ScrollChange] Timeline click - requesting scroll to index:', nearestIndex);
     setScrollToIndex({ index: nearestIndex, timestamp: Date.now() });
-  }, [filteredRows]);
+  }, [filteredRows, setScrollToIndex]);
 
   // Handle search input (uses appropriate search term based on view mode)
   const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -851,7 +851,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     } else {
       console.log('[ScrollChange] ViewModeSwitch - no scroll requested (no match found)');
     }
-  }, [viewMode, selectedRowIndex, visibleRange, filteredAnsiRows, filteredJsonRows, setViewMode]);
+  }, [viewMode, selectedRowIndex, visibleRange, filteredAnsiRows, filteredJsonRows, setViewMode, sortOrder, setScrollToIndex]);
 
   // Toggle settings dropdown
   const toggleSettings = useCallback(() => {
