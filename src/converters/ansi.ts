@@ -231,7 +231,7 @@ function createHyperlink(url: string, contentHtml: string, _params: Record<strin
   // Escape URL for HTML attribute
   const escapedUrl = escapeHtmlAttr(url);
 
-  return `<a href="${escapedUrl}" title="${escapedUrl}" target="_blank" rel="noopener noreferrer">${contentHtml}</a>`;
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="logs-detected-link" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${contentHtml}</a>`;
 }
 
 // Escape text for HTML attributes (more strict than content escaping)

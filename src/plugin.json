@@ -17,7 +17,12 @@
       { "name": "GitHub", "url": "https://github.com/Azmisov/pyris" },
       { "name": "Issues", "url": "https://github.com/Azmisov/pyris/issues" }
     ],
-    "screenshots": [],
+    "screenshots": [
+      { "name": "ANSI view with dark theme", "path": "img/screenshot1.png" },
+      { "name": "Settings dropdown with theme selection", "path": "img/screenshot2.png" },
+      { "name": "Link navigation in ANSI logs", "path": "img/screenshot3.png" },
+      { "name": "JSON view with light theme", "path": "img/screenshot4.png" }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },

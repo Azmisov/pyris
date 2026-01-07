@@ -1,50 +1,42 @@
-<!-- This README file is going to be the one displayed on the Grafana.com website for your plugin. Uncomment and replace the content here before publishing.
+# Pyris
 
-Remove any remaining comments before publishing as these may be displayed on Grafana.com -->
+![Grafana 10.4+](https://img.shields.io/badge/Grafana-10.4%2B-orange)
+![License](https://img.shields.io/badge/license-LGPL--3.0-blue)
 
-# ANSI Logs
+A log viewer panel for Grafana with JSON and ANSI styling support.
 
-<!-- To help maximize the impact of your README and improve usability for users, we propose the following loose structure:
+- Full styling and link support for ANSI messages
+- Syntax highlighting and collapsible nesting for JSON messages
+- Match log styling of your favorite terminal emulator or IDE with 300+ built-in color themes from [Gogh](https://gogh-co.github.io/Gogh/), plus custom Grafana light/dark themes
+- Easily navigate with a timeline chart of log records
+- Virtual scrolling for handling large log volumes
 
-**BEFORE YOU BEGIN**
-- Ensure all links are absolute URLs so that they will work when the README is displayed within Grafana and Grafana.com
-- Be inspired ✨
-  - [grafana-polystat-panel](https://github.com/grafana/grafana-polystat-panel)
-  - [volkovlabs-variable-panel](https://github.com/volkovlabs/volkovlabs-variable-panel)
+## Usage
 
-**ADD SOME BADGES**
+### Panel Layout
 
-Badges convey useful information at a glance for users whether in the Catalog or viewing the source code. You can use the generator on [Shields.io](https://shields.io/badges/dynamic-json-badge) together with the Grafana.com API
-to create dynamic badges that update automatically when you publish a new version to the marketplace.
+**Settings:** At the top of the panel is a header bar with various toggles and settings. On the left you'll see settings like theme, font size, or word-wrap.
 
-- For the URL parameter use `https://grafana.com/api/plugins/your-plugin-id`.
-- Example queries:
-  - Downloads: `$.downloads`
-  - Catalog Version: `$.version`
-  - Grafana Dependency: `$.grafanaDependency`
-  - Signature Type: `$.versionSignatureType`
-- Optionally, for the logo parameter use `grafana`.
+**Timeline:** Next to settings is a toggle for the timeline chart. When shown, you'll see a bar chart with log records by time. Scroll to zoom, drag to pan. You can click a point on the timeline to find and scroll to the nearest record. You'll see other clickable elements like buttons to center the view, extend the view, or sync the dashboard's range. Vertical indicators show you your current selection, view, and dashboard range.
 
-Full example: ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?logo=grafana&query=$.version&url=https://grafana.com/api/plugins/grafana-polystat-panel&label=Marketplace&prefix=v&color=F47A20)
+**Search:** Next to the timeline toggle is a search bar. Toggle this to enable/disable filtering. For ANSI log records, it searches by substring, optionally case sensitive or a regular expression. For JSON log records, you define a JavaScript lambda expression for filtering.
 
-Consider other [badges](https://shields.io/badges) as you feel appropriate for your project.
+**View:** In the center you can toggle between viewing ANSI vs JSON logs. JSON logs are autodetected from records that look like JSON objects: a message enclosed in `{}` characters. When toggling between them, it will try to find a matching record based on keywords and sync the current scroll position. If a selected row is currently in view, it centers on a matching record instead.
 
-## Overview / Introduction
-Provide one or more paragraphs as an introduction to your plugin to help users understand why they should use it.
+**Actions:** On the right are actions like viewing record labels or copying.
 
-Consider including screenshots:
-- in [plugin.json](https://grafana.com/developers/plugin-tools/reference/plugin-json#info) include them as relative links.
-- in the README ensure they are absolute URLs.
+### Data Source
 
-## Requirements
-List any requirements or dependencies they may need to run the plugin.
+This panel works with any data source that returns log-like data. You can include multiple series. Each series should have these fields:
 
-## Getting Started
-Provide a quick start on how to configure and use the plugin.
-
-## Documentation
-If your project has dedicated documentation available for users, provide links here. For help in following Grafana's style recommendations for technical documentation, refer to our [Writer's Toolkit](https://grafana.com/docs/writers-toolkit/).
+- **Time**: Prefers a field named `time`, or `ts`. Otherwise it picks the first time field. Otherwise it looks for the first UNIX timestamp-like field.
+- **Message**: Prefers a field named `message`, `msg`, `log`, `line`, `content`, or `text`. If not found, it picks the first string field. Otherwise it uses the field immediately after the time field.
+- **Labels** (optional): Prefers a JSON encoded string field named `labels`, `tags`, `metadata`, or `fields`.
 
 ## Contributing
-Do you want folks to contribute to the plugin or provide feedback through specific means? If so, tell them how!
--->
+
+See [CONTRIBUTING.md](https://github.com/Azmisov/pyris/blob/master/CONTRIBUTING.md) for development setup and guidelines.
+
+## License
+
+LGPL-3.0 - see [LICENSE](https://github.com/Azmisov/pyris/blob/master/LICENSE) for details.
