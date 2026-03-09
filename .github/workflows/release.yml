@@ -20,6 +20,7 @@ jobs:
           persist-credentials: false
 
       - uses: grafana/plugin-actions/build-plugin@build-plugin/v1.0.2
-        with:
-          policy_token: ${{ secrets.GRAFANA_API_KEY }}
-          attestation: true
+        # TODO: add policy_token and attestation after marketplace approval
+        # with:
+        #   policy_token: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
+        #   attestation: true
