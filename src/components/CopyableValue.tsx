@@ -1,5 +1,6 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useState, useCallback, useContext } from 'react';
 import { createPortal } from 'react-dom';
+import { ThemeVarsContext } from '../theme/ThemeVarsContext';
 import styles from './Copyable.module.css';
 
 /**
@@ -7,6 +8,7 @@ import styles from './Copyable.module.css';
  */
 export function useCopyToast() {
   const [toastPosition, setToastPosition] = useState<{ x: number; y: number } | null>(null);
+  const themeVars = useContext(ThemeVarsContext);
 
   const copyWithToast = useCallback(async (text: string, e: React.MouseEvent) => {
     try {
@@ -24,13 +26,14 @@ export function useCopyToast() {
     <span
       className={styles.copyToast}
       style={{
+        ...themeVars,
         position: 'fixed',
         left: `${toastPosition.x}px`,
         top: `${toastPosition.y}px`,
         transform: 'translate(-50%, calc(-100% - 4px))',
         pointerEvents: 'none',
         zIndex: 9999,
-      }}
+      } as React.CSSProperties}
     >
       Copied!
     </span>,

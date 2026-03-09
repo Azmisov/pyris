@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { ColorSwatch } from './ColorSwatch';
 import { getColorScheme } from '../theme/colorSchemes';
+import { useThemeVars } from '../theme/ThemeVarsContext';
 import styles from './ThemeSelect.module.css';
 
 // DEBUG: Set to true to keep dropdown open for inspection
@@ -27,6 +28,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
   const selectedItem = options.find(opt => opt.value === value);
   const displayItem = selectedItem || options[0];
   const [debugOpen, _setDebugOpen] = useState(DEBUG_KEEP_OPEN);
+  const themeVars = useThemeVars();
 
   return (
     <div className={styles.container}>
@@ -57,6 +59,7 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
         <Select.Portal>
           <Select.Content
             className={`${styles.menu} ${styles.open}`}
+            style={themeVars as React.CSSProperties}
             position="popper"
             sideOffset={2}
             align="start"

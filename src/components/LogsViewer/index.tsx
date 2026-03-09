@@ -19,6 +19,7 @@ import { ErrorState } from './ErrorState';
 import { LogsTimeline } from '../LogsTimeline';
 import { parseExpression } from '../../utils/jsonExpression';
 import { findMatchingRow, findNearestByTimestamp } from '../../utils/matching';
+import { ThemeVarsContext } from '../../theme/ThemeVarsContext';
 import styles from './LogsViewer.module.css';
 
 /**
@@ -954,6 +955,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
 
   // Main render
   return (
+    <ThemeVarsContext.Provider value={cssVars}>
     <div
       className={`${styles.panel} ${className}`}
       style={{ ...cssVars, width, height } as React.CSSProperties}
@@ -1076,6 +1078,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
         onClose={handleCloseErrorsModal}
       />
     </div>
+    </ThemeVarsContext.Provider>
   );
 });
 
