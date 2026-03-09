@@ -5,6 +5,9 @@ import { linkifyPlainUrls } from '../converters/urlDetector';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
 import styles from './Row.module.css';
 import sharedStyles from '../shared.module.css';
+import ansi from '../theme/ansi.module.css';
+
+const linkClass = ansi['logs-detected-link'];
 
 interface RowProps {
   row: AnsiLogRow;
@@ -154,7 +157,7 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
   } else {
     // Convert ANSI to HTML with truncation (includes OSC-8 hyperlink processing)
     // The conversion stops early when maxLength is reached and properly closes tags
-    const result = convertAnsiToHtml(message, maxLength);
+    const result = convertAnsiToHtml(message, ansi, linkClass, maxLength);
     html = result.html;
     truncatedChars = result.truncatedChars;
   }
@@ -162,7 +165,7 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
   // Apply plain URL detection (auto-linking, dangerous schemes are blocked internally)
   // Only apply to non-truncated content to avoid linkifying partial URLs
   if (truncatedChars === 0) {
-    const withPlainLinks = linkifyPlainUrls(html, []);
+    const withPlainLinks = linkifyPlainUrls(html, linkClass);
     if (withPlainLinks !== html) {
       html = withPlainLinks;
     }

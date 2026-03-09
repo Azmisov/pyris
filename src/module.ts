@@ -3,8 +3,6 @@ import { LogsPanelOptions, defaultOptions } from './types';
 import { LogsPanel } from './components/LogsPanel';
 import { ThemeSelectEditor } from './components/ThemeSelectEditor';
 
-// Import CSS styles
-import './styles.css';
 
 export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptions((builder) => {
   return builder

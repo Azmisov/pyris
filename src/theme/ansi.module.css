@@ -1,7 +1,6 @@
-/* Pyris Panel - Global styles that must remain global */
-/* These styles are dynamically applied via string class names */
+/* Scoped ANSI text decoration classes */
+/* Colors are handled via inline styles with CSS variables, not classes */
 
-/* ANSI text styling - applied by converters/ansi.ts */
 .ansi-bold {
   font-weight: 700;
 }
@@ -38,17 +37,14 @@
   animation-iteration-count: infinite;
 }
 
-/* Conceal/reveal */
 .ansi-conceal {
   opacity: 0;
 }
 
-/* Strike through */
 .ansi-strike {
   text-decoration: line-through;
 }
 
-/* Framed and encircled */
 .ansi-framed {
   display: inline-block;
   border: 1px solid currentColor;
@@ -66,12 +62,10 @@
   -webkit-box-decoration-break: clone;
 }
 
-/* Overline */
 .ansi-overline {
   text-decoration: overline;
 }
 
-/* Superscript and subscript */
 .ansi-superscript {
   vertical-align: super;
   font-size: 0.75em;
@@ -82,8 +76,20 @@
   font-size: 0.75em;
 }
 
-/* Underline color classes are dynamically generated in cssVars.ts
-   for all 256 colors as .ansi-underline-color-{0-255} */
+/* Hyperlinks - applied by converters/ansi.ts and converters/urlDetector.ts */
+.logs-detected-link,
+.logs-detected-link:link,
+.logs-detected-link:any-link {
+  color: inherit;
+  text-decoration: underline dotted;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.logs-detected-link:hover {
+  text-decoration-style: solid;
+  filter: brightness(1.3);
+}
 
 /* Blink animations */
 @keyframes ansi-blink-slow {
@@ -96,19 +102,4 @@
   0% { opacity: 1; }
   50% { opacity: 0; }
   100% { opacity: 1; }
-}
-
-/* Hyperlinks - applied by converters/urlDetector.ts as HTML string */
-a.logs-detected-link,
-a.logs-detected-link:link,
-a.logs-detected-link:any-link {
-  color: inherit;
-  text-decoration: underline dotted;
-  cursor: pointer;
-  transition: filter 0.15s ease;
-}
-
-a.logs-detected-link:hover {
-  text-decoration-style: solid;
-  filter: brightness(1.3);
 }

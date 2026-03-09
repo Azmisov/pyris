@@ -306,8 +306,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
     };
   }, [eventBus]);
 
-  // Theme management
-  const effectiveThemeMode = useThemeManagement(themeMode, darkTheme, lightTheme);
+  // Theme management — returns CSS variables to apply on the container
+  const { effectiveThemeMode, cssVars } = useThemeManagement(themeMode, darkTheme, lightTheme);
 
   // Helper to sort rows by timestamp, then seriesIndex for stable ordering
   const sortRows = <T extends { timestamp: number; seriesIndex?: number }>(rows: T[]): T[] => {
@@ -956,7 +956,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   return (
     <div
       className={`${styles.panel} ${className}`}
-      style={{ width, height }}
+      style={{ ...cssVars, width, height } as React.CSSProperties}
+      data-logs-theme={effectiveThemeMode}
       onClick={handlePanelClick}
       onMouseEnter={handlePanelMouseEnter}
       onMouseLeave={handlePanelMouseLeave}

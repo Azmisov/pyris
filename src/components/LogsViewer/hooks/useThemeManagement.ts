@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme2 } from '@grafana/ui';
-import { applyTheme, applyPalette } from '../../../theme/cssVars';
+import { generateThemeVars, generatePaletteVars } from '../../../theme/cssVars';
 import { getActiveColorScheme, getEffectiveThemeMode } from '../../../theme/colorSchemes';
 
 export function useThemeManagement(
@@ -10,56 +10,16 @@ export function useThemeManagement(
 ) {
   const grafanaTheme = useTheme2();
 
-  const [effectiveThemeMode, setEffectiveThemeMode] = useState<'dark' | 'light'>(() =>
-    themeMode === 'grafana' ? (grafanaTheme.isDark ? 'dark' : 'light') : getEffectiveThemeMode(themeMode)
-  );
+  // Track system preference for 'system' mode (needs state to trigger re-render on OS change)
+  const [systemMode, setSystemMode] = useState<'dark' | 'light'>(() => getEffectiveThemeMode('system'));
 
-  // Initialize fixed palette styles once on mount
-  useEffect(applyPalette, []); // Empty deps - only run once on mount
-
-  // Set data-logs-theme on body for global theme-aware styling (e.g., shadows on portaled elements)
-  useEffect(() => {
-    document.body.setAttribute('data-logs-theme', effectiveThemeMode);
-    return () => {
-      document.body.removeAttribute('data-logs-theme');
-    };
-  }, [effectiveThemeMode]);
-
-  // Apply theme with selected color scheme
-  useEffect(() => {
-    try {
-      const effectiveMode = themeMode === 'grafana'
-        ? (grafanaTheme.isDark ? 'dark' : 'light')
-        : getEffectiveThemeMode(themeMode);
-      // For getActiveColorScheme, map 'grafana' to the effective mode
-      const modeForScheme = themeMode === 'grafana' ? effectiveMode : themeMode;
-      const activeScheme = getActiveColorScheme(modeForScheme, darkTheme, lightTheme);
-      setEffectiveThemeMode(effectiveMode);
-      applyTheme(activeScheme);
-    } catch (err) {
-      console.warn('Failed to apply palette theme:', err);
-    }
-  }, [themeMode, darkTheme, lightTheme, grafanaTheme.isDark]);
-
-  // Listen for system theme changes if mode is 'system'
-  // (Grafana theme changes are handled by the grafanaTheme.isDark dependency above)
   useEffect(() => {
     if (themeMode !== 'system') {
       return undefined;
     }
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const handleChange = () => {
-      try {
-        const activeScheme = getActiveColorScheme(themeMode, darkTheme, lightTheme);
-        const effectiveMode = getEffectiveThemeMode(themeMode);
-        setEffectiveThemeMode(effectiveMode);
-        applyTheme(activeScheme);
-      } catch (err) {
-        console.warn('Failed to apply palette theme on system change:', err);
-      }
-    };
+    const handleChange = () => setSystemMode(getEffectiveThemeMode('system'));
 
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
@@ -67,7 +27,34 @@ export function useThemeManagement(
     }
 
     return undefined;
-  }, [themeMode, darkTheme, lightTheme]);
+  }, [themeMode]);
 
-  return effectiveThemeMode;
+  // Derive effective theme mode from all inputs
+  const effectiveThemeMode = useMemo((): 'dark' | 'light' => {
+    if (themeMode === 'grafana') {
+      return grafanaTheme.isDark ? 'dark' : 'light';
+    }
+    if (themeMode === 'system') {
+      return systemMode;
+    }
+    return themeMode;
+  }, [themeMode, grafanaTheme.isDark, systemMode]);
+
+  // Palette vars are static (colors 16-255), computed once
+  const paletteVars = useMemo(() => generatePaletteVars(), []);
+
+  // Theme vars change with theme selection
+  const themeVars = useMemo(() => {
+    const modeForScheme = themeMode === 'grafana' ? effectiveThemeMode : themeMode;
+    const activeScheme = getActiveColorScheme(modeForScheme, darkTheme, lightTheme);
+    return generateThemeVars(activeScheme);
+  }, [effectiveThemeMode, themeMode, darkTheme, lightTheme]);
+
+  // Combined CSS variables for the container element
+  const cssVars = useMemo(
+    () => ({ ...paletteVars, ...themeVars }),
+    [paletteVars, themeVars]
+  );
+
+  return { effectiveThemeMode, cssVars };
 }

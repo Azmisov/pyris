@@ -483,7 +483,7 @@ export const AutoSizedVirtualList = memo<AutoSizedVirtualListProps>(({
   totalRowCount,
 }) => {
   return (
-    <div className="ansi-auto-sized-container" style={{ height: '100%', minHeight }}>
+    <div style={{ height: '100%', minHeight }}>
       <AutoSizer>
         {({ height, width }: { height: number; width: number }) => (
           <VirtualList

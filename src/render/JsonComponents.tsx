@@ -2,6 +2,10 @@ import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { useCopyToast, formatValueForCopy } from '../components/CopyableValue';
 import styles from './JsonRow.module.css';
 import copyStyles from '../components/Copyable.module.css';
+import ansi from '../theme/ansi.module.css';
+
+// Inline color style helpers
+const fg = (n: number): React.CSSProperties => ({ color: `var(--ansi-color-${n})` });
 
 /**
  * JSON rendering components for the logs viewer.
@@ -148,14 +152,15 @@ const JsonContainer = memo<JsonContainerProps>(({
     return (
       <span>
         <span
-          className={`${styles.jsonEllipsis} ansi-fg-14`}
+          className={styles.jsonEllipsis}
+          style={fg(14)}
           data-path={pathString}
           title="Click to expand (Shift+Click for recursive)"
           onClick={handleClick}
         >
           {ellipsis}
         </span>
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+        {hasComma && <span className={ansi['ansi-faint']} style={fg(5)}>, </span>}
       </span>
     );
   }
@@ -164,7 +169,8 @@ const JsonContainer = memo<JsonContainerProps>(({
   return (
     <span>
       <span
-        className={`${styles.jsonCollapse} ansi-fg-14`}
+        className={styles.jsonCollapse}
+        style={fg(14)}
         data-path={pathString}
         title="Click to collapse (Shift+Click for recursive)"
         onClick={handleClick}
@@ -174,9 +180,9 @@ const JsonContainer = memo<JsonContainerProps>(({
       <span className={`${styles.jsonIndent}${shouldFlash ? ` ${styles.jsonExpandedFlash}` : ''}`}>
         {children}
       </span>
-      <span className="ansi-fg-14">
+      <span style={fg(14)}>
         {closeBracket}
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+        {hasComma && <span className={ansi['ansi-faint']} style={fg(5)}>, </span>}
       </span>
     </span>
   );
@@ -202,48 +208,46 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
 
   const content = (() => {
     if (value === null) {
-      return <span className="ansi-fg-8">null</span>;
+      return <span style={fg(8)}>null</span>;
     }
 
     const type = typeof value;
 
     if (type === 'boolean') {
-      return <span className="ansi-fg-3">{String(value)}</span>;
+      return <span style={fg(3)}>{String(value)}</span>;
     }
 
     if (type === 'number') {
-      return <span className="ansi-fg-6">{String(value)}</span>;
+      return <span style={fg(6)}>{String(value)}</span>;
     }
 
     if (type === 'string') {
-      let className: string;
-
       if (levelHint) {
         // Determine color based on level string content
         const lowerValue = value.toLowerCase();
+        let colorIndex: number;
 
         if (/inf/.test(lowerValue)) {
-          className = "ansi-fg-2 ansi-bold"; // info: green
+          colorIndex = 2; // info: green
         } else if (/err/.test(lowerValue)) {
-          className = "ansi-fg-1 ansi-bold"; // error: red
+          colorIndex = 1; // error: red
         } else if (/ftl|crit|crt|fat/.test(lowerValue)) {
-          className = "ansi-fg-5 ansi-bold"; // fatal/critical: magenta
+          colorIndex = 5; // fatal/critical: magenta
         } else if (/dbg|debug/.test(lowerValue)) {
-          className = "ansi-fg-6 ansi-bold"; // debug: cyan
+          colorIndex = 6; // debug: cyan
         } else if (/wrn|warn/.test(lowerValue)) {
-          className = "ansi-fg-3 ansi-bold"; // warning: yellow
+          colorIndex = 3; // warning: yellow
         } else {
-          className = "ansi-faint ansi-bold"; // default: dim
+          return <span className={`${ansi['ansi-faint']} ${ansi['ansi-bold']}`}>{JSON.stringify(value)}</span>;
         }
-      } else {
-        className = "";
+        return <span className={ansi['ansi-bold']} style={fg(colorIndex)}>{JSON.stringify(value)}</span>;
       }
 
-      return <span className={className}>{JSON.stringify(value)}</span>;
+      return <span>{JSON.stringify(value)}</span>;
     }
 
     // Fallback for undefined, functions, etc.
-    return <span className="ansi-fg-8">{String(value)}</span>;
+    return <span style={fg(8)}>{String(value)}</span>;
   })();
 
   return (
@@ -254,7 +258,7 @@ export const JsonPrimitive = memo<{ value: any; hasComma?: boolean; copyEnabled?
         title={copyEnabled ? "Click to copy" : undefined}
       >
         {content}
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+        {hasComma && <span className={ansi['ansi-faint']} style={fg(5)}>, </span>}
       </span>
       {Toast}
     </>
@@ -291,9 +295,9 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
 
   if (entries.length === 0) {
     return (
-      <span className="ansi-fg-14">
+      <span style={fg(14)}>
         &#123;&#125;
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+        {hasComma && <span className={ansi['ansi-faint']} style={fg(5)}>, </span>}
       </span>
     );
   }
@@ -315,8 +319,8 @@ export const JsonObject = memo<BaseJsonProps & { obj: Record<string, any>; hasCo
 
         return (
           <span key={key}>
-            <span className="ansi-faint ansi-italic">{key}</span>
-            <span className="ansi-faint ansi-fg-5">: </span>
+            <span className={`${ansi['ansi-faint']} ${ansi['ansi-italic']}`}>{key}</span>
+            <span className={ansi['ansi-faint']} style={fg(5)}>: </span>
             <JsonValue
               value={val}
               depth={depth + 1}
@@ -364,9 +368,9 @@ export const JsonArray = memo<BaseJsonProps & { arr: any[]; hasComma?: boolean }
 
   if (arr.length === 0) {
     return (
-      <span className="ansi-fg-14">
+      <span style={fg(14)}>
         &#91;&#93;
-        {hasComma && <span className="ansi-faint ansi-fg-5">, </span>}
+        {hasComma && <span className={ansi['ansi-faint']} style={fg(5)}>, </span>}
       </span>
     );
   }

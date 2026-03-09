@@ -15,15 +15,20 @@ export interface AnsiConversionResult {
   truncatedChars: number;
 }
 
-// Convert ANSI escape sequences to HTML using CSS variables
-export function convertAnsiToHtml(text: string, maxLength?: number): AnsiConversionResult {
+// Convert ANSI escape sequences to HTML using CSS Modules + inline color styles
+export function convertAnsiToHtml(
+  text: string,
+  classMap: Record<string, string>,
+  linkClass: string,
+  maxLength?: number,
+): AnsiConversionResult {
   if (!text) {
     return { html: '', truncatedChars: 0 };
   }
 
   try {
     const tokens = parse(text) as AnsiToken[];
-    return tokensToHtml(tokens, maxLength);
+    return tokensToHtml(tokens, classMap, linkClass, maxLength);
   } catch (error) {
     console.warn('Failed to parse ANSI text:', error);
     // Fallback: return text with basic escaping
@@ -38,9 +43,14 @@ export function convertAnsiToHtml(text: string, maxLength?: number): AnsiConvers
   }
 }
 
-// Convert tokens to HTML with CSS classes, inline styles, and OSC-8 hyperlinks
+// Convert tokens to HTML with CSS Module classes, inline color styles, and OSC-8 hyperlinks
 // Supports early termination when maxLength is reached
-function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionResult {
+function tokensToHtml(
+  tokens: AnsiToken[],
+  classMap: Record<string, string>,
+  linkClass: string,
+  maxLength?: number,
+): AnsiConversionResult {
   let html = '';
   let currentStyles: string[] = [];
   let currentInlineStyles: Record<string, string> = {};
@@ -123,7 +133,7 @@ function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionRe
 
           // Open new spans for new styles
           if (newStyles.length > 0 || Object.keys(newInlineStyles).length > 0) {
-            const classAttr = newStyles.length > 0 ? ` class="${newStyles.join(' ')}"` : '';
+            const classAttr = newStyles.length > 0 ? ` class="${newStyles.map(s => classMap[s]).join(' ')}"` : '';
             const styleAttr = Object.keys(newInlineStyles).length > 0
               ? ` style="${Object.entries(newInlineStyles).map(([k, v]) => `${k}:${v}`).join(';')}"`
               : '';
@@ -159,7 +169,7 @@ function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionRe
             // Close link
             if (linkUrl) {
               // Wrap collected content in <a> tag
-              const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams);
+              const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams, linkClass);
               html += linkHtml;
 
               linkUrl = null;
@@ -183,7 +193,7 @@ function tokensToHtml(tokens: AnsiToken[], maxLength?: number): AnsiConversionRe
 
   // Close any remaining open link (with partial content if truncated)
   if (linkUrl && linkContentHtml) {
-    const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams);
+    const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams, linkClass);
     html += linkHtml;
   }
 
@@ -219,7 +229,7 @@ function parseOsc8Params(paramString: string): Record<string, string> {
 }
 
 // Create HTML hyperlink from OSC-8 data
-function createHyperlink(url: string, contentHtml: string, _params: Record<string, string>): string {
+function createHyperlink(url: string, contentHtml: string, _params: Record<string, string>, linkClass: string): string {
   // Validate URL (user consent is required via modal in the UI)
   try {
     new URL(url);
@@ -231,7 +241,7 @@ function createHyperlink(url: string, contentHtml: string, _params: Record<strin
   // Escape URL for HTML attribute
   const escapedUrl = escapeHtmlAttr(url);
 
-  return `<a href="${escapedUrl}" title="${escapedUrl}" class="logs-detected-link" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${contentHtml}</a>`;
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${contentHtml}</a>`;
 }
 
 // Escape text for HTML attributes (more strict than content escaping)
@@ -348,39 +358,29 @@ function processSgrCommand(
         removeFromArray(styles, 'ansi-strike');
         break;
 
-      // Foreground colors (30-37, 90-97)
+      // Foreground colors (30-37, 90-97) — inline styles with CSS variables
       case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37:
-        removeColorClasses(styles, 'ansi-fg-');
-        delete inlineStyles['color'];
-        styles.push(`ansi-fg-${code - 30}`);
+        inlineStyles['color'] = `var(--ansi-color-${code - 30})`;
         break;
 
       case 90: case 91: case 92: case 93: case 94: case 95: case 96: case 97:
-        removeColorClasses(styles, 'ansi-fg-');
-        delete inlineStyles['color'];
-        styles.push(`ansi-fg-${code - 90 + 8}`);
+        inlineStyles['color'] = `var(--ansi-color-${code - 90 + 8})`;
         break;
 
-      // Background colors (40-47, 100-107)
+      // Background colors (40-47, 100-107) — inline styles with CSS variables
       case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47:
-        removeColorClasses(styles, 'ansi-bg-');
-        delete inlineStyles['background-color'];
-        styles.push(`ansi-bg-${code - 40}`);
+        inlineStyles['background-color'] = `var(--ansi-color-${code - 40})`;
         break;
 
       case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107:
-        removeColorClasses(styles, 'ansi-bg-');
-        delete inlineStyles['background-color'];
-        styles.push(`ansi-bg-${code - 100 + 8}`);
+        inlineStyles['background-color'] = `var(--ansi-color-${code - 100 + 8})`;
         break;
 
       case 39: // Default foreground
-        removeColorClasses(styles, 'ansi-fg-');
         delete inlineStyles['color'];
         break;
 
       case 49: // Default background
-        removeColorClasses(styles, 'ansi-bg-');
         delete inlineStyles['background-color'];
         break;
 
@@ -433,9 +433,7 @@ function processSgrCommand(
         if (i + 2 < params.length && params[i + 1] === '5') {
           // 256-color: ESC[38;5;{n}m
           const colorIndex = parseInt(params[i + 2], 10);
-          removeColorClasses(styles, 'ansi-fg-');
-          delete inlineStyles['color'];
-          styles.push(`ansi-fg-${colorIndex}`);
+          inlineStyles['color'] = `var(--ansi-color-${colorIndex})`;
           i += 2;
         } else if (i + 2 < params.length && params[i + 1] === '2') {
           // Truecolor: ESC[38;2;{r};{g};{b}m
@@ -456,7 +454,6 @@ function processSgrCommand(
           } else {
             break;
           }
-          removeColorClasses(styles, 'ansi-fg-');
           inlineStyles['color'] = `rgb(${r},${g},${b})`;
           i += skipCount;
         }
@@ -467,9 +464,7 @@ function processSgrCommand(
         if (i + 2 < params.length && params[i + 1] === '5') {
           // 256-color: ESC[48;5;{n}m
           const colorIndex = parseInt(params[i + 2], 10);
-          removeColorClasses(styles, 'ansi-bg-');
-          delete inlineStyles['background-color'];
-          styles.push(`ansi-bg-${colorIndex}`);
+          inlineStyles['background-color'] = `var(--ansi-color-${colorIndex})`;
           i += 2;
         } else if (i + 2 < params.length && params[i + 1] === '2') {
           // Truecolor: ESC[48;2;{r};{g};{b}m
@@ -490,7 +485,6 @@ function processSgrCommand(
           } else {
             break;
           }
-          removeColorClasses(styles, 'ansi-bg-');
           inlineStyles['background-color'] = `rgb(${r},${g},${b})`;
           i += skipCount;
         }
@@ -501,10 +495,7 @@ function processSgrCommand(
         if (i + 2 < params.length && params[i + 1] === '5') {
           // 256-color: ESC[58;5;{n}m
           const colorIndex = parseInt(params[i + 2], 10);
-          removeColorClasses(styles, 'ansi-underline-color-');
-          delete inlineStyles['text-decoration-color'];
-          styles.push(`ansi-underline-color-${colorIndex}`);
-          // Skip the next 2 params
+          inlineStyles['text-decoration-color'] = `var(--ansi-color-${colorIndex})`;
           i += 2;
         } else if (i + 2 < params.length && params[i + 1] === '2') {
           // Truecolor: ESC[58;2;{r};{g};{b}m
@@ -525,29 +516,18 @@ function processSgrCommand(
           } else {
             break;
           }
-          removeColorClasses(styles, 'ansi-underline-color-');
           inlineStyles['text-decoration-color'] = `rgb(${r},${g},${b})`;
           i += skipCount;
         }
         break;
 
       case 59: // Default underline color
-        removeColorClasses(styles, 'ansi-underline-color-');
         delete inlineStyles['text-decoration-color'];
         break;
     }
   }
 
   return { classes: styles, inlineStyles };
-}
-
-// Remove all classes with a specific prefix
-function removeColorClasses(styles: string[], prefix: string): void {
-  for (let i = styles.length - 1; i >= 0; i--) {
-    if (styles[i].startsWith(prefix)) {
-      styles.splice(i, 1);
-    }
-  }
 }
 
 // Remove specific item from array

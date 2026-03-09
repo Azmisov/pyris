@@ -38,7 +38,7 @@ function detectPlainUrls(text: string): DetectedLink[] {
  * This is applied to HTML that already has ANSI formatting
  * Skips URLs that are already inside anchor tags
  */
-export function linkifyPlainUrls(html: string, allowedSchemes: string[]): string {
+export function linkifyPlainUrls(html: string, linkClass: string): string {
   // First, find all existing anchor tag ranges to avoid double-wrapping
   const anchorRanges = findAnchorRanges(html);
 
@@ -75,7 +75,7 @@ export function linkifyPlainUrls(html: string, allowedSchemes: string[]): string
   for (const link of validLinks) {
     const before = result.substring(0, link.start);
     const after = result.substring(link.end);
-    const linkHtml = createLinkHtml(link.url, link.text);
+    const linkHtml = createLinkHtml(link.url, link.text, linkClass);
     result = before + linkHtml + after;
   }
 
@@ -116,11 +116,11 @@ function isInsideAnchorTag(
 /**
  * Create HTML anchor tag with proper attributes
  */
-function createLinkHtml(url: string, text: string): string {
+function createLinkHtml(url: string, text: string, linkClass: string): string {
   const escapedUrl = escapeHtml(url);
   const escapedText = escapeHtml(text);
 
-  return `<a href="${escapedUrl}" title="${escapedUrl}" class="logs-detected-link" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
 }
 
 /**
