@@ -61,9 +61,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             {isExpressionMode && (
               <span
                 className={styles.expressionPrefix}
-                title="Variable 'r' represents the parsed JSON data (record) for each log row"
+                title={'Filter expression evaluated against each log\'s JSON fields.\nSupported: ==, !=, <, >, &&, ||, !, in, (), numbers, strings, arrays, dot paths.\nExample: level == "error" && method in ["POST", "PUT"]'}
               >
-                r =&gt;
+                =&gt;
               </span>
             )}
             <input

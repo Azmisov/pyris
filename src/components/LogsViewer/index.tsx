@@ -199,7 +199,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     if (!eventBus) {return;}
 
     // Helper to get origin panel key from event
-     
+
     const getOriginPanelKey = (evt: any): string | null => {
       return evt.origin?._eventsOrigin?.getPathId?.() ?? null;
     };
@@ -402,24 +402,41 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, [debouncedJsonSearchTerm]);
 
   // Apply expression filtering for JSON logs (independent of viewMode)
-  const { filteredJsonRows, jsonHasFilter, jsonRuntimeError } = useMemo(() => {
-    // When search is collapsed, disable filtering
-    if (!searchExpanded || !debouncedJsonSearchTerm.trim()) {
-      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: null };
+  const [filteredJsonRows, setFilteredJsonRows] = useState(jsonRows);
+  const [jsonHasFilter, setJsonHasFilter] = useState(false);
+  const [jsonRuntimeError, setJsonRuntimeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!searchExpanded || !debouncedJsonSearchTerm.trim() || !parsedExpression || parsedExpression.error || !parsedExpression.filter) {
+      setFilteredJsonRows(jsonRows);
+      setJsonHasFilter(false);
+      setJsonRuntimeError(null);
+      return;
     }
 
-    if (!parsedExpression || parsedExpression.error || !parsedExpression.filter) {
-      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: null };
-    }
+    let cancelled = false;
+    // jexl filtering is async; spawn filter task for every row, which should be fine for our log volumes
+    Promise.all(jsonRows.map(parsedExpression.filter))
+      .then((results) => {
+        if (!cancelled) {
+          // results[i] indicates if it passed the filter
+          setFilteredJsonRows(jsonRows.filter((_, i) => results[i]));
+          setJsonHasFilter(true);
+          setJsonRuntimeError(null);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          const errorMsg = error instanceof Error ? error.message : 'Runtime error during filtering';
+          setFilteredJsonRows(jsonRows);
+          setJsonHasFilter(false);
+          setJsonRuntimeError(errorMsg);
+        }
+      });
 
-    // Run actual filtering and catch runtime errors
-    try {
-      const filtered = jsonRows.filter(parsedExpression.filter);
-      return { filteredJsonRows: filtered, jsonHasFilter: true, jsonRuntimeError: null };
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Runtime error during filtering';
-      return { filteredJsonRows: jsonRows, jsonHasFilter: false, jsonRuntimeError: errorMsg };
-    }
+    return () => {
+      cancelled = true;
+    };
   }, [jsonRows, debouncedJsonSearchTerm, parsedExpression, searchExpanded]);
 
   // Select active filtered rows based on view mode (instant switch)
