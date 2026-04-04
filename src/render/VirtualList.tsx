@@ -340,7 +340,22 @@ export const VirtualList = memo<VirtualListProps>(({
   // Configure initial scroll position - use scrollToIndex only on first render of this instance
   // (for view mode switch remount), otherwise default based on sort order
   // IMPORTANT: Only consume scrollId on first render - after mount, the effect handles scrolling
+  //
+  // Detect wrapMode change in the render phase so we can provide the correct initial item
+  // to the remounted Virtuoso (key={options.wrapMode} forces a remount on each change).
+  const prevWrapModeForKeyRef = useRef(options.wrapMode);
+  const wrapModeChangedThisRender = prevWrapModeForKeyRef.current !== options.wrapMode;
+  if (wrapModeChangedThisRender) {
+    prevWrapModeForKeyRef.current = options.wrapMode;
+  }
+  // Capture the current first visible item so the remounted Virtuoso starts there, not at the default.
+  const remountInitialItem = wrapModeChangedThisRender ? currentDisplayFirstRef.current : null;
+
   const initialTopMostItem = useMemo(() => {
+    // When Virtuoso remounts due to a wrapMode change, restore the current scroll position.
+    if (remountInitialItem !== null) {
+      return { index: remountInitialItem, align: 'start' as const };
+    }
     // Only use scrollToIndex on first render (before mount effect runs)
     // After mount, scrollToIndex changes are handled by the effect above
     if (!hasMountedRef.current && scrollToIndex && displayRows.length > 0) {
@@ -378,8 +393,9 @@ export const VirtualList = memo<VirtualListProps>(({
     console.log('[ScrollChange] VirtualList initialTopMostItem - using default:', index, 'sortOrder:', sortOrder);
     return index;
     // Note: scrollToIndex intentionally not in deps - only used on first render (hasMountedRef check)
+    // options.wrapMode is included so this re-runs (and picks up remountInitialItem) on mode change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortOrder, displayRows.length, logicalToDisplay]);
+  }, [sortOrder, displayRows.length, logicalToDisplay, options.wrapMode]);
 
   // Compute className based on wrap mode
   const virtualListClassName = useMemo(() => {
@@ -427,6 +443,7 @@ export const VirtualList = memo<VirtualListProps>(({
   return (
     <div ref={containerRef} className={styles.container} style={{ height, width }}>
       <Virtuoso
+        key={options.wrapMode}
         ref={virtuosoRef}
         data={displayRows}
         totalCount={displayRows.length}
