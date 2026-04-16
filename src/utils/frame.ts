@@ -108,6 +108,7 @@ export function parseDataSeries(series: any, seriesName?: string): ParsedLogsRes
         timestamp,
         seriesIndex: i,
         data: jsonData,
+        message,
         labels,
       };
       out.jsonLogs.push(jsonRow);

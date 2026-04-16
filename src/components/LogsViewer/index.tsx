@@ -347,6 +347,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
         timestamp: log.timestamp,
         seriesIndex: log.seriesIndex ?? index,
         data: log.data,
+        message: log.message,
         labels: log.labels,
         id: log.id,
         level: log.level,
@@ -488,7 +489,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   } = useLinkModal();
 
   // Clipboard operations
-  const { copyAllLogs, copySelectedLog } = useClipboard(filteredRows as any, selectedRowIndex);
+  const { copyAllLogs, copySelectedLog } = useClipboard(filteredRows, selectedRowIndex);
 
   // Get selected row labels
   const selectedRowLabels = useMemo(() => {
@@ -554,7 +555,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
     if (onRowClick) {
       const logData: LogData = {
         timestamp: row.timestamp,
-        message: 'message' in row ? row.message : JSON.stringify(row.data),
+        message: row.message,
         labels: row.labels,
         id: row.id,
         level: row.level,

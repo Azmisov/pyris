@@ -57,6 +57,7 @@ export interface AnsiLogRow extends BaseLogRow {
 // JSON log row with structured data
 export interface JsonLogRow extends BaseLogRow {
   data: Record<string, any>;
+  message: string;
 }
 
 // Union type for compatibility

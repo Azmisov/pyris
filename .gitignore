@@ -1,4 +1,10 @@
+# Development files
 logos/
+
+# Build
+nyrix-pyris-panel/
+nyrix-pyris-panel*.zip
+*build.sh
 
 # Logs
 logs

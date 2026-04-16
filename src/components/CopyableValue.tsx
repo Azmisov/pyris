@@ -10,17 +10,21 @@ export function useCopyToast() {
   const [toastPosition, setToastPosition] = useState<{ x: number; y: number } | null>(null);
   const themeVars = useContext(ThemeVarsContext);
 
+  const showToast = useCallback((e: React.MouseEvent) => {
+    setToastPosition({ x: e.clientX, y: e.clientY });
+    setTimeout(() => setToastPosition(null), 1500);
+  }, []);
+
   const copyWithToast = useCallback(async (text: string, e: React.MouseEvent) => {
     try {
       await navigator.clipboard.writeText(text);
-      setToastPosition({ x: e.clientX, y: e.clientY });
-      setTimeout(() => setToastPosition(null), 1500);
+      showToast(e);
       return true;
     } catch (err) {
       console.error('Failed to copy:', err);
       return false;
     }
-  }, []);
+  }, [showToast]);
 
   const Toast = toastPosition ? createPortal(
     <span
@@ -40,7 +44,7 @@ export function useCopyToast() {
     document.body
   ) : null;
 
-  return { copyWithToast, Toast };
+  return { copyWithToast, showToast, Toast };
 }
 
 /**

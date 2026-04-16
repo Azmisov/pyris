@@ -5,6 +5,7 @@ import { ToggleSwitch } from './ToggleSwitch';
 import { Icon } from '@grafana/ui';
 import toolbarStyles from '../toolbar.module.css';
 import styles from './LogsViewer.module.css';
+import { useCopyToast } from '../CopyableValue';
 
 interface LogsViewerHeaderProps {
   // Settings props
@@ -115,6 +116,15 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   onShowErrors,
 }) => {
   const hasLabels = selectedLabels && Object.keys(selectedLabels).length > 0;
+  const { showToast, Toast } = useCopyToast();
+  const handleCopyAll = (e: React.MouseEvent) => {
+    onCopyAll();
+    showToast(e);
+  };
+  const handleCopySelected = (e: React.MouseEvent) => {
+    onCopySelected();
+    showToast(e);
+  };
   return (
     <div className={styles.header}>
       {/* Left toolbar wrapper */}
@@ -202,12 +212,12 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
                 <Icon name="tag-alt" size='lg' />
               </button>
             )}
-            <button onClick={onCopySelected} className={toolbarStyles.copyButton} title="Copy selected log">
+            <button onClick={handleCopySelected} className={toolbarStyles.copyButton} title="Copy selected log">
               <Icon name="clipboard-alt" size='lg' />
             </button>
           </>
         )}
-        <button onClick={onCopyAll} className={toolbarStyles.copyButton} title="Copy all logs">
+        <button onClick={handleCopyAll} className={toolbarStyles.copyButton} title="Copy all logs">
           <Icon name="clipboard-alt" size='lg' /> All
         </button>
         {hasErrors && onShowErrors && (
@@ -216,6 +226,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
           </button>
         )}
       </div>
+      {Toast}
     </div>
   );
 };

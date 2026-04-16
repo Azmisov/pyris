@@ -1,8 +1,15 @@
 import { useCallback } from 'react';
-import { AnsiLogRow } from '../../../types';
+import { LogRow } from '../../../types';
+
+function rowToText(row: LogRow): string {
+  if ('data' in row) {
+    return row.message;
+  }
+  return row.strippedText || row.message;
+}
 
 export function useClipboard(
-  filteredRows: AnsiLogRow[],
+  filteredRows: LogRow[],
   selectedRowIndex: number | undefined
 ) {
   const copyToClipboard = useCallback(async (content: string) => {
@@ -14,14 +21,13 @@ export function useClipboard(
   }, []);
 
   const copyAllLogs = useCallback(() => {
-    const text = filteredRows.map(row => row.strippedText || row.message).join('\n');
+    const text = filteredRows.map(rowToText).join('\n');
     copyToClipboard(text);
   }, [filteredRows, copyToClipboard]);
 
   const copySelectedLog = useCallback(() => {
     if (selectedRowIndex !== undefined && filteredRows[selectedRowIndex]) {
-      const row = filteredRows[selectedRowIndex];
-      copyToClipboard(row.strippedText || row.message);
+      copyToClipboard(rowToText(filteredRows[selectedRowIndex]));
     }
   }, [selectedRowIndex, filteredRows, copyToClipboard]);
 
