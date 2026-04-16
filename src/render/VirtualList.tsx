@@ -411,8 +411,13 @@ export const VirtualList = memo<VirtualListProps>(({
   const followOutputValue = false;
 
   // When word wrap is disabled, all rows have fixed height - use this for Virtuoso optimization
-  // This skips per-item measurement and significantly improves scroll performance
-  const useFixedHeight = options.wrapMode === 'nowrap';
+  // This skips per-item measurement and significantly improves scroll performance.
+  // JSON mode is excluded: the selected JSON row expands to a multi-line tree (see
+  // .jsonRow.selected .jsonIndent { display: block } in JsonRow.module.css), so rows
+  // are not truly fixed-height. With fixedItemHeight Virtuoso mis-totals scroll height
+  // and snaps the viewport back when scrolling near the expanded row.
+  const isJsonMode = displayRows.length > 0 && 'data' in displayRows[0];
+  const useFixedHeight = options.wrapMode === 'nowrap' && !isJsonMode;
 
   // Determine if we need to show row count warning
   const effectiveTotalRowCount = totalRowCount ?? rows.length;
