@@ -123,6 +123,35 @@ describe('ANSI to HTML Converter', () => {
       expect(html).toContain('href="vscode://file/foo"');
     });
 
+    test('absolute file path in quotes with :line suffix', () => {
+      const input = '  File "/home/user/dev/acme/connection.py:410"';
+      const { html } = convertAnsiToHtml(input, classMap, linkClass);
+      expect(html).toContain('href="file:///home/user/dev/acme/connection.py:410"');
+      expect(html).toContain('>/home/user/dev/acme/connection.py:410</a>');
+    });
+
+    test('absolute file path with :line:col suffix', () => {
+      const { html } = convertAnsiToHtml('at /src/foo.ts:42:8 here', classMap, linkClass);
+      expect(html).toContain('href="file:///src/foo.ts:42:8"');
+    });
+
+    test('absolute path trailing sentence punctuation is not consumed', () => {
+      const { html } = convertAnsiToHtml('see /home/user/foo.py.', classMap, linkClass);
+      expect(html).toContain('href="file:///home/user/foo.py"');
+      expect(html).not.toContain('foo.py."');
+    });
+
+    test('path portion of a URL is not double-matched', () => {
+      const { html } = convertAnsiToHtml('http://example.com/home/user', classMap, linkClass);
+      const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map(m => m[1]);
+      expect(hrefs).toEqual(['http://example.com/home/user']);
+    });
+
+    test('double-slash sequence is not treated as a path', () => {
+      const { html } = convertAnsiToHtml('note //foo/bar here', classMap, linkClass);
+      expect(html).not.toContain('href=');
+    });
+
     test('OSC-8 vscode:// link with styled wrapper (real sample shape)', () => {
       const input = '\x1b[2;38;5;166m\x1b]8;;vscode://file/foo\x07VSCode\x1b]8;;\x07\x1b[0m';
       const { html } = convertAnsiToHtml(input, classMap, linkClass);

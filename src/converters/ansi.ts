@@ -20,6 +20,53 @@ export interface AnsiConversionResult {
 // Dangerous schemes (javascript:, data:, vbscript:) are intentionally excluded.
 const PLAIN_URL_REGEX = /\b((?:[a-z][a-z0-9+.-]{2,}):\/\/[^\s<>"'{}|\\^`\[\]]+|(?:mailto|tel|sms|callto):[^\s<>"'{}|\\^`\[\]]+)/gi;
 
+// Absolute POSIX file-path detector. Matches paths like `/home/user/foo.py`
+// with optional `:line[:col]` suffix. Lookbehind requires a path-start boundary
+// so we don't re-match the path portion of an already-captured URL — URL
+// precedence is additionally enforced in collectLinks().
+const PLAIN_PATH_REGEX = /(?<=^|[\s(\[{"'=|,])\/[a-zA-Z0-9._\-][a-zA-Z0-9._\-/]*(?::\d+(?::\d+)?)?/g;
+
+interface LinkMatch {
+  start: number;
+  end: number;
+  href: string;
+  text: string;
+}
+
+// Scan text for URL and absolute-path matches. URL matches take precedence on
+// overlap. Bare paths are emitted with a `file://` href so the link-confirm
+// modal treats them like file URLs (it strips the prefix for display/copy).
+function collectLinks(raw: string): LinkMatch[] {
+  const matches: LinkMatch[] = [];
+
+  PLAIN_URL_REGEX.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = PLAIN_URL_REGEX.exec(raw)) !== null) {
+    matches.push({ start: m.index, end: m.index + m[0].length, href: m[1], text: m[1] });
+  }
+
+  PLAIN_PATH_REGEX.lastIndex = 0;
+  while ((m = PLAIN_PATH_REGEX.exec(raw)) !== null) {
+    let text = m[0];
+    // Strip trailing dots (e.g. sentence terminator) without eating :line:col.
+    const lineCol = text.match(/:\d+(?::\d+)?$/);
+    if (lineCol) {
+      const base = text.slice(0, lineCol.index).replace(/\.+$/, '');
+      text = base + lineCol[0];
+    } else {
+      text = text.replace(/\.+$/, '');
+    }
+    if (text.length < 2) {continue;}
+    const start = m.index;
+    const end = start + text.length;
+    if (matches.some(u => start < u.end && end > u.start)) {continue;}
+    matches.push({ start, end, href: 'file://' + text, text });
+  }
+
+  matches.sort((a, b) => a.start - b.start);
+  return matches;
+}
+
 // Convert ANSI escape sequences to HTML using CSS Modules + inline color styles.
 // When `copyableClass` is provided, styled runs that aren't pure punctuation and
 // don't contain a link get the class added — enabling click-to-copy on the row.
@@ -67,11 +114,11 @@ function hasStylingTokens(tokens: AnsiToken[]): boolean {
 
 const NON_PUNCT_RE = /[^\s\p{P}\p{S}]/u;
 
-// Create an <a> element for a plain URL found inside text (not OSC-8).
-function createPlainLinkHtml(url: string, linkClass: string): string {
-  const escapedUrl = escapeHtmlAttr(url);
-  const escapedText = escapeHtml(url);
-  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
+// Create an <a> element for a plain URL/path found inside text (not OSC-8).
+function createPlainLinkHtml(href: string, text: string, linkClass: string): string {
+  const escapedHref = escapeHtmlAttr(href);
+  const escapedText = escapeHtml(text);
+  return `<a href="${escapedHref}" title="${escapedHref}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedHref}">${escapedText}</a>`;
 }
 
 // Convert tokens to HTML with CSS Module classes, inline color styles, OSC-8
@@ -119,21 +166,20 @@ function tokensToHtml(
     pendingRaw = '';
 
     // Build the run's inner HTML: plain text, with <a> inlined for plain URLs
-    // (skipped when we're inside an OSC-8 link — that content is already a
-    // link — and on the truncated final flush, where the URL may be cut off).
+    // and absolute file paths (skipped when we're inside an OSC-8 link — that
+    // content is already a link — and on the truncated final flush, where the
+    // URL/path may be cut off).
     let inner = '';
     if (linkUrl || truncated) {
       inner = escapeHtml(raw);
     } else {
-      PLAIN_URL_REGEX.lastIndex = 0;
       let lastIdx = 0;
-      let m: RegExpExecArray | null;
-      while ((m = PLAIN_URL_REGEX.exec(raw)) !== null) {
-        if (m.index > lastIdx) {
-          inner += escapeHtml(raw.substring(lastIdx, m.index));
+      for (const link of collectLinks(raw)) {
+        if (link.start > lastIdx) {
+          inner += escapeHtml(raw.substring(lastIdx, link.start));
         }
-        inner += createPlainLinkHtml(m[1], linkClass);
-        lastIdx = m.index + m[0].length;
+        inner += createPlainLinkHtml(link.href, link.text, linkClass);
+        lastIdx = link.end;
       }
       if (lastIdx < raw.length) {
         inner += escapeHtml(raw.substring(lastIdx));
