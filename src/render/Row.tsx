@@ -1,13 +1,37 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { AnsiLogRow, ProcessedLogRow, LogsPanelOptions } from '../types';
-import { convertAnsiToHtml, hasAnsiCodes, stripAnsiCodes } from '../converters/ansi';
-import { linkifyPlainUrls } from '../converters/urlDetector';
+import { convertAnsiToHtml, stripAnsiCodes } from '../converters/ansi';
 import { createMemoKey, getGlobalCache } from '../utils/memo';
+import { useCopyToast } from '../components/CopyableValue';
 import styles from './Row.module.css';
 import sharedStyles from '../shared.module.css';
 import ansi from '../theme/ansi.module.css';
 
 const linkClass = ansi['logs-detected-link'];
+// `styles.rowCopyable` is a space-separated list because of `composes` in the
+// CSS module — use the full string when adding to className for styling, but
+// take the first token for DOM selectors (a multi-token selector string becomes
+// a descendant combinator, which `closest()` can't satisfy on a single span).
+const copyableClass = styles.rowCopyable;
+const copyableSelectorClass = copyableClass.split(/\s+/).filter(Boolean)[0];
+
+const MATCHING_QUOTES = new Set(['"', '\'', '`']);
+
+// Clean up text copied from a copyable span:
+function cleanCopyText(text: string): string {
+  let s = text.trim();
+  // punctuation + whitespace at start or end; likely indicates separators between styled content
+  s = s.replace(/\s+[\p{P}\p{S}]+$/u, '');
+  s = s.replace(/^[\p{P}\p{S}]+\s+/u, '');
+  // key=value separators
+  s = s.replace(/[=:]$/, '');
+  // Strip matching wrapping quotes (e.g., 'foo' → foo, "bar" → bar).
+  // Mismatched brackets like [foo 'bar'] are left alone.
+  if (s.length >= 2 && s[0] === s[s.length - 1] && MATCHING_QUOTES.has(s[0])) {
+    s = s.slice(1, -1);
+  }
+  return s;
+}
 
 interface RowProps {
   row: AnsiLogRow;
@@ -27,6 +51,25 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
     return processLogRow(row, options);
   }, [row.message, row.id, options.maxLineLength, options.wrapMode]);
   /* eslint-enable react-hooks/exhaustive-deps */
+
+  const { copyWithToast, Toast } = useCopyToast();
+
+  const handleContentClick = useCallback((e: React.MouseEvent) => {
+    // Only enable copy-on-click when the row is already selected — same
+    // interaction model as JsonRow (copyEnabled={isSelected}). An unselected
+    // row's click should fall through to the row-level handler, selecting it.
+    if (!isSelected) {return;}
+    const target = e.target as HTMLElement;
+    if (!target) {return;}
+    // Let clicks on detected / OSC-8 links fall through to the link-modal logic.
+    if (target.closest('a')) {return;}
+    const copyableEl = target.closest(`.${copyableSelectorClass}`) as HTMLElement | null;
+    if (!copyableEl) {return;}
+    e.stopPropagation();
+    const text = cleanCopyText(copyableEl.textContent || '');
+    if (!text) {return;}
+    copyWithToast(text, e);
+  }, [isSelected, copyWithToast]);
 
   const handleClick = useMemo(() => {
     return onRowClick ? () => onRowClick(row) : undefined;
@@ -62,6 +105,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
       {/* Wrapper span is required: React doesn't allow dangerouslySetInnerHTML
           on elements that have other React children (like LabelsDisplay above) */}
       <span
+        onClick={handleContentClick}
         dangerouslySetInnerHTML={{ __html: processedRow.html }}
       />
       {processedRow.truncatedChars !== undefined && processedRow.truncatedChars > 0 && (
@@ -69,6 +113,7 @@ export const Row = memo<RowProps>(({ row, options, isSelected, onRowClick, onRow
           +{processedRow.truncatedChars.toLocaleString()}
         </span>
       )}
+      {Toast}
     </div>
   );
 });
@@ -135,7 +180,6 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
 
   // Process the message
   const message = row.message || '';
-  const hasAnsi = hasAnsiCodes(message);
 
   // Always strip ANSI codes for searching
   const strippedText = stripAnsiCodes(message);
@@ -143,33 +187,11 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
   // Determine max length for truncation (applies in both wrap modes)
   const maxLength = options.maxLineLength > 0 ? options.maxLineLength : undefined;
 
-  let html: string;
-  let truncatedChars = 0;
-
-  if (!hasAnsi) {
-    // Fast path: plain text - apply truncation directly
-    if (maxLength && message.length > maxLength) {
-      html = escapeHtml(message.substring(0, maxLength)) + '…';
-      truncatedChars = message.length - maxLength;
-    } else {
-      html = escapeHtml(message);
-    }
-  } else {
-    // Convert ANSI to HTML with truncation (includes OSC-8 hyperlink processing)
-    // The conversion stops early when maxLength is reached and properly closes tags
-    const result = convertAnsiToHtml(message, ansi, linkClass, maxLength);
-    html = result.html;
-    truncatedChars = result.truncatedChars;
-  }
-
-  // Apply plain URL detection (auto-linking, dangerous schemes are blocked internally)
-  // Only apply to non-truncated content to avoid linkifying partial URLs
-  if (truncatedChars === 0) {
-    const withPlainLinks = linkifyPlainUrls(html, linkClass);
-    if (withPlainLinks !== html) {
-      html = withPlainLinks;
-    }
-  }
+  // ANSI → HTML in one pass: SGR styling, OSC-8 hyperlinks, plain-URL
+  // auto-linking, and copyable-class marking. Handles pure plain text fine
+  // (the parser yields a single TEXT token and the row gets URL linkification
+  // but no copyable class, since no SGR codes are present).
+  const { html, truncatedChars } = convertAnsiToHtml(message, ansi, linkClass, maxLength, copyableClass);
 
   const processed: ProcessedLogRow = {
     ...row,
@@ -184,12 +206,3 @@ function processLogRow(row: AnsiLogRow, options: LogsPanelOptions): ProcessedLog
   return processed;
 }
 
-// Simple HTML escaping for plain text
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
-}

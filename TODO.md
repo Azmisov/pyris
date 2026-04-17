@@ -16,8 +16,6 @@
     - save search expression in local storage
     - special JSON styling:
       - when you hover over timestamp/datetime looking value in JSON, show tooltip with conversions
-    - ability to copy values in ANSI logs, delimited by stripped ansi colored elements; don't enable
-      copy if only contains punctuation characters
     - detect timestamps within ANSI styled elements; do the tooltip conversion thing for ANSI too
     - autodetect timezone offset for ANSI/JSON logs, by comparing seen timestamp to the log record
       timestamp from the dataframe
@@ -46,3 +44,5 @@
       https://github.com/petyosi/react-virtuoso/issues/118. May need to compute our own "range visible"
       event and scroll to behavior, using calculated offsets?
     - remove debug logging: I've kept them in for now, but prod builds will strip them
+    - JSON no-wrap with one line selected is 99% fixed height rows, except the selected one which
+      formats the JSON; someway to have virtuoso optimize this, or another lib that could?

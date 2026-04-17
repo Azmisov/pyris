@@ -13,6 +13,15 @@
   background-color: var(--logs-bg-accent-3);
 }
 
+/* Inline variant for wrapping copyable atoms inside mixed-content lines
+   (e.g., ANSI-styled log segments). Intentionally bare — parents compose
+   this class and add their own cursor/hover rules so copy-on-click can be
+   gated on row selection. */
+.copyableInline {
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
 .copyToast {
   padding: 0.08em 0.5em;
   background-color: var(--ansi-color-2);

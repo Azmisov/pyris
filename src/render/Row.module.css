@@ -33,6 +33,25 @@
 }
 
 .logsRow.selected::before {
+  background-color: var(--logs-bg-accent-1);
+}
+
+.logsRow.selected {
+  border-left: 8px solid var(--logs-bg-accent-3);
+}
+
+/* Copyable atoms inside a selected ANSI row. Composes from Copyable.module.css
+   so the hover/cursor styling only kicks in once the row is selected —
+   matches JsonRow's copyEnabled={isSelected} behavior. */
+.rowCopyable {
+  composes: copyableInline from '../components/Copyable.module.css';
+}
+
+.logsRow.selected .rowCopyable {
+  cursor: copy;
+}
+
+.logsRow.selected .rowCopyable:hover {
   background-color: var(--logs-bg-accent-3);
 }
 

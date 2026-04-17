@@ -15,12 +15,20 @@ export interface AnsiConversionResult {
   truncatedChars: number;
 }
 
-// Convert ANSI escape sequences to HTML using CSS Modules + inline color styles
+// Plain URL detector used to auto-linkify URLs found inside TEXT tokens.
+// Matches `scheme://…` and safe colon-only schemes (mailto/tel/sms/callto).
+// Dangerous schemes (javascript:, data:, vbscript:) are intentionally excluded.
+const PLAIN_URL_REGEX = /\b((?:[a-z][a-z0-9+.-]{2,}):\/\/[^\s<>"'{}|\\^`\[\]]+|(?:mailto|tel|sms|callto):[^\s<>"'{}|\\^`\[\]]+)/gi;
+
+// Convert ANSI escape sequences to HTML using CSS Modules + inline color styles.
+// When `copyableClass` is provided, styled runs that aren't pure punctuation and
+// don't contain a link get the class added — enabling click-to-copy on the row.
 export function convertAnsiToHtml(
   text: string,
   classMap: Record<string, string>,
   linkClass: string,
   maxLength?: number,
+  copyableClass?: string,
 ): AnsiConversionResult {
   if (!text) {
     return { html: '', truncatedChars: 0 };
@@ -28,7 +36,7 @@ export function convertAnsiToHtml(
 
   try {
     const tokens = parse(text) as AnsiToken[];
-    return tokensToHtml(tokens, classMap, linkClass, maxLength);
+    return tokensToHtml(tokens, classMap, linkClass, maxLength, copyableClass);
   } catch (error) {
     console.warn('Failed to parse ANSI text:', error);
     // Fallback: return text with basic escaping
@@ -36,26 +44,59 @@ export function convertAnsiToHtml(
     if (maxLength && maxLength > 0 && text.length > maxLength) {
       return {
         html: escaped.substring(0, maxLength) + '…',
-        truncatedChars: text.length - maxLength
+        truncatedChars: text.length - maxLength,
       };
     }
     return { html: escaped, truncatedChars: 0 };
   }
 }
 
-// Convert tokens to HTML with CSS Module classes, inline color styles, and OSC-8 hyperlinks
-// Supports early termination when maxLength is reached
+// True if any SGR in the tokens produces a non-reset style.
+// Used to gate copyable-class emission: only lines that actually contain
+// formatting are treated as structured data that can be atomically copied.
+function hasStylingTokens(tokens: AnsiToken[]): boolean {
+  for (const t of tokens) {
+    if (t.type !== 'CSI' || t.command !== 'm') {continue;}
+    for (const p of t.params || []) {
+      const code = parseInt(p, 10);
+      if (!isNaN(code) && code !== 0) {return true;}
+    }
+  }
+  return false;
+}
+
+const NON_PUNCT_RE = /[^\s\p{P}\p{S}]/u;
+
+// Create an <a> element for a plain URL found inside text (not OSC-8).
+function createPlainLinkHtml(url: string, linkClass: string): string {
+  const escapedUrl = escapeHtmlAttr(url);
+  const escapedText = escapeHtml(url);
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${escapedText}</a>`;
+}
+
+// Convert tokens to HTML with CSS Module classes, inline color styles, OSC-8
+// hyperlinks, plain-URL linkification, and optional copyable-class marking.
+// Supports early termination when maxLength is reached.
+//
+// Emission model: text accumulates into `pendingRaw` under the current styling
+// context. On every context change (SGR, OSC-8 boundary, end-of-stream), we
+// flush the buffer, splitting on plain URLs and wrapping the run in a single
+// styled <span> so nested <a>s inherit ANSI color. The copyable class is
+// applied to a run iff (a) the overall row has styling, (b) we're not inside
+// an OSC-8 link, (c) the run has no plain URL, and (d) the text contains at
+// least one non-punctuation character.
 function tokensToHtml(
   tokens: AnsiToken[],
   classMap: Record<string, string>,
   linkClass: string,
   maxLength?: number,
+  copyableClass?: string,
 ): AnsiConversionResult {
   let html = '';
   let currentStyles: string[] = [];
   let currentInlineStyles: Record<string, string> = {};
-  let charCount = 0; // Track visible character count
-  let totalTextLength = 0; // Track total text length for truncation calculation
+  let charCount = 0;
+  let totalTextLength = 0;
   let truncated = false;
 
   // OSC-8 hyperlink state
@@ -63,12 +104,61 @@ function tokensToHtml(
   let linkParams: Record<string, string> = {};
   let linkContentHtml = '';
 
-  // Helper to close current styling span
-  const closeCurrentSpan = (): string => {
-    if (currentStyles.length > 0 || Object.keys(currentInlineStyles).length > 0) {
-      return '</span>';
+  let pendingRaw = '';
+  const rowHasStyling = !!copyableClass && hasStylingTokens(tokens);
+
+  const emit = (chunk: string) => {
+    if (!chunk) {return;}
+    if (linkUrl) {linkContentHtml += chunk;}
+    else {html += chunk;}
+  };
+
+  const flushPending = () => {
+    if (!pendingRaw) {return;}
+    const raw = pendingRaw;
+    pendingRaw = '';
+
+    // Build the run's inner HTML: plain text, with <a> inlined for plain URLs
+    // (skipped when we're inside an OSC-8 link — that content is already a
+    // link — and on the truncated final flush, where the URL may be cut off).
+    let inner = '';
+    if (linkUrl || truncated) {
+      inner = escapeHtml(raw);
+    } else {
+      PLAIN_URL_REGEX.lastIndex = 0;
+      let lastIdx = 0;
+      let m: RegExpExecArray | null;
+      while ((m = PLAIN_URL_REGEX.exec(raw)) !== null) {
+        if (m.index > lastIdx) {
+          inner += escapeHtml(raw.substring(lastIdx, m.index));
+        }
+        inner += createPlainLinkHtml(m[1], linkClass);
+        lastIdx = m.index + m[0].length;
+      }
+      if (lastIdx < raw.length) {
+        inner += escapeHtml(raw.substring(lastIdx));
+      }
     }
-    return '';
+
+    const styleClasses = currentStyles.map(s => classMap[s]);
+    const hasStyleClasses = styleClasses.length > 0;
+    const hasInline = Object.keys(currentInlineStyles).length > 0;
+    // Allow copyable on spans that contain a plain <a> too: the click handler
+    // bails on target.closest('a'), so link clicks fall through to the modal,
+    // and clicks on surrounding text copy the full run (URL text included).
+    const wantCopyable = rowHasStyling && !linkUrl && NON_PUNCT_RE.test(raw);
+
+    if (!hasStyleClasses && !hasInline && !wantCopyable) {
+      emit(inner);
+      return;
+    }
+    const classes = [...styleClasses];
+    if (wantCopyable) {classes.push(copyableClass!);}
+    const classAttr = classes.length > 0 ? ` class="${classes.join(' ')}"` : '';
+    const styleAttr = hasInline
+      ? ` style="${Object.entries(currentInlineStyles).map(([k, v]) => `${k}:${v}`).join(';')}"`
+      : '';
+    emit(`<span${classAttr}${styleAttr}>${inner}</span>`);
   };
 
   // First pass: calculate total text length for truncation info
@@ -81,77 +171,32 @@ function tokensToHtml(
   }
 
   for (const token of tokens) {
-    // Check if we've hit the limit
     if (maxLength && maxLength > 0 && charCount >= maxLength) {
       truncated = true;
       break;
     }
 
     switch (token.type) {
-      case 'TEXT':
+      case 'TEXT': {
         let textToAdd = token.raw;
-
-        // Check if this text would exceed the limit
         if (maxLength && maxLength > 0 && charCount + textToAdd.length > maxLength) {
-          // Truncate the text to fit
-          const remaining = maxLength - charCount;
-          textToAdd = textToAdd.substring(0, remaining);
+          textToAdd = textToAdd.substring(0, maxLength - charCount);
           truncated = true;
         }
-
-        const escapedText = escapeHtml(textToAdd);
         charCount += textToAdd.length;
-
-        if (linkUrl) {
-          // Inside a link - collect content
-          linkContentHtml += escapedText;
-        } else {
-          // Normal text
-          html += escapedText;
-        }
-
-        // Stop processing if we've truncated
-        if (truncated) {
-          break;
-        }
+        pendingRaw += textToAdd;
         break;
+      }
 
-      case 'CSI':
+      case 'CSI': {
         if (token.command === 'm') {
-          // SGR (Select Graphic Rendition) command
+          flushPending();
           const result = processSgrCommand(token.params || [], currentStyles, currentInlineStyles);
-          const newStyles = result.classes;
-          const newInlineStyles = result.inlineStyles;
-
-          // Generate style change HTML
-          let styleChangeHtml = '';
-
-          // Close current spans if styles changed
-          if (currentStyles.length > 0 || Object.keys(currentInlineStyles).length > 0) {
-            styleChangeHtml += '</span>';
-          }
-
-          // Open new spans for new styles
-          if (newStyles.length > 0 || Object.keys(newInlineStyles).length > 0) {
-            const classAttr = newStyles.length > 0 ? ` class="${newStyles.map(s => classMap[s]).join(' ')}"` : '';
-            const styleAttr = Object.keys(newInlineStyles).length > 0
-              ? ` style="${Object.entries(newInlineStyles).map(([k, v]) => `${k}:${v}`).join(';')}"`
-              : '';
-            styleChangeHtml += `<span${classAttr}${styleAttr}>`;
-          }
-
-          if (linkUrl) {
-            // Inside a link - collect styling
-            linkContentHtml += styleChangeHtml;
-          } else {
-            // Normal context
-            html += styleChangeHtml;
-          }
-
-          currentStyles = newStyles;
-          currentInlineStyles = newInlineStyles;
+          currentStyles = result.classes;
+          currentInlineStyles = result.inlineStyles;
         }
         break;
+      }
 
       case 'OSC':
         if (token.command === '8') {
@@ -191,16 +236,11 @@ function tokensToHtml(
     }
   }
 
-  // Close any remaining open link (with partial content if truncated)
+  flushPending();
   if (linkUrl && linkContentHtml) {
-    const linkHtml = createHyperlink(linkUrl, linkContentHtml, linkParams, linkClass);
-    html += linkHtml;
+    html += createHyperlink(linkUrl, linkContentHtml, linkParams, linkClass);
   }
 
-  // Close any remaining open spans
-  html += closeCurrentSpan();
-
-  // Add ellipsis if truncated
   if (truncated) {
     html += '…';
   }
@@ -583,7 +623,7 @@ export function stripAnsiCodes(input: string): string {
     console.warn('Failed to parse ANSI text for stripping:', error);
     // Fallback to regex-based stripping if parser fails
     return input.replace(
-       
+
       /\x1b\[[0-9;]*[a-zA-Z]|\x1b\][^\x07]*\x07|\x1b\][^\x1b]*\x1b\\/g,
       ''
     );
