@@ -51,6 +51,9 @@ sample file, wire it into `SAMPLE_FILES` in `scripts/convert-samples.js` and
 into `SAMPLES` in `scripts/update-dashboard.js` — otherwise the script will
 silently skip it and the on-disk JSON goes stale.
 
+`scripts/tokenize-samples.py` and `scripts/anonymize-samples.py` (with customization)
+can be used to help anonymize a sample's log data.
+
 ## Linting
 
 ```bash

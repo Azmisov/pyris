@@ -29,7 +29,10 @@ def extract_tokens(filepath: Path) -> Counter:
     clean_content = strip_ansi(content)
 
     # Extract all contiguous word characters
-    tokens = re.findall(r'\w+', clean_content)
+    tokens = re.findall(r'[\w-]+', clean_content)
+
+    # Drop tokens that are only digits and separators
+    tokens = [t for t in tokens if not re.fullmatch(r'[\d\-_]+', t)]
 
     return Counter(tokens)
 
