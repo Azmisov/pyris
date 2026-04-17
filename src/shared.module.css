@@ -11,6 +11,9 @@
 }
 
 .labelsContainerBlock {
+  /* block in wrap mode; the labels sort of act as a left padding for a line, so it
+    is hard to read when lines wrap back to the unpadded beginning in my opinion
+  */
   display: block;
   margin-bottom: 2px;
 }

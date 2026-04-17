@@ -39,7 +39,7 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
     })
     .addBooleanSwitch({
       path: 'showLabels',
-      name: 'Show Labels',
+      name: 'Inline Labels',
       description: 'Display log labels as badges with each line. Labels are always accessible from a modal, even when this option is disabled.',
       defaultValue: defaultOptions.showLabels,
     })

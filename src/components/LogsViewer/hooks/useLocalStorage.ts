@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const STORAGE_PREFIX = 'grafana.plugin.ansi-logs-panel';
+const STORAGE_PREFIX = 'grafana.plugin.nyrix-pyris-panel';
 const STORAGE_CHANGE_EVENT = 'nyrix-logs-storage-change';
 
 function getStorageItem<T>(key: string, defaultValue: T): T {
