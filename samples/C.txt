@@ -133,6 +133,11 @@ file:///home/user/documents/report.pdf
 vscode://file/workspace/src/index.ts:10:5
 http://localhost:3000/dashboard
 
+Plain URL inside styled span:
+[31msee https://example.com/red-error for details[0m
+[1;33mwarning[0m: connect [36mhttp://localhost:3000/dashboard[0m failed, retry
+[32mkey[0m=[34mhttps://svc.example.com/api?x=1&y=2[0m [90m# note[0m
+
 Dangerous Schemes (NOT auto-linked for security - displayed as plain text):
 javascript:alert(document.domain)
 javascript:void(0)

@@ -35,6 +35,22 @@ GRAFANA_VERSION=11.3.0 npm run server
 npm run e2e
 ```
 
+## Samples
+
+Test fixtures live in `samples/` (e.g. `A.txt`, `B.txt`, `C.txt`). After
+editing a sample:
+
+```bash
+npm run provision-samples
+docker compose restart   # pick up the regenerated provisioning files
+```
+
+`provision-samples` runs `convert-samples` (rewrites TestData fixtures) then
+`update-dashboard` (refreshes the dashboard JSON). If you add a brand-new
+sample file, wire it into `SAMPLE_FILES` in `scripts/convert-samples.js` and
+into `SAMPLES` in `scripts/update-dashboard.js` — otherwise the script will
+silently skip it and the on-disk JSON goes stale.
+
 ## Linting
 
 ```bash

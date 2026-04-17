@@ -22,6 +22,12 @@ const SAMPLE_FILES = [
     labels: { source: 'sample-B', app: 'app_worker', type: 'hybrid' },
     extractTimestampHybrid: true,
   },
+  {
+    input: 'C.txt',
+    output: 'sample-C.json',
+    labels: { source: 'sample-C', app: 'ansi_test', type: 'ansi' },
+    generateTimestamp: true,
+  },
 ];
 
 /**

@@ -68,7 +68,7 @@ function main() {
         },
       ],
       title: sample.title,
-      type: 'nyrix-ansilogs-panel',
+      type: 'nyrix-pyris-panel',
     };
   });
 
