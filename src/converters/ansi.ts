@@ -200,7 +200,10 @@ function tokensToHtml(
 
       case 'OSC':
         if (token.command === '8') {
-          // OSC-8 hyperlink sequence
+          // OSC-8 hyperlink sequence. Flush buffered text first so it lands on
+          // the correct side of the link boundary (before-open goes to outer
+          // html; before-close goes inside the <a>).
+          flushPending();
           const params = token.params || [];
           const paramsString = params[0] || '';
           const url = params[1] || '';

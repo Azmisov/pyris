@@ -90,4 +90,45 @@ describe('ANSI to HTML Converter', () => {
       expect(html).toContain('Red');
     });
   });
+
+  describe('Plain URL linkification', () => {
+    test('http URL in plain text', () => {
+      const { html } = convertAnsiToHtml('see http://example.com here', classMap, linkClass);
+      expect(html).toContain('href="http://example.com"');
+    });
+
+    test('vscode:// URL in plain text', () => {
+      const { html } = convertAnsiToHtml('Open vscode://file/foo now', classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+    });
+
+    test('vscode:// URL inside SGR styled run', () => {
+      const input = '\x1b[31mvscode://file/foo\x1b[0m';
+      const { html } = convertAnsiToHtml(input, classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+    });
+
+    test('vscode:// URL after key=value prefix', () => {
+      const { html } = convertAnsiToHtml('url=vscode://file/foo', classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+    });
+
+    test('vscode:// URL in quotes', () => {
+      const { html } = convertAnsiToHtml('"vscode://file/foo"', classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+    });
+
+    test('vscode:// URL at start of line', () => {
+      const { html } = convertAnsiToHtml('vscode://file/foo bar', classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+    });
+
+    test('OSC-8 vscode:// link with styled wrapper (real sample shape)', () => {
+      const input = '\x1b[2;38;5;166m\x1b]8;;vscode://file/foo\x07VSCode\x1b]8;;\x07\x1b[0m';
+      const { html } = convertAnsiToHtml(input, classMap, linkClass);
+      expect(html).toContain('href="vscode://file/foo"');
+      expect(html).toContain('VSCode');
+      expect(html).toMatch(/<a[^>]*href="vscode:\/\/file\/foo"[^>]*>[^<]*(?:<[^>]+>[^<]*VSCode[^<]*<\/[^>]+>|VSCode)[^<]*<\/a>/);
+    });
+  });
 });
