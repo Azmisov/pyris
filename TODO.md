@@ -1,3 +1,5 @@
+- bugs:
+  - when no panel title, needs to make space for the hover buttons in top-right
 - test:
   - add e2e tests (scaffold tests removed, CI pipeline disabled currently)
   - navigation syncing: test with filtering
@@ -20,13 +22,17 @@
     - autodetect timezone offset for ANSI/JSON logs, by comparing seen timestamp to the log record
       timestamp from the dataframe
     - shift/ctrl select to extend line selection
-    - reset localStorage settings; or maybe just remove the defaults?
     - autoconvert first datetime format to the user's timezone? will be finicky
     - breakout log count by log level
     - showing json + ansi combined histogram in the timeline
   - change behavior:
     - aligning histogram bins to grid lines instead of being a fixed division of full range
     - have count of all records be the limit for histogram scaling, rather than view dependent?
+    - when there are many labels, and nowrap mode, inline labels push the relevant content out;
+      maybe we should make labels block in nowrap mode as well? or maybe we just don't worry about
+      this, since its mostly a design compatibility with builtin logging panel; the "labels" header
+      button I think is the better choice as labels are 99% of the time just noise; for JSON, could
+      maybe append labels to end
   - issues:
     - JSON clickable container, e.g. { bracket, has some bottom clipping for certain font sizes.
       Initial investigation don't think there's anything to do without ruining box drawing fidelity

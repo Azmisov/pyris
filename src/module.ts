@@ -6,6 +6,12 @@ import { ThemeSelectEditor } from './components/ThemeSelectEditor';
 
 export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptions((builder) => {
   return builder
+    .addBooleanSwitch({
+      path: 'panelSpecificTheme',
+      name: 'Panel-specific theme',
+      description: 'Use as a visual indicator for different logging panels on the same dashboard (e.g., separate themes per log source or filter). When enabled, theme selection is per-panel and the options below set this panel\'s default; when disabled, theme is shared across all panels.',
+      defaultValue: defaultOptions.panelSpecificTheme,
+    })
     .addCustomEditor({
       id: 'darkTheme',
       path: 'darkTheme',
@@ -16,6 +22,7 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
       settings: {
         themeMode: 'dark',
       },
+      showIf: (cfg) => !!cfg.panelSpecificTheme,
     })
     .addCustomEditor({
       id: 'lightTheme',
@@ -27,6 +34,7 @@ export const plugin = new PanelPlugin<LogsPanelOptions>(LogsPanel).setPanelOptio
       settings: {
         themeMode: 'light',
       },
+      showIf: (cfg) => !!cfg.panelSpecificTheme,
     })
     .addTextInput({
       path: 'fontFamily',

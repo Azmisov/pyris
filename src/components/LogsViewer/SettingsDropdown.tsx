@@ -11,9 +11,10 @@ interface SettingsDropdownProps {
   themeMode: 'grafana' | 'system' | 'light' | 'dark';
   onThemeModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   effectiveThemeMode: 'dark' | 'light';
-  availableThemeOptions: Array<{ value: string; label: string }>;
+  availableThemeOptions: Array<{ value: string; label: string; schemeKey?: string }>;
   currentTheme: string;
   onThemeChange: (value: string) => void;
+  panelSpecificTheme: boolean;
   rowHeight: 'auto' | 'fixed';
   fixedRowHeight: number;
   onRowHeightAuto: () => void;
@@ -31,6 +32,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
   availableThemeOptions,
   currentTheme,
   onThemeChange,
+  panelSpecificTheme,
   rowHeight,
   fixedRowHeight,
   onRowHeightAuto,
@@ -101,7 +103,10 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
             </select>
           </div>
           <div className={styles.item}>
-            <label htmlFor="theme">{effectiveThemeMode === 'dark' ? 'Dark' : 'Light'} Theme</label>
+            <label htmlFor="theme">
+              {effectiveThemeMode === 'dark' ? 'Dark' : 'Light'} Theme
+              <i> ({panelSpecificTheme ? 'panel-specific' : 'global'})</i>
+            </label>
             <ThemeSelect
               id="theme"
               options={availableThemeOptions}

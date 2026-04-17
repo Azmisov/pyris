@@ -82,6 +82,8 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
         dashboardTimeRange={dashboardTimeRangeMs}
         timeZone={timeZone}
         eventBus={eventBus}
+        panelId={id}
+        dashboardUID={data.request?.dashboardUID}
       />
   );
 };

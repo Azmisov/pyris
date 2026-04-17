@@ -6,6 +6,12 @@ export interface LogsPanelOptions {
   themeMode: 'grafana' | 'system' | 'light' | 'dark';
   darkTheme: string;
   lightTheme: string;
+  /**
+   * When true, the user's theme selection is stored per-panel (scoped by dashboard UID + panel id)
+   * and the panel-level Default Dark/Light Theme options act as that panel's default.
+   * When false, theme selection is global across all panels and the panel-level theme options are hidden.
+   */
+  panelSpecificTheme: boolean;
 
   // Display options
   wrapMode: 'nowrap' | 'soft-wrap';
@@ -29,6 +35,7 @@ export const defaultOptions: LogsPanelOptions = {
   themeMode: 'grafana',
   darkTheme: 'grafana-dark',
   lightTheme: 'grafana-light',
+  panelSpecificTheme: false,
   wrapMode: 'nowrap',
   maxLineLength: 1000,
   rowHeight: 'auto',

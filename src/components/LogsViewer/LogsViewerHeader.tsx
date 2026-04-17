@@ -14,9 +14,10 @@ interface LogsViewerHeaderProps {
   themeMode: 'grafana' | 'system' | 'light' | 'dark';
   onThemeModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   effectiveThemeMode: 'dark' | 'light';
-  availableThemeOptions: Array<{ value: string; label: string }>;
+  availableThemeOptions: Array<{ value: string; label: string; schemeKey?: string }>;
   currentTheme: string;
   onThemeChange: (value: string) => void;
+  panelSpecificTheme: boolean;
   rowHeight: 'auto' | 'fixed';
   fixedRowHeight: number;
   onRowHeightAuto: () => void;
@@ -80,6 +81,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
   availableThemeOptions,
   currentTheme,
   onThemeChange,
+  panelSpecificTheme,
   rowHeight,
   fixedRowHeight,
   onRowHeightAuto,
@@ -140,6 +142,7 @@ export const LogsViewerHeader: React.FC<LogsViewerHeaderProps> = ({
             availableThemeOptions={availableThemeOptions}
             currentTheme={currentTheme}
             onThemeChange={onThemeChange}
+            panelSpecificTheme={panelSpecificTheme}
             rowHeight={rowHeight}
             fixedRowHeight={fixedRowHeight}
             onRowHeightAuto={onRowHeightAuto}

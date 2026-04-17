@@ -6,7 +6,8 @@ import { cleanupCaches } from '../../utils/memo';
 import { stripAnsiCodes } from '../../converters/ansi';
 import { LogsPanelOptions, LogRow, ParsedLogsResult } from '../../types';
 import { getDarkColorSchemeOptions, getLightColorSchemeOptions, getColorScheme } from '../../theme/colorSchemes';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import { PANEL_DEFAULT_THEME_VALUE } from '../ThemeSelect';
+import { useLocalStorage, clearStorageKey } from './hooks/useLocalStorage';
 import { useThemeManagement } from './hooks/useThemeManagement';
 import { useClipboard } from './hooks/useClipboard';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
@@ -51,6 +52,10 @@ export interface LogsViewerProps {
   className?: string;
   /** Grafana event bus for cursor synchronization (shared crosshair) */
   eventBus?: EventBus;
+  /** Panel id from Grafana, used to scope per-panel localStorage entries */
+  panelId?: number;
+  /** Dashboard UID from Grafana, used alongside panelId to scope per-panel localStorage entries */
+  dashboardUID?: string;
 }
 
 /**
@@ -60,6 +65,7 @@ const defaultViewerOptions: LogsPanelOptions = {
   themeMode: 'grafana',
   darkTheme: 'nord',
   lightTheme: 'solarized-light',
+  panelSpecificTheme: false,
   wrapMode: 'nowrap',
   maxLineLength: 1000,
   rowHeight: 'auto',
@@ -88,6 +94,8 @@ export const LogsViewer = memo<LogsViewerProps>(({
   timeZone,
   className = '',
   eventBus,
+  panelId,
+  dashboardUID,
 }) => {
   // Merge user options with defaults
   const options = useMemo(
@@ -122,8 +130,37 @@ export const LogsViewer = memo<LogsViewerProps>(({
   // LocalStorage-backed state
   const [wrapMode, setWrapMode] = useLocalStorage('wrapMode', options.wrapMode || 'nowrap');
   const [themeMode, setThemeMode] = useLocalStorage('themeMode', options.themeMode || 'grafana');
-  const [darkTheme, setDarkTheme] = useLocalStorage('darkTheme', options.darkTheme || 'nord');
-  const [lightTheme, setLightTheme] = useLocalStorage('lightTheme', options.lightTheme || 'solarized-light');
+  // Per-panel scope for theme storage; only used when options.panelSpecificTheme is on AND we have ids.
+  // Uses dashboardUID + panelId (fallback to panelId-only if UID missing).
+  const panelScope = useMemo(() => {
+    if (!options.panelSpecificTheme) {return '';}
+    if (panelId === undefined) {return '';}
+    return dashboardUID ? `panel.${dashboardUID}.${panelId}.` : `panel.${panelId}.`;
+  }, [options.panelSpecificTheme, panelId, dashboardUID]);
+  const darkThemeKey = `${panelScope}darkTheme`;
+  const lightThemeKey = `${panelScope}lightTheme`;
+  const [darkTheme, setDarkTheme, clearDarkTheme, isDarkThemeStored] = useLocalStorage(darkThemeKey, options.darkTheme || 'nord');
+  const [lightTheme, setLightTheme, clearLightTheme, isLightThemeStored] = useLocalStorage(lightThemeKey, options.lightTheme || 'solarized-light');
+
+  // Canonical per-panel scope (ignores the toggle), used for unmount cleanup of orphan entries.
+  const canonicalPanelScope = useMemo(() => {
+    if (panelId === undefined) {return '';}
+    return dashboardUID ? `panel.${dashboardUID}.${panelId}.` : `panel.${panelId}.`;
+  }, [panelId, dashboardUID]);
+  const panelSpecificThemeRef = useRef(options.panelSpecificTheme);
+  panelSpecificThemeRef.current = options.panelSpecificTheme;
+  const canonicalScopeRef = useRef(canonicalPanelScope);
+  canonicalScopeRef.current = canonicalPanelScope;
+  // On unmount: if the panel has committed to a non-panel-specific theme, purge any lingering
+  // per-panel overrides so a later re-enable starts fresh.
+  useEffect(() => {
+    return () => {
+      if (!panelSpecificThemeRef.current && canonicalScopeRef.current) {
+        clearStorageKey(`${canonicalScopeRef.current}darkTheme`);
+        clearStorageKey(`${canonicalScopeRef.current}lightTheme`);
+      }
+    };
+  }, []);
   const [rowHeight, setRowHeight] = useLocalStorage('rowHeight', options.rowHeight || 'auto');
   const [fixedRowHeight, setFixedRowHeight] = useLocalStorage('fixedRowHeight', options.fixedRowHeight || 20);
   const [sortOrder, setSortOrder] = useLocalStorage<'asc' | 'desc'>('sortOrder', 'asc');
@@ -877,18 +914,34 @@ export const LogsViewer = memo<LogsViewerProps>(({
     setSettingsOpen(!settingsOpen);
   }, [settingsOpen]);
 
-  // Get available theme options based on current mode
+  // Panel-option default for the active light/dark mode
+  const panelDefaultTheme = useMemo(() => {
+    return effectiveThemeMode === 'dark'
+      ? (options.darkTheme || 'nord')
+      : (options.lightTheme || 'solarized-light');
+  }, [effectiveThemeMode, options.darkTheme, options.lightTheme]);
+
+  const isCurrentThemeStored = effectiveThemeMode === 'dark' ? isDarkThemeStored : isLightThemeStored;
+
+  // Get available theme options based on current mode; when the panel uses a per-panel theme,
+  // prepend a "Panel Default" entry that resets the user's per-panel override.
   const availableThemeOptions = useMemo(() => {
-    return effectiveThemeMode === 'dark' ? getDarkColorSchemeOptions() : getLightColorSchemeOptions();
-  }, [effectiveThemeMode]);
+    const base = effectiveThemeMode === 'dark' ? getDarkColorSchemeOptions() : getLightColorSchemeOptions();
+    if (!options.panelSpecificTheme) {return base;}
+    return [
+      { value: PANEL_DEFAULT_THEME_VALUE, label: 'Panel Default', schemeKey: panelDefaultTheme },
+      ...base,
+    ];
+  }, [effectiveThemeMode, panelDefaultTheme, options.panelSpecificTheme]);
 
   const currentTheme = useMemo(() => {
+    if (options.panelSpecificTheme && !isCurrentThemeStored) {return PANEL_DEFAULT_THEME_VALUE;}
     return effectiveThemeMode === 'dark' ? darkTheme : lightTheme;
-  }, [effectiveThemeMode, darkTheme, lightTheme]);
+  }, [effectiveThemeMode, darkTheme, lightTheme, isCurrentThemeStored, options.panelSpecificTheme]);
 
   const currentColorScheme = useMemo(() => {
-    return getColorScheme(currentTheme);
-  }, [currentTheme]);
+    return getColorScheme(effectiveThemeMode === 'dark' ? darkTheme : lightTheme);
+  }, [effectiveThemeMode, darkTheme, lightTheme]);
 
   // Settings change handlers
   const handleThemeModeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -896,12 +949,20 @@ export const LogsViewer = memo<LogsViewerProps>(({
   }, [setThemeMode]);
 
   const handleThemeChange = useCallback((value: string) => {
+    if (value === PANEL_DEFAULT_THEME_VALUE) {
+      if (effectiveThemeMode === 'dark') {
+        clearDarkTheme();
+      } else {
+        clearLightTheme();
+      }
+      return;
+    }
     if (effectiveThemeMode === 'dark') {
       setDarkTheme(value);
     } else {
       setLightTheme(value);
     }
-  }, [effectiveThemeMode, setDarkTheme, setLightTheme]);
+  }, [effectiveThemeMode, setDarkTheme, setLightTheme, clearDarkTheme, clearLightTheme]);
 
   const handleRowHeightAuto = useCallback(() => {
     setRowHeight('auto');
@@ -992,6 +1053,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
         availableThemeOptions={availableThemeOptions}
         currentTheme={currentTheme}
         onThemeChange={handleThemeChange}
+        panelSpecificTheme={!!options.panelSpecificTheme}
         rowHeight={rowHeight}
         fixedRowHeight={fixedRowHeight}
         onRowHeightAuto={handleRowHeightAuto}

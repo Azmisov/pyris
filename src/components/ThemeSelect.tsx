@@ -11,7 +11,12 @@ const DEBUG_KEEP_OPEN = false;
 export interface ThemeOption {
   value: string;
   label: string;
+  /** Optional override: key of the ColorScheme to use for the swatch. Defaults to `value`. */
+  schemeKey?: string;
 }
+
+// Sentinel to indicate the theme matching the panel's default
+export const PANEL_DEFAULT_THEME_VALUE = '__panel_default__';
 
 interface ThemeSelectProps {
   options: ThemeOption[];
@@ -46,8 +51,13 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
           <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
             {displayItem && (
               <>
-                <ColorSwatch scheme={getColorScheme(displayItem.value)} />
-                <span className={styles.label}>{displayItem.label}</span>
+                <ColorSwatch scheme={getColorScheme(displayItem.schemeKey ?? displayItem.value)} />
+                <span
+                  className={styles.label}
+                  style={displayItem.value === PANEL_DEFAULT_THEME_VALUE ? { fontStyle: 'italic' } : undefined}
+                >
+                  {displayItem.label}
+                </span>
               </>
             )}
           </div>
@@ -73,9 +83,14 @@ export const ThemeSelect = memo<ThemeSelectProps>(({ options, value, onChange, i
                   value={item.value}
                   className={styles.item}
                 >
-                  <ColorSwatch scheme={getColorScheme(item.value)} />
+                  <ColorSwatch scheme={getColorScheme(item.schemeKey ?? item.value)} />
                   <Select.ItemText asChild>
-                    <span className={styles.itemLabel}>{item.label}</span>
+                    <span
+                      className={styles.itemLabel}
+                      style={item.value === PANEL_DEFAULT_THEME_VALUE ? { fontStyle: 'italic' } : undefined}
+                    >
+                      {item.label}
+                    </span>
                   </Select.ItemText>
                 </Select.Item>
               ))}
