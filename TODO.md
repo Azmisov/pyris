@@ -1,5 +1,3 @@
-- bugs:
-  - when no panel title, needs to make space for the hover buttons in top-right
 - test:
   - add e2e tests (scaffold tests removed, CI pipeline disabled currently)
   - navigation syncing: test with filtering

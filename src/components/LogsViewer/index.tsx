@@ -56,6 +56,10 @@ export interface LogsViewerProps {
   panelId?: number;
   /** Dashboard UID from Grafana, used alongside panelId to scope per-panel localStorage entries */
   dashboardUID?: string;
+  /** True when the Grafana panel has no title; Grafana overlays hover controls over our header,
+   * so we reserve space for them
+   */
+  titleless?: boolean;
 }
 
 /**
@@ -96,6 +100,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   eventBus,
   panelId,
   dashboardUID,
+  titleless = false,
 }) => {
   // Merge user options with defaults
   const options = useMemo(
@@ -1036,7 +1041,7 @@ export const LogsViewer = memo<LogsViewerProps>(({
   return (
     <ThemeVarsContext.Provider value={cssVars}>
     <div
-      className={`${styles.panel} ${className}`}
+      className={`${styles.panel} ${titleless ? styles.titleless : ''} ${className}`}
       style={{ ...cssVars, width, height } as React.CSSProperties}
       data-logs-theme={effectiveThemeMode}
       onClick={handlePanelClick}

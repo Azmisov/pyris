@@ -31,6 +31,15 @@
   font-size: 11px;
   border-bottom: 1px solid var(--logs-fg-muted-1);
   background-color: var(--logs-bg-accent-1);
+  transition: padding-right 0.15s ease;
+}
+
+/* When Grafana hides the panel title, it overlays hover controls (meatball
+   menu, drag handle) on top-right of the panel. Reserve space on hover so our
+   toolbar buttons don't get covered. We rely on PanelProps.title rather than
+   a Grafana CSS class because panel-chrome classes are emotion-hashed. */
+.titleless:hover .header {
+  padding-right: 66px; /* 58px (overlay width) + 8px (.header) */
 }
 
 /* Stats section */

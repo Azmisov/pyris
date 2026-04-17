@@ -7,7 +7,7 @@ import { LogsViewer } from './LogsViewer';
 import { parseDataFrame } from '../utils/frame';
 
 
-export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id, onChangeTimeRange, timeRange, timeZone, eventBus }) => {
+export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, height, fieldConfig, id, onChangeTimeRange, timeRange, timeZone, eventBus, title }) => {
   // const theme = useTheme2();
   // const styles = useStyles2(getStyles);
 
@@ -84,6 +84,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ options, data, width, heig
         eventBus={eventBus}
         panelId={id}
         dashboardUID={data.request?.dashboardUID}
+        titleless={!title || !title.trim()}
       />
   );
 };
