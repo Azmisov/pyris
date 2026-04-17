@@ -3,12 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 const STORAGE_PREFIX = 'grafana.plugin.nyrix-pyris-panel';
 const STORAGE_CHANGE_EVENT = 'nyrix-logs-storage-change';
 
-function getStorageItem<T>(key: string, defaultValue: T): T {
+function getStoredValue<T>(key: string): T | undefined {
   try {
     const item = localStorage.getItem(`${STORAGE_PREFIX}.${key}`);
-    return item ? JSON.parse(item) : defaultValue;
+    return item !== null ? (JSON.parse(item) as T) : undefined;
   } catch {
-    return defaultValue;
+    return undefined;
   }
 }
 
@@ -27,31 +27,36 @@ function setStorageItem<T>(key: string, value: T): void {
 }
 
 /**
- * Custom hook for managing localStorage-synced state
- * Automatically synchronizes across all panel instances
+ * localStorage-synced state with a live fallback to `defaultValue`.
+ * If no stored value exists, `defaultValue` is returned and changes to it
+ * propagate — nothing is written to localStorage until the setter is called.
  */
 export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T | ((prev: T) => T)) => void] {
-  const [state, setState] = useState<T>(() => getStorageItem(key, defaultValue));
+  const [stored, setStored] = useState<T | undefined>(() => getStoredValue<T>(key));
 
-  const setStorageState = useCallback((value: T | ((prev: T) => T)) => {
-    setState(value);
-  }, []);
+  const value = stored !== undefined ? stored : defaultValue;
 
-  // Write to localStorage whenever state changes
-  useEffect(() => {
-    setStorageItem(key, state);
-  }, [key, state]);
+  const setStorageState = useCallback((v: T | ((prev: T) => T)) => {
+    setStored(prev => {
+      const current = prev !== undefined ? prev : defaultValue;
+      const next = typeof v === 'function' ? (v as (p: T) => T)(current) : v;
+      setStorageItem(key, next);
+      return next;
+    });
+  }, [key, defaultValue]);
 
-  // Listen for changes from other instances (same window) and other tabs
   useEffect(() => {
     const fullKey = `${STORAGE_PREFIX}.${key}`;
 
     // Handle storage event from other tabs/windows
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === fullKey && e.newValue !== null) {
+      if (e.key === fullKey) {
+        if (e.newValue === null) {
+          setStored(undefined);
+          return;
+        }
         try {
-          const newValue = JSON.parse(e.newValue) as T;
-          setState(newValue);
+          setStored(JSON.parse(e.newValue) as T);
         } catch (err) {
           console.warn('Failed to parse localStorage change:', err);
         }
@@ -63,8 +68,7 @@ export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T 
       const customEvent = e as CustomEvent<{ key: string; value: string }>;
       if (customEvent.detail.key === fullKey) {
         try {
-          const newValue = JSON.parse(customEvent.detail.value) as T;
-          setState(newValue);
+          setStored(JSON.parse(customEvent.detail.value) as T);
         } catch (err) {
           console.warn('Failed to parse custom storage change:', err);
         }
@@ -80,5 +84,5 @@ export function useLocalStorage<T>(key: string, defaultValue: T): [T, (value: T 
     };
   }, [key]);
 
-  return [state, setStorageState];
+  return [value, setStorageState];
 }
