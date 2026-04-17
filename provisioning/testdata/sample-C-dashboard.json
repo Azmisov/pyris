@@ -16,797 +16,797 @@
     ],
     "rows": [
       [
-        1776445363634,
+        1776448749710,
         "Basic Colors - Foreground (30-37):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445365004,
+        1776448753195,
         "\u001b[30mBlack\u001b[0m \u001b[31mRed\u001b[0m \u001b[32mGreen\u001b[0m \u001b[33mYellow\u001b[0m \u001b[34mBlue\u001b[0m \u001b[35mMagenta\u001b[0m \u001b[36mCyan\u001b[0m \u001b[37mWhite\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445368925,
+        1776448756389,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445370929,
+        1776448758434,
         "Bright Colors - Foreground (90-97):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445371045,
+        1776448759179,
         "\u001b[90mBright Black\u001b[0m \u001b[91mBright Red\u001b[0m \u001b[92mBright Green\u001b[0m \u001b[93mBright Yellow\u001b[0m \u001b[94mBright Blue\u001b[0m \u001b[95mBright Magenta\u001b[0m \u001b[96mBright Cyan\u001b[0m \u001b[97mBright White\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445373150,
+        1776448759244,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445373260,
+        1776448761319,
         "Basic Colors - Background (40-47):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445377034,
+        1776448762247,
         "\u001b[40mBlack BG\u001b[0m \u001b[41mRed BG\u001b[0m \u001b[42mGreen BG\u001b[0m \u001b[43mYellow BG\u001b[0m \u001b[44mBlue BG\u001b[0m \u001b[45mMagenta BG\u001b[0m \u001b[46mCyan BG\u001b[0m \u001b[47mWhite BG\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445377059,
+        1776448764415,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445380113,
+        1776448766161,
         "Bright Colors - Background (100-107):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445381585,
+        1776448766787,
         "\u001b[100mBright Black BG\u001b[0m \u001b[101mBright Red BG\u001b[0m \u001b[102mBright Green BG\u001b[0m \u001b[103mBright Yellow BG\u001b[0m \u001b[104mBright Blue BG\u001b[0m \u001b[105mBright Magenta BG\u001b[0m \u001b[106mBright Cyan BG\u001b[0m \u001b[107mBright White BG\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445384387,
+        1776448768513,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445386307,
+        1776448771990,
         "256 Color Mode - Foreground (38;5;n):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445387940,
+        1776448773874,
         "\u001b[38;5;0mColor 0\u001b[0m \u001b[38;5;16mColor 16\u001b[0m \u001b[38;5;95mColor 95\u001b[0m \u001b[38;5;124mColor 124\u001b[0m \u001b[38;5;196mColor 196\u001b[0m \u001b[38;5;226mColor 226\u001b[0m \u001b[38;5;255mColor 255\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445391254,
+        1776448775346,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445393473,
+        1776448775414,
         "256 Color Mode - Background (48;5;n):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445393923,
+        1776448777865,
         "\u001b[48;5;17mColor 17 BG\u001b[0m \u001b[48;5;53mColor 53 BG\u001b[0m \u001b[48;5;125mColor 125 BG\u001b[0m \u001b[48;5;197mColor 197 BG\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445396573,
+        1776448780735,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445398791,
+        1776448785367,
         "Truecolor - Foreground (38;2;r;g;b):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445399620,
+        1776448786232,
         "\u001b[38;2;255;0;0mRed RGB\u001b[0m \u001b[38;2;0;255;0mGreen RGB\u001b[0m \u001b[38;2;0;0;255mBlue RGB\u001b[0m \u001b[38;2;255;128;0mOrange RGB\u001b[0m \u001b[38;2;128;0;128mPurple RGB\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445404131,
+        1776448788702,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445405102,
+        1776448792539,
         "Truecolor - Background (48;2;r;g;b):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445407706,
+        1776448793135,
         "\u001b[48;2;255;192;203mPink BG\u001b[0m \u001b[48;2;255;255;0mYellow BG\u001b[0m \u001b[48;2;0;255;255mCyan BG\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445408123,
+        1776448794218,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445412611,
+        1776448796818,
         "Text Styles - Bold (1):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445417539,
+        1776448798461,
         "\u001b[1mBold text\u001b[0m \u001b[1;31mBold red\u001b[0m \u001b[1;32mBold green\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445419079,
+        1776448799502,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445420231,
+        1776448801766,
         "Text Styles - Faint/Dim (2):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445422564,
+        1776448803703,
         "\u001b[2mFaint text\u001b[0m \u001b[2;33mFaint yellow\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445423477,
+        1776448805757,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445426862,
+        1776448808958,
         "Text Styles - Italic (3):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445428880,
+        1776448810011,
         "\u001b[3mItalic text\u001b[0m \u001b[3;34mItalic blue\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445432593,
+        1776448814310,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445435013,
+        1776448819008,
         "Text Styles - Underline (4):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445438750,
+        1776448819451,
         "\u001b[4mUnderlined text\u001b[0m \u001b[4;35mUnderlined magenta\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445438935,
+        1776448821621,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445439730,
+        1776448824442,
         "Text Styles - Double Underline (21):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445441715,
+        1776448824833,
         "\u001b[21mDouble underlined text\u001b[0m \u001b[21;36mDouble underlined cyan\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445445285,
+        1776448825661,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445449509,
+        1776448829286,
         "Text Styles - Slow Blink (5):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445452813,
+        1776448834053,
         "\u001b[5mSlow blinking text\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445453953,
+        1776448835950,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445454146,
+        1776448837988,
         "Text Styles - Rapid Blink (6):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445457499,
+        1776448841181,
         "\u001b[6mRapid blinking text\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445460590,
+        1776448844123,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445464527,
+        1776448847178,
         "Text Styles - Conceal (8):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445465845,
+        1776448851224,
         "Visible \u001b[8mHidden text\u001b[0m Visible again",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445468031,
+        1776448856082,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445472387,
+        1776448860260,
         "Text Styles - Strike (9):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445477024,
+        1776448861894,
         "\u001b[9mStrikethrough text\u001b[0m \u001b[9;31mStrikethrough red\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445480861,
+        1776448864298,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445484638,
+        1776448866234,
         "Text Styles - Framed (51):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445488110,
+        1776448867218,
         "\u001b[51mFramed text\u001b[0m \u001b[51;32mFramed green\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445492176,
+        1776448869484,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445493902,
+        1776448872650,
         "Text Styles - Encircled (52):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445497030,
+        1776448876955,
         "\u001b[52mEncircled text\u001b[0m \u001b[52;33mEncircled yellow\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445498345,
+        1776448881394,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445499587,
+        1776448881908,
         "Text Styles - Overline (53):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445501835,
+        1776448882678,
         "\u001b[53mOverlined text\u001b[0m \u001b[53;34mOverlined blue\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445506323,
+        1776448887002,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445508713,
+        1776448887292,
         "Text Styles - Superscript (73):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445512717,
+        1776448892120,
         "Normal\u001b[73mSuperscript\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445513838,
+        1776448894187,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445517705,
+        1776448897955,
         "Text Styles - Subscript (74):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445517856,
+        1776448898369,
         "Normal\u001b[74mSubscript\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445522517,
+        1776448899431,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445526272,
+        1776448900974,
         "Underline Color (58;5;n):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445529125,
+        1776448902677,
         "\u001b[4;58;5;196mRed underline\u001b[0m \u001b[4;58;5;46mGreen underline\u001b[0m \u001b[4;58;5;21mBlue underline\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445530862,
+        1776448903363,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445533483,
+        1776448904066,
         "Underline Color RGB (58;2;r;g;b):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445537361,
+        1776448907747,
         "\u001b[4;58;2;255;0;255mMagenta underline\u001b[0m \u001b[4;58;2;255;165;0mOrange underline\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445541328,
+        1776448909634,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445543143,
+        1776448910511,
         "Combined Styles:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445545616,
+        1776448911646,
         "\u001b[1;3;4;31mBold Italic Underlined Red\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445549454,
+        1776448915163,
         "\u001b[1;32;48;5;235mBold Green on Gray\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445551277,
+        1776448915557,
         "\u001b[3;38;5;141;48;5;236mItalic Purple on Dark Gray\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445555687,
+        1776448918681,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445559349,
+        1776448920600,
         "Multi-code sequence test (the bug fix case):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445563198,
+        1776448922422,
         "\u001b[3;38;5;95mItalic with 256-color 95\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445565476,
+        1776448923133,
         "\u001b[1;4;38;5;124mBold Underlined with 256-color 124\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445569673,
+        1776448927563,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445570399,
+        1776448930404,
         "Reset codes:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445573391,
+        1776448934731,
         "\u001b[1mBold\u001b[22m Not bold",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445576843,
+        1776448938737,
         "\u001b[3mItalic\u001b[23m Not italic",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445581251,
+        1776448942001,
         "\u001b[4mUnderline\u001b[24m Not underlined",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445583582,
+        1776448944295,
         "\u001b[9mStrike\u001b[29m Not striked",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445587492,
+        1776448949121,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445587600,
+        1776448952445,
         "Color reset:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445588253,
+        1776448952816,
         "\u001b[31mRed\u001b[39m Default foreground",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445592452,
+        1776448956524,
         "\u001b[41mRed BG\u001b[49m Default background",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445596718,
+        1776448958964,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445600620,
+        1776448960082,
         "Complex nesting:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445602942,
+        1776448962958,
         "\u001b[1m\u001b[31mBold Red \u001b[4mUnderlined\u001b[24m Not underlined\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445603492,
+        1776448964118,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445607522,
+        1776448967891,
         "Edge cases:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445610205,
+        1776448972117,
         "\u001b[0m Reset only",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445611018,
+        1776448976712,
         "\u001b[m Empty SGR (should reset)",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445614355,
+        1776448979276,
         "Normal \u001b[31m\u001b[32m\u001b[33mRapid color changes\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445616291,
+        1776448980386,
         "\u001b[1;2;3;4;5;9;21;51;53;73mAll styles at once\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445617744,
+        1776448981472,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445621835,
+        1776448982899,
         "Default colors with 256-color overrides:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445621945,
+        1776448987252,
         "\u001b[31mBasic Red\u001b[0m vs \u001b[38;5;196m256-Red\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445622884,
+        1776448990488,
         "\u001b[34mBasic Blue\u001b[0m vs \u001b[38;5;21m256-Blue\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445624634,
+        1776448992125,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445628392,
+        1776448995250,
         "Performance test - long sequence:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445631348,
+        1776448997763,
         "\u001b[38;5;196m█\u001b[38;5;202m█\u001b[38;5;208m█\u001b[38;5;214m█\u001b[38;5;220m█\u001b[38;5;226m█\u001b[38;5;190m█\u001b[38;5;154m█\u001b[38;5;118m█\u001b[38;5;82m█\u001b[38;5;46m█\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445632608,
+        1776448998868,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445633565,
+        1776449000155,
         "Multiple resets:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445634068,
+        1776449002207,
         "\u001b[31mRed\u001b[0m \u001b[32mGreen\u001b[0m \u001b[33mYellow\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445634795,
+        1776449004945,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445638277,
+        1776449007109,
         "Foreground + Background combinations:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445641119,
+        1776449008465,
         "\u001b[31;42mRed on Green\u001b[0m \u001b[33;44mYellow on Blue\u001b[0m \u001b[37;41mWhite on Red\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445643546,
+        1776449011338,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445645300,
+        1776449015118,
         "256-color foreground + background:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445649540,
+        1776449018582,
         "\u001b[38;5;226;48;5;18mYellow on Navy\u001b[0m \u001b[38;5;46;48;5;196mGreen on Red\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445654286,
+        1776449021200,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445655092,
+        1776449023993,
         "OSC-8 Hyperlinks:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445657444,
+        1776449025480,
         "\u001b]8;;https://example.com\u0007Example Website\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445662013,
+        1776449026421,
         "\u001b]8;;https://github.com\u0007GitHub\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445662906,
+        1776449029048,
         "\u001b]8;;mailto:test@example.com\u0007Email Link\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445665035,
+        1776449032692,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445669330,
+        1776449035558,
         "File Links (file://):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445673022,
+        1776449036512,
         "\u001b]8;;file:///home/user/example.txt\u0007Local File Link\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445674496,
+        1776449040505,
         "\u001b]8;;file:///var/log/system.log\u0007System Log File\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445678834,
+        1776449044436,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445679446,
+        1776449045515,
         "VSCode Links (vscode://):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445681151,
+        1776449046746,
         "\u001b]8;;vscode://file/home/user/project/main.ts:42:10\u0007VSCode Link with Line\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445684560,
+        1776449049519,
         "\u001b]8;;vscode://file/home/user/project/README.md\u0007VSCode File Link\u001b]8;;\u0007\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445685439,
+        1776449050066,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445689880,
+        1776449052876,
         "Plain URL Detection (no OSC-8):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445692688,
+        1776449056708,
         "https://docs.grafana.com/",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445695990,
+        1776449058150,
         "file:///home/user/documents/report.pdf",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445698977,
+        1776449059405,
         "vscode://file/workspace/src/index.ts:10:5",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445702842,
+        1776449062194,
         "http://localhost:3000/dashboard",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445703170,
+        1776449062961,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445704030,
+        1776449064911,
         "Plain URL inside styled span:",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445707985,
+        1776449067380,
         "\u001b[31msee https://example.com/red-error for details\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445708739,
+        1776449072213,
         "\u001b[1;33mwarning\u001b[0m: connect \u001b[36mhttp://localhost:3000/dashboard\u001b[0m failed, retry",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445710254,
+        1776449075754,
         "\u001b[32mkey\u001b[0m=\u001b[34mhttps://svc.example.com/api?x=1&y=2\u001b[0m \u001b[90m# note\u001b[0m",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445712047,
+        1776449076949,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445714340,
+        1776449078529,
         "Dangerous Schemes (NOT auto-linked for security - displayed as plain text):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445715275,
+        1776449079340,
         "javascript:alert(document.domain)",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445718907,
+        1776449080060,
         "javascript:void(0)",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445720989,
+        1776449081245,
         "data:text/html,alert-test",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445725188,
+        1776449083904,
         "vbscript:msgbox-test",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445728954,
+        1776449084254,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445731836,
+        1776449088904,
         "Dangerous URLs with :// (auto-linked but will show warning modal):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445736827,
+        1776449089017,
         "javascript://example.com/path",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445738897,
+        1776449092679,
         "data://text/html,test",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445739275,
+        1776449096477,
         "vbscript://test",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445741082,
+        1776449100806,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445743837,
+        1776449100924,
         "Safe Non-URL Schemes (auto-linked):",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445745921,
+        1776449104640,
         "mailto:user@example.com",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445750736,
+        1776449109213,
         "tel:+1234567890",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445754081,
+        1776449110030,
         "sms:+1234567890",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445755859,
+        1776449111109,
         "callto:+1234567890",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445760352,
+        1776449112703,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445763912,
+        1776449114399,
         "End of test file",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ],
       [
-        1776445767941,
+        1776449116876,
         "",
         "{\"source\":\"sample-C\",\"app\":\"ansi_test\",\"type\":\"ansi\"}"
       ]
