@@ -71,13 +71,20 @@ Tag for release
 1. Run `npm version <major|minor|patch>`
 2. Run `git push origin master --follow-tags`
 
-Create secret for private signing (need approval to generate community signing key):
+Create secret for signing:
 
-1. Navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
+1. At https://grafana.com/profile/access-policies, create an access policy with
+   scope `plugins:write` (realm = your Grafana Cloud org/user), then generate a
+   token from it.
+2. In the repo, go to "Settings > Secrets and variables > Actions" and add a
+   new repository secret named `GRAFANA_ACCESS_POLICY_TOKEN` with that token.
+3. Uncomment the `policy_token` / `attestation` block in
+   `.github/workflows/release.yml` once the plugin has been approved at the
+   desired signature level (private/community/commercial).
+
+The first part of the plugin ID (`nyrix-` in `nyrix-pyris-panel`) must match
+the slug of the Grafana Cloud account that owns the access policy, or signing
+will be rejected.
 
 ## Docs
 

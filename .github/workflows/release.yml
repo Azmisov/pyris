@@ -21,6 +21,6 @@ jobs:
 
       - uses: grafana/plugin-actions/build-plugin@build-plugin/v1.0.2
         # TODO: add policy_token and attestation after marketplace approval
-        # with:
-        #   policy_token: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
-        #   attestation: true
+        with:
+          policy_token: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
+          attestation: true
