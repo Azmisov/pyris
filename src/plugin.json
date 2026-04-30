@@ -14,20 +14,38 @@
       "large": "icons/logo.svg"
     },
     "links": [
-      { "name": "GitHub", "url": "https://github.com/Azmisov/pyris" },
-      { "name": "Issues", "url": "https://github.com/Azmisov/pyris/issues" }
+      {
+        "name": "GitHub",
+        "url": "https://github.com/Azmisov/pyris"
+      },
+      {
+        "name": "Issues",
+        "url": "https://github.com/Azmisov/pyris/issues"
+      }
     ],
     "screenshots": [
-      { "name": "ANSI view with dark theme", "path": "img/screenshot1.png" },
-      { "name": "Settings dropdown with theme selection", "path": "img/screenshot2.png" },
-      { "name": "Link navigation in ANSI logs", "path": "img/screenshot3.png" },
-      { "name": "JSON view with light theme", "path": "img/screenshot4.png" }
+      {
+        "name": "ANSI view with dark theme",
+        "path": "img/screenshot1.png"
+      },
+      {
+        "name": "Settings dropdown with theme selection",
+        "path": "img/screenshot2.png"
+      },
+      {
+        "name": "Link navigation in ANSI logs",
+        "path": "img/screenshot3.png"
+      },
+      {
+        "name": "JSON view with light theme",
+        "path": "img/screenshot4.png"
+      }
     ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.4.0",
+    "grafanaDependency": ">=11.6.11 <12 || >=12.0.10 <12.1 || >=12.1.7 <12.2 || >=12.2.5",
     "plugins": []
   }
 }
