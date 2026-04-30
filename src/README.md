@@ -1,7 +1,7 @@
 # Pyris
 
-![Grafana 10.4+](https://img.shields.io/badge/Grafana-10.4%2B-orange)
-![License](https://img.shields.io/badge/license-LGPL--3.0-blue)
+![Grafana](https://img.shields.io/badge/Grafana-11.6.11%2B_%7C_12.0.10%2B_%7C_12.1.7%2B_%7C_12.2.5%2B-orange)
+![License](https://img.shields.io/badge/License-LGPL--3.0-blue)
 
 A log viewer panel for Grafana with JSON and ANSI styling support.
 
