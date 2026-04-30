@@ -33,31 +33,29 @@ const SAMPLE_FILES = [
 /**
  * Extract timestamp from A.txt log lines
  * Format: [38;5;144m2025-10-22 00:45:38.12[0m
+ *
+ * Text lines have no TZ marker. The paired JSON entries do (e.g. -06:00); pass that
+ * offset in via tzOffset so both representations resolve to the same UTC instant.
+ * Defaults to 'Z' (UTC) if no offset has been detected yet.
  */
-function extractTimestampFromLogLine(line) {
-  const timestampMatch = line.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2})/);
+function extractTimestampFromLogLine(line, tzOffset = 'Z') {
+  const timestampMatch = line.match(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2}\.\d{2})/);
   if (timestampMatch) {
-    const timestampStr = timestampMatch[1];
-    // Parse format: 2025-10-22 00:45:38.12
-    const [datePart, timePart] = timestampStr.split(' ');
-    const [year, month, day] = datePart.split('-').map(Number);
-    const [hour, minute, secondWithMs] = timePart.split(':');
-    const [second, centiseconds] = secondWithMs.split('.');
-
-    // Use Date.UTC to match JSON log timestamps (which are parsed as UTC)
-    const timestamp = Date.UTC(
-      year,
-      month - 1,
-      day,
-      parseInt(hour, 10),
-      parseInt(minute, 10),
-      parseInt(second, 10),
-      parseInt(centiseconds, 10) * 10 // Convert centiseconds to milliseconds
-    );
-
-    return timestamp;
+    const datePart = timestampMatch[1];
+    const timePart = timestampMatch[2];
+    const ms = new Date(`${datePart}T${timePart}${tzOffset}`).getTime();
+    return Number.isFinite(ms) ? ms : null;
   }
   return null;
+}
+
+/**
+ * Extract the TZ offset (e.g. "-06:00", "+00:00", "Z") from an ISO-8601 string,
+ * or null if the string has no offset marker.
+ */
+function extractTzOffset(isoString) {
+  const m = isoString.match(/(Z|[+-]\d{2}:\d{2})$/);
+  return m ? m[1] : null;
 }
 
 /**
@@ -68,15 +66,26 @@ function isJsonLine(line) {
   return trimmed.startsWith('{') && trimmed.endsWith('}');
 }
 
+/** Common field names carrying an ISO-8601 timestamp on JSON log lines. */
+const JSON_TIME_FIELDS = ['log_time', 'time', 'timestamp', 'ts', '@timestamp'];
+
+function getJsonTimeString(json) {
+  for (const f of JSON_TIME_FIELDS) {
+    if (typeof json[f] === 'string') {return json[f];}
+  }
+  return null;
+}
+
 /**
- * Extract timestamp from JSON log_time field
- * Format: "log_time":"2025-11-18T23:46:48.927082+00:00"
+ * Extract timestamp from a JSON log line by checking common time field names.
  */
 function extractTimestampFromJson(line) {
   try {
     const json = JSON.parse(line);
-    if (json.log_time) {
-      return new Date(json.log_time).getTime();
+    const s = getJsonTimeString(json);
+    if (s) {
+      const ms = new Date(s).getTime();
+      return Number.isFinite(ms) ? ms : null;
     }
   } catch (error) {
     // Not valid JSON, return null
@@ -140,6 +149,26 @@ function convertSampleFile(config) {
   // Convert labels to JSON string
   const labelsJson = JSON.stringify(config.labels);
 
+  // For hybrid samples, detect the source TZ from the first JSON line that carries
+  // one. Text lines lack a TZ marker and would otherwise be interpreted as UTC,
+  // drifting from JSON timestamps by the source's local offset (see
+  // extractTimestampFromLogLine).
+  let detectedTzOffset = 'Z';
+  if (config.extractTimestampHybrid) {
+    for (const line of lines) {
+      if (!isJsonLine(line)) {continue;}
+      try {
+        const json = JSON.parse(line);
+        const s = getJsonTimeString(json);
+        const offset = s ? extractTzOffset(s) : null;
+        if (offset) {
+          detectedTzOffset = offset;
+          break;
+        }
+      } catch {}
+    }
+  }
+
   // Process each line
   let currentTimestamp = 0; // Will be set to first extracted timestamp
   // For hybrid format, track timestamps separately
@@ -169,7 +198,7 @@ function convertSampleFile(config) {
         }
       } else {
         // Text line - extract from log line
-        const extractedTimestamp = extractTimestampFromLogLine(line);
+        const extractedTimestamp = extractTimestampFromLogLine(line, detectedTzOffset);
         if (extractedTimestamp) {
           if (textTimestamp === 0) {
             textTimestamp = extractedTimestamp;
