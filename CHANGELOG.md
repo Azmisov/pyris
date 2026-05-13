@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.1
+
+- "Open" modal button is hidden for dangerous URL schemes
+
 ## v1.1.0
 
 - React 19 updates for Grafana 13 (@jackw)
