@@ -1,5 +1,7 @@
 import { parse } from '@ansi-tools/parser';
 
+const DANGEROUS_SCHEME_RE = /^(?:javascript|vbscript|data|about):/i;
+
 interface AnsiToken {
   type: string;
   raw: string;
@@ -17,7 +19,7 @@ export interface AnsiConversionResult {
 
 // Plain URL detector used to auto-linkify URLs found inside TEXT tokens.
 // Matches `scheme://…` and safe colon-only schemes (mailto/tel/sms/callto).
-// Dangerous schemes (javascript:, data:, vbscript:) are intentionally excluded.
+// Dangerous schemes are filtered in collectLinks() via DANGEROUS_SCHEME_RE.
 const PLAIN_URL_REGEX = /\b((?:[a-z][a-z0-9+.-]{2,}):\/\/[^\s<>"'{}|\\^`\[\]]+|(?:mailto|tel|sms|callto):[^\s<>"'{}|\\^`\[\]]+)/gi;
 
 // Absolute POSIX file-path detector. Matches paths like `/home/user/foo.py`
@@ -42,6 +44,7 @@ function collectLinks(raw: string): LinkMatch[] {
   PLAIN_URL_REGEX.lastIndex = 0;
   let m: RegExpExecArray | null;
   while ((m = PLAIN_URL_REGEX.exec(raw)) !== null) {
+    if (DANGEROUS_SCHEME_RE.test(m[1])) { continue; }
     matches.push({ start: m.index, end: m.index + m[0].length, href: m[1], text: m[1] });
   }
 
@@ -330,7 +333,8 @@ function createHyperlink(url: string, contentHtml: string, _params: Record<strin
   // Escape URL for HTML attribute
   const escapedUrl = escapeHtmlAttr(url);
 
-  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}">${contentHtml}</a>`;
+  const dangerous = DANGEROUS_SCHEME_RE.test(url);
+  return `<a href="${escapedUrl}" title="${escapedUrl}" class="${linkClass}" target="_blank" rel="noopener noreferrer" data-url="${escapedUrl}" data-dangerous="${dangerous}">${contentHtml}</a>`;
 }
 
 // Escape text for HTML attributes (more strict than content escaping)

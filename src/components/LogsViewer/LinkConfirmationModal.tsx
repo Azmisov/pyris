@@ -37,7 +37,7 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
           <button className={`${modalStyles.button} ${modalStyles.buttonPrimary}`} onClick={onCopy}>
             Copy
           </button>
-          {!isFileUrl && (
+          {!isFileUrl && !isDangerousUrl && (
             <a
               href={url}
               target="_blank"
@@ -51,16 +51,15 @@ export const LinkConfirmationModal: React.FC<LinkConfirmationModalProps> = ({
         </>
       }
     >
-      {isDangerousUrl && (
-        <p className={styles.warning}>This URL uses a potentially dangerous scheme. Proceed with caution.</p>
-      )}
-      {isFileUrl ? (
+      {isFileUrl || isDangerousUrl ? (
         <>
-          <p className={styles.warning}>Browsers block file:// links for security reasons.</p>
+          {isFileUrl ? (
+            <p className={styles.warning}>Browsers block file:// links for security reasons.</p>
+          ) : (
+            <p className={styles.warning}>This URL uses a potentially dangerous scheme.</p>
+          )}
           <p>Copy the path and paste it into your file manager or terminal:</p>
         </>
-      ) : isDangerousUrl ? (
-        <p>This link may execute code or perform unexpected actions. Only open if you trust the source.</p>
       ) : (
         <p>Do you want to visit this link?</p>
       )}

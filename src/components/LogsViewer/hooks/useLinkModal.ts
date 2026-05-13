@@ -38,6 +38,7 @@ import { useState, useCallback, useMemo } from 'react';
 export function useLinkModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingUrl, setPendingUrl] = useState<string>('');
+  const [isDangerousUrl, setIsDangerousUrl] = useState(false);
 
   /**
    * Click handler that intercepts anchor tag clicks
@@ -50,6 +51,7 @@ export function useLinkModal() {
     if (link && link.href) {
       event.preventDefault();
       setPendingUrl(link.href);
+      setIsDangerousUrl(link.dataset.dangerous === 'true');
       setIsModalOpen(true);
     }
   }, []);
@@ -60,6 +62,7 @@ export function useLinkModal() {
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setPendingUrl('');
+    setIsDangerousUrl(false);
   }, []);
 
   /**
@@ -69,22 +72,6 @@ export function useLinkModal() {
   const isFileUrl = useMemo(() => {
     try {
       return pendingUrl.startsWith('file://');
-    } catch {
-      return false;
-    }
-  }, [pendingUrl]);
-
-  /**
-   * Checks if the pending URL uses a dangerous scheme
-   * Dangerous schemes include: javascript, vbscript, data, about
-   * These can execute code or perform unexpected actions
-   */
-  const isDangerousUrl = useMemo(() => {
-    try {
-      const parsed = new URL(pendingUrl);
-      const scheme = parsed.protocol.replace(':', '').toLowerCase();
-      const DANGEROUS_SCHEMES = ['javascript', 'vbscript', 'data', 'about'];
-      return DANGEROUS_SCHEMES.includes(scheme);
     } catch {
       return false;
     }

@@ -155,4 +155,10 @@ tel:+1234567890
 sms:+1234567890
 callto:+1234567890
 
+OSC-8 Dangerous Schemes (auto-linked, warning modal, no Open button):
+]8;;javascript:alert(document.domain)javascript:alert]8;;
+]8;;data:text/html,<h1>injected</h1>data: link]8;;
+]8;;vbscript:msgbox("test")vbscript: link]8;;
+]8;;about:blankabout: link]8;;
+
 End of test file
