@@ -11,6 +11,7 @@
     - if selected line, find a match (exact match?)
     - preserve visible window and zoom
     - if visible start/end, assume selection is relative to start/end
+  - refactor some/all px offsets in CSS to use https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md
 - future version or needs more thought:
   - new features:
     - save search expression in local storage
@@ -23,6 +24,9 @@
     - autoconvert first datetime format to the user's timezone? will be finicky
     - breakout log count by log level
     - showing json + ansi combined histogram in the timeline
+    - dynamically build theme based on current grafana theme selection (instead of the hardcoded
+      ones that are generated at compile time); will need some color math to autofill in missing
+      ansi colors
   - change behavior:
     - aligning histogram bins to grid lines instead of being a fixed division of full range
     - have count of all records be the limit for histogram scaling, rather than view dependent?
